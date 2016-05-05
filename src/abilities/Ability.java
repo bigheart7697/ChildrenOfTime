@@ -34,6 +34,7 @@ abstract public class Ability {
 //    other methods:
 
     public abstract void cast();
+
     public void Upgrade() {
         if (currentXP > XPtoNextLevel) {
             level++;
