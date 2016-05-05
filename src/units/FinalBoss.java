@@ -21,7 +21,7 @@ public class FinalBoss extends Enemy{
     }
 
     @Override
-    public void getTarget() {
+    public void setTarget() {
         this.target = null; // Targets are accessed via battlefield in action method.
     }
 

@@ -28,7 +28,7 @@ public class Tank extends Enemy {
     }
 
     @Override
-    public void getTarget() {
+    public void setTarget() {
         this.target = null; // Targets are all of the heroes, attacked in method action.
     }
 }

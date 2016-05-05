@@ -1,7 +1,7 @@
 package units;
 
 import abilities.*;
-import itemMGMT.Item;
+import itemMGMT.*;
 
 import java.util.ArrayList;
 
@@ -35,11 +35,18 @@ abstract public class Hero extends Unit{
     //Setting up ArrayLists
 
     public void intializeInventory() { this.inventory = new ArrayList<>(); }
+
     public void addItem(Item i) {
         if (this.inventory.size() < this.invSize)
             this.inventory.add(i);
         else
             System.out.println("Not enough room in inventory");
+        if (i instanceof Equipment) ((Equipment) i).setBuff();
+    }
+
+    public void removeItem(Item i) {
+        this.inventory.remove(i);
+        if (i instanceof Equipment) ((Equipment) i).isRemoved();
     }
 
     public void initializeAbilities() { this.abilities = new ArrayList<>(); }
@@ -50,6 +57,9 @@ abstract public class Hero extends Unit{
 
     public int getMP() { return this.MP; }
     public void setMP(int m) { this.MP = m; }
+
+    public int getMaxEP() { return this.EPmax; }
+    public void setMaxEP(int e) { this.EPmax = e; }
 
     public int getMaxMP() { return maxMP; }
     public void setMaxMP(int maxMP) { this.maxMP = maxMP; }
@@ -69,15 +79,31 @@ abstract public class Hero extends Unit{
     public void magic(int abilityNo) {
         Ability a = this.abilities.get(abilityNo);
         if (a instanceof ActiveAbility) {
-            this.getTarget();
+            this.setTarget();
             ((ActiveAbility) a).cast(this.target);
             this.target.refreshStatus();
         }
         else System.out.println("The selected ability is passive.");
     }
 
-    public void item() {
-        //Code to be written
+    public void useItem(Item i) {
+        if (i instanceof Consumable) {
+            switch (i.getTargetStat()) {
+                case "HP":
+                    this.setHP(this.getHP() + i.getEffect());
+                    refreshStatus();
+                    break;
+                case "MP":
+                    this.setMP(this.getMP() + i.getEffect());
+                    refreshStatus();
+                    break;
+                case "EP":
+                    this.setEP(this.getEP() + i.getEffect());
+                    refreshStatus();
+                    break;
+            }
+        }
+        else System.out.println("Selected Item is not Consumable");
     }
 
     public void addXP(int quantity, Ability target) {
@@ -88,11 +114,13 @@ abstract public class Hero extends Unit{
     public void refreshStatus() {
         super.refreshStatus();
         if (this.getEP() < 0) this.setEP(0);
+        if (this.getEP() > this.getMaxEP()) this.setEP(this.getMaxEP());
         if (this.getMP() < 0) this.setMP(0);
+        if (this.getMP() > this.getMaxMP()) this.setMP(this.getMaxMP());
     }
 
     @Override
-    public void getTarget() {
+    public void setTarget() {
         //Code to be written
         //Requires player input to be completed
     }

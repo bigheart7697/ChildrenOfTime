@@ -23,7 +23,7 @@ public class Angel extends Enemy {
     }
 
     @Override
-    public void getTarget() {
+    public void setTarget() {
         int MAX_VAL = 2000;
         for (Enemy e: this.field.getEnemies()) {
             if (e.getHP() < MAX_VAL) {
