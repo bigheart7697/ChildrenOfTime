@@ -7,16 +7,16 @@ abstract public class Ability {
     protected int currentXP;
     protected int level;
     protected int XPtoNextLevel;
-    protected int XPGainPatten;
+    protected int XPGainPattern;
     protected Ability requiredAbility;
 
 //    constructors:
 
-    Ability(String name, int level, int XPtoNextLevel, int XPGainPatten) {
+    Ability(String name, int level, int XPtoNextLevel, int XPGainPattern) {
         this.name = name;
         this.level = level;
         this.XPtoNextLevel = XPtoNextLevel;
-        this.XPGainPatten = XPGainPatten;
+        this.XPGainPattern = XPGainPattern;
     }
 
 //    getters and setters:

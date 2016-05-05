@@ -1,7 +1,7 @@
 package units;
 
 import abilities.PassiveAbility;
-import abilities.Restorer;
+import abilities.SelfBoost;
 
 public class Fighter extends Hero{
 
@@ -9,8 +9,8 @@ public class Fighter extends Hero{
 
     Fighter(String n) {
         super(n, 200, 120, 120, 10, 5, 6, 2);
-        PassiveAbility FightTraining = new PassiveAbility(); // PassiveAbility constructor to be changed.
-        PassiveAbility WorkOut = new Restorer("Work out", 0, 2, 34, "health point", 50);
+        PassiveAbility FightTraining = new SelfBoost("Fight training", 0, 2, 34, "attack power", 30); // PassiveAbility constructor to be changed.
+        PassiveAbility WorkOut = new SelfBoost("Work out", 0, 2, 34, "health point", 50);
         this.abilities.add(FightTraining);
         this.abilities.add(WorkOut);
     }
