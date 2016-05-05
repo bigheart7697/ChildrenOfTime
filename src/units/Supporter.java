@@ -4,7 +4,7 @@ import abilities.PassiveAbility;
 
 public class Supporter extends Hero {
 
-    //Constructors
+    //Constructor
 
     Supporter(String n) {
         super(n, 220, 80, 200, 5, 10, 5, 3);
@@ -13,12 +13,6 @@ public class Supporter extends Hero {
         this.abilities.add(QuickAsABunny);
         this.abilities.add(MagicLessons);
     }
-
-    Supporter() {
-        System.out.println("Error: inputs missing in Fighter constructor");
-    }
-
-
 
     //Other methods
 

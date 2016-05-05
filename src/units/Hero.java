@@ -5,7 +5,7 @@ import itemMGMT.Item;
 
 import java.util.ArrayList;
 
-abstract class Hero extends Unit{
+abstract public class Hero extends Unit{
     protected int HPRefill;
     protected int maxMP;
     protected int MP, MPRefill;
@@ -18,7 +18,7 @@ abstract class Hero extends Unit{
 
     protected ArrayList<Ability> abilities;
 
-    //Constructors
+    //Constructor
 
     Hero(String n, int mhp, int dmg, int mmp, int hpr, int mpr, int epm, int invs) {
         super(n, mhp, dmg);
@@ -29,11 +29,6 @@ abstract class Hero extends Unit{
         this.invSize = invs;
         this.XPGained = 0;
     }
-
-    Hero() {
-        System.out.println("Error: inputs missing in Hero constructor");
-    }
-
 
     //Setting up ArrayLists
 
@@ -61,8 +56,9 @@ abstract class Hero extends Unit{
     //Other methods
 
     public void attack() {
-        target.setHP(target.getHP() - this.attDmg);
+        this.target.setHP(this.target.getHP() - getAttDmg());
         this.EP -= 2;
+        this.target.checkLifeStatus();
     }
 
     public void magic(int abilityNo) {
@@ -70,6 +66,7 @@ abstract class Hero extends Unit{
         if (a instanceof ActiveAbility) {
             this.getTarget();
             ((ActiveAbility) a).cast(this.target);
+            this.target.checkLifeStatus();
         }
         else System.out.println("The selected ability is passive.");
     }
