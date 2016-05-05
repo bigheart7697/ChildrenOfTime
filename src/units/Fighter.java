@@ -5,7 +5,7 @@ import abilities.Restorer;
 
 public class Fighter extends Hero{
 
-    //Constructors
+    //Constructor
 
     Fighter(String n) {
         super(n, 200, 120, 120, 10, 5, 6, 2);
@@ -14,12 +14,6 @@ public class Fighter extends Hero{
         this.abilities.add(FightTraining);
         this.abilities.add(WorkOut);
     }
-
-    Fighter() {
-        System.out.println("Error: inputs missing in Fighter constructor");
-    }
-
-
 
     //Other methods
 

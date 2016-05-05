@@ -1,23 +1,25 @@
 package units;
 
 public class Thug extends Enemy {
-    String actionMsg;
 
-    Thug(int version) {
-        this.version = version;
+    Thug(int version, String n, int h, int dmg) {
+        super(n, h, dmg);
         if (version == 0) {
-            this.maxHP = 200;
-            this.attDmg = 50;
+            setMaxHP(200);
+            setAttDmg(50);
+            this.version = version;
         }
         if (version == 1) {
-            this.maxHP = 300;
-            this.attDmg = 90;
+            setMaxHP(300);
+            setAttDmg(90);
+            this.version = version;
         }
         if (version == 2) {
-            this.maxHP = 400;
-            this.attDmg = 150;
+            setMaxHP(400);
+            setAttDmg(150);
+            this.version = version;
         }
-        else System.out.println("Error: wrong version input in thug constructor");
+        else System.out.println("Error: wrong version input in thug constructor"); //for test purposes
     }
 
     @Override
@@ -27,7 +29,8 @@ public class Thug extends Enemy {
 
     @Override
     public void action() {
-        //Code to be written
+        this.target.setHP(this.target.getHP() - getAttDmg());
+        this.target.checkLifeStatus();
     }
 
 }
