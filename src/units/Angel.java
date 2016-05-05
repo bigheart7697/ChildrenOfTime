@@ -1,7 +1,6 @@
 package units;
 
 public class Angel extends Enemy {
-
     Angel(int version, String n, int h, int dmg) {
         super(n, h, dmg);
         if (version == 0) {
@@ -25,6 +24,12 @@ public class Angel extends Enemy {
 
     @Override
     public void getTarget() {
-        //Code to be written
+        int MAX_VAL = 2000;
+        for (Enemy e: this.field.getEnemies()) {
+            if (e.getHP() < MAX_VAL) {
+                this.target = e;
+                MAX_VAL = e.getHP();
+            }
+        }
     }
 }

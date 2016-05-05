@@ -28,6 +28,8 @@ abstract public class Hero extends Unit{
         this.EPmax = epm;
         this.invSize = invs;
         this.XPGained = 0;
+        this.initializeAbilities();
+        this.intializeInventory();
     }
 
     //Setting up ArrayLists
@@ -58,7 +60,7 @@ abstract public class Hero extends Unit{
     public void attack() {
         this.target.setHP(this.target.getHP() - getAttDmg());
         this.EP -= 2;
-        this.target.checkLifeStatus();
+        this.target.refreshStatus();
     }
 
     public void magic(int abilityNo) {
@@ -66,7 +68,7 @@ abstract public class Hero extends Unit{
         if (a instanceof ActiveAbility) {
             this.getTarget();
             ((ActiveAbility) a).cast(this.target);
-            this.target.checkLifeStatus();
+            this.target.refreshStatus();
         }
         else System.out.println("The selected ability is passive.");
     }
@@ -80,8 +82,16 @@ abstract public class Hero extends Unit{
     }
 
     @Override
+    public void refreshStatus() {
+        super.refreshStatus();
+        if (this.getEP() < 0) this.setEP(0);
+        if (this.getMP() < 0) this.setMP(0);
+    }
+
+    @Override
     public void getTarget() {
         //Code to be written
+        //Requires player input to be completed
     }
 
     @Override

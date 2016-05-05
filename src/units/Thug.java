@@ -24,13 +24,19 @@ public class Thug extends Enemy {
 
     @Override
     public void getTarget() {
-        //Code to be written
+        int mhp = 0; // To find the hero with max hp and attack it
+        for (Hero h: this.field.getHeroes()) {
+            if (h.getHP() > mhp) {
+                target = h;
+                mhp = h.getHP();
+            }
+        }
     }
 
     @Override
     public void action() {
         this.target.setHP(this.target.getHP() - getAttDmg());
-        this.target.checkLifeStatus();
+        this.target.refreshStatus();
     }
 
 }

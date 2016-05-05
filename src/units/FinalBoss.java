@@ -6,12 +6,23 @@ public class FinalBoss extends Enemy{
 
     @Override
     public void action() {
-        //Needs Battlefield to be implemented
+        int attCount = 0;
+        for (Hero h: this.field.getHeroes()) {
+            if (!h.isDead) {
+                int rand = (int) (Math.random() * 2) + 2;
+                h.setEP(h.getEP() - rand);
+                if (attCount < 2) {
+                    h.setHP(h.getHP() - getAttDmg());
+                    attCount++;
+                }
+                h.refreshStatus();
+            }
+        }
     }
 
     @Override
     public void getTarget() {
-        //Code to be written
+        this.target = null; // Targets are accessed via battlefield in action method.
     }
 
     @Override

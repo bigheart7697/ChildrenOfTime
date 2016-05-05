@@ -21,7 +21,7 @@ abstract public class Unit {
 
     public String getName() { return name; }
 
-    public void checkLifeStatus() {
+    public void refreshStatus() {
         if (this.getHP() <= 0) {
             this.died();
             this.setHP(0);
