@@ -1,6 +1,6 @@
 package units;
 
-abstract class Enemy extends Unit {
+abstract class ,Enemy extends Unit {
     protected int version; // 0 is weak; 1 is able; 2 is mighty
     protected String actionMsg;
     protected int id;
