@@ -1,8 +1,8 @@
 package abilities;
 
-public abstract class PassiveAbility extends Ability{
+abstract public class PassiveAbility extends Ability{
 
-    PassiveAbility(String name, int level, int XPtoNextLevel, int XPGainPatten, Ability requiredAbility) {
-        super(name, level, XPtoNextLevel, XPGainPatten, requiredAbility);
+    PassiveAbility(String name, int level, int XPtoNextLevel, int XPGainPatten) {
+        super(name, level, XPtoNextLevel, XPGainPatten);
     }
 }

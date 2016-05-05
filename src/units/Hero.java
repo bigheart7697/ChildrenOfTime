@@ -51,6 +51,9 @@ abstract public class Hero extends Unit{
     public int getMP() { return this.MP; }
     public void setMP(int m) { this.MP = m; }
 
+    public int getMaxMP() { return maxMP; }
+    public void setMaxMP(int maxMP) { this.maxMP = maxMP; }
+
     public int getEP() { return this.EP;}
     public void setEP(int e) { this.EP = e; }
 

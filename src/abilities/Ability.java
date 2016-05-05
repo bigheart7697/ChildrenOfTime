@@ -9,27 +9,27 @@ abstract public class Ability {
     protected int XPtoNextLevel;
     protected int XPGainPatten;
     protected Ability requiredAbility;
-    protected Unit target;
 
 //    constructors:
 
-    Ability(String name, int level, int XPtoNextLevel, int XPGainPatten, Ability requiredAbility) {
+    Ability(String name, int level, int XPtoNextLevel, int XPGainPatten) {
         this.name = name;
         this.level = level;
         this.XPtoNextLevel = XPtoNextLevel;
         this.XPGainPatten = XPGainPatten;
-        this.requiredAbility = requiredAbility;
     }
 
 //    getters and setters:
 
-    public void getXP(int quantity) {
+    public void setXP(int quantity) {
         currentXP = quantity;
     }
 
-    public void setTarget(Unit target) {
-        this.target = target;
+
+    public int getCurrentXP(){
+        return  currentXP;
     }
+
 
 //    other methods:
 
