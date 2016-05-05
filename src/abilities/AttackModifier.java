@@ -9,20 +9,27 @@ public class AttackModifier extends PassiveAbility {
     protected int critRate;
     protected int splashPattern;
     protected int chancePattern;
+    protected int critChance;
+    protected int splashDmg;
     protected Hero user;
     protected Enemy target;
     protected Battlefield battlefield;
 
 //    constructors:
 
-    public AttackModifier(String name, int level, int XPtoNextLevel, int XPGainPattern, int critRate, int critChance, int splashDmg, int splashPattern, int chancePattern, Enemy target, Hero user, Battlefield battlefield) {
+    public AttackModifier(String name, int level, int XPtoNextLevel, int XPGainPattern, int critRate, int critChance, int splashDmg, int splashPattern, int chancePattern, Hero user, Battlefield battlefield) {
         super(name, level, XPtoNextLevel, XPGainPattern);
         this.critRate = critRate;
         this.splashPattern = splashPattern;
         this.chancePattern = chancePattern;
-        this.target = target;
         this.user = user;
         this.battlefield = battlefield;
+    }
+
+//    getters and setters:
+
+    public void setTarget(Enemy target) {
+        this.target = target;
     }
 
 //  other methods:
@@ -34,13 +41,15 @@ public class AttackModifier extends PassiveAbility {
             for(Enemy tmp : battlefield.getEnemies()) {
                 if (tmp.equals(target) || level == 0)
                     continue;
-                target.setHP(target.getHP() - user.getAttDmg() / 10 * (((splashPattern) / (int) Math.pow(10.0,(double)(level - 1))) % 10));
+                splashDmg = (((splashPattern) / (int) Math.pow(10.0,(double)(level - 1))) % 10);
+                target.setHP(target.getHP() - user.getAttDmg() * splashDmg / 100);
             }
         }
         if(chancePattern != 0) {
             Random random = new Random();
             int randomNumber = random.nextInt(100);
-            if(randomNumber < (chancePattern) / 10 * ((int) Math.pow(10.0,(double)(level - 1)) % 10)) {
+            critChance = ((int) Math.pow(10.0,(double)(level - 1)) % 10) * 10;
+            if(randomNumber < (chancePattern) * critChance / 100) {
                 target.setHP(target.getHP() - user.getAttDmg() * critRate);
             }
             else {

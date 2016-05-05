@@ -45,10 +45,9 @@ public class SelfBoost extends PassiveAbility {
         else if((whichStat == "energy point") && XPGainPattern != 0) {
             getTarget().setEP(getTarget().getEP() + amount);
         }
-        XPtoNextLevel = XPGainPattern / 10;
-        XPGainPattern = (XPGainPattern % 10) * 10;
 
     }
+
 
 
 }
