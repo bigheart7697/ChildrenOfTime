@@ -1,6 +1,6 @@
 package units;
 
-abstract class ,Enemy extends Unit {
+abstract class Enemy extends Unit {
     protected int version; // 0 is weak; 1 is able; 2 is mighty
     protected String actionMsg;
     protected int id;
@@ -9,7 +9,6 @@ abstract class ,Enemy extends Unit {
 
     Enemy(String n, int h, int dmg) {
         super(n, h, dmg);
-
     }
 
     abstract public void action();
