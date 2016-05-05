@@ -26,6 +26,7 @@ abstract public class Unit {
             this.died();
             this.setHP(0);
         }
+        if (this.getHP() > this.getMaxHP()) this.setHP(this.getMaxHP());
     }
     public void died() { this.isDead = true; }
     public void revived() { this.isDead = false;}
@@ -42,6 +43,6 @@ abstract public class Unit {
     public Battlefield getField() { return this.field; }
     public void setField(Battlefield f) { this.field = f; }
 
-    public abstract void getTarget();
+    public abstract void setTarget();
     public abstract void update();
 }
