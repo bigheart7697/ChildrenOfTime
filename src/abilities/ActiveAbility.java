@@ -2,10 +2,12 @@ package abilities;
 
 import units.Unit;
 
-public class ActiveAbility extends Ability{
+public abstract class ActiveAbility extends Ability{
 
 
-    public void cast(Unit target) {
-        //Code to be written
+    ActiveAbility(String name, int level, int XPtoNextLevel, int XPGainPatten, Ability requiredAbility) {
+        super(name, level, XPtoNextLevel, XPGainPatten, requiredAbility);
     }
+
+    abstract public void cast(Unit target);
 }
