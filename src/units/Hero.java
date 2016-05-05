@@ -5,7 +5,7 @@ import itemMGMT.Item;
 
 import java.util.ArrayList;
 
-abstract class Hero extends Unit{
+abstract public class Hero extends Unit{
     protected int HPRefill;
     protected int maxMP;
     protected int MP, MPRefill;
@@ -53,6 +53,9 @@ abstract class Hero extends Unit{
 
     public int getMP() { return this.MP; }
     public void setMP(int m) { this.MP = m; }
+
+    public int getMaxMP() { return maxMP; }
+    public void setMaxMP(int maxMP) { this.maxMP = maxMP; }
 
     public int getEP() { return this.EP;}
     public void setEP(int e) { this.EP = e; }
