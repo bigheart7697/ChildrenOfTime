@@ -30,6 +30,7 @@ public class Restorer extends ActiveAbility {
 
     @Override
     public void cast() {
+        EPCost = EPCostPattern / ((int)Math.pow(10.0, (double)(level - 1)) % 10);
         if(user.getEP() < EPCost)
             System.out.println("You don't have enough energy point!");
         else if(user.getMP() < magicCost)
@@ -54,8 +55,8 @@ public class Restorer extends ActiveAbility {
                 if (target.getEP() == target.getMaxEP())
                     System.out.println("Hero's EP is full!");
                 else {
-                    target.setEP(EPCost + target.getEP());
-                    user.setEP(user.getEP() - amount);
+                    target.setEP(amount + target.getEP());
+                    user.setEP(user.getEP() - EPCost);
                     user.setMP(user.getEP() - magicCost);
                 }
                 if (target.getEP() > target.getMaxEP())

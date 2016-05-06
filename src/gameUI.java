@@ -26,13 +26,13 @@ public class gameUI {
 
         //Add specific abilities for heroes here
 
-        Attacker OverpoweredAttack = new Attacker("Overpowered attack", 0, 2, 46, 50, 2, 0, 246, 0, false ,Eley);
+        Attacker OverpoweredAttack = new Attacker("Overpowered attack", 0, 2, 46, 50, 222, 0, 246, 0, false ,Eley);
         Ability[] OverpoweredAttacksRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             OverpoweredAttacksRequiredAbility[cnt] = new SelfBoost("Fight training", cnt, 0, 0, "", 0);
         OverpoweredAttack.setRequiredAbility(OverpoweredAttacksRequiredAbility);
 
-        Attacker Sacrifice = new Attacker("Sacrifice", 0, 2, 34, 60, 3, 111, 0, 456, false, Chrome);
+        Attacker Sacrifice = new Attacker("Sacrifice", 0, 2, 34, 60, 333, 111, 0, 456, false, Chrome);
         Ability[] SacrificesRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt, 0, 0, "", 0);
@@ -52,30 +52,39 @@ public class gameUI {
         CriticalStrikesRequiredAbility[2] = new SelfBoost("", 0, 0, 0, "", 0);
         CriticalStrike.setRequiredAbility(CriticalStrikesRequiredAbility);
 
-        Restorer Elixir = new Restorer("Elixir", 0, 2, 35, 60, 2, 110, "health point", 101515, Meryl);
+        Restorer Elixir = new Restorer("Elixir", 0, 2, 35, 60, 222, 110, "health point", 101515, Meryl);
         Ability[] ElixirsRequiredAbility = new Ability[3];
         ElixirsRequiredAbility[0] = new SelfBoost("", 0, 0, 0, "", 0);
         ElixirsRequiredAbility[1] = new SelfBoost("Magic lessons", 1, 0, 0, "", 0);
         ElixirsRequiredAbility[2] = new SelfBoost("Magic lessons", 1, 0, 0, "", 0);
         Elixir.setRequiredAbility(ElixirsRequiredAbility);
 
-        Restorer Caretaker = new Restorer("Caretaker", 0, 2, 35, 30, 1, 100, "energy point", 221, Meryl);
+        Restorer Caretaker = new Restorer("Caretaker", 0, 2, 35, 30, 221, 100, "energy point", 111, Meryl);
         Ability[] CaretakersRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             CaretakersRequiredAbility[cnt] = new SelfBoost("Quick as a bunny", cnt, 0, 0, "", 0);
         Caretaker.setRequiredAbility(CaretakersRequiredAbility);
 
-        Restorer Boost = new Restorer("Boost", 0, 2, 35, 50, 2, 110, "attack power", 233, Bolti);
+        Restorer Boost = new Restorer("Boost", 0, 2, 35, 50, 222, 110, "attack power", 233, Bolti);
         Ability[] BoostsRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             BoostsRequiredAbility[cnt] = new SelfBoost("", 0, 0, 0, "", 0);
         Boost.setRequiredAbility(BoostsRequiredAbility);
 
-        Restorer ManaBeam = new Restorer("Mana beam", 0, 2, 34, 50, 1, 110, "magic point", 588, Bolti);
+        Restorer ManaBeam = new Restorer("Mana beam", 0, 2, 34, 50, 111, 110, "magic point", 588, Bolti);
         Ability[] ManaBeamsRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt, 0, 0, "", 0);
         ManaBeam.setRequiredAbility(ManaBeamsRequiredAbility);
+
+        Eley.addAbility(OverpoweredAttack);
+        Eley.addAbility(SwirlingAttack);
+        Chrome.addAbility(Sacrifice);
+        Chrome.addAbility(CriticalStrike);
+        Meryl.addAbility(Elixir);
+        Meryl.addAbility(Caretaker);
+        Bolti.addAbility(Boost);
+        Bolti.addAbility(ManaBeam);
 
         ArrayList<Unit> heroesArr = new ArrayList<>();
         heroesArr.add(Eley);

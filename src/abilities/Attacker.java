@@ -31,6 +31,7 @@ public class Attacker extends ActiveAbility {
 
     @Override
     public void cast() {
+        EPCost = EPCostPattern / ((int)Math.pow(10.0, (double)(level - 1)) % 10);
         if(multiplierPattern > 0) {
             multiplier = multiplierPattern / (int)Math.pow(10.0, (double)(level - 1)) % 10;
             target.setHP(target.getHP() - user.getAttDmg() - user.getAttDmg() * multiplier / 10);
