@@ -8,7 +8,8 @@ abstract public class Ability {
     protected int level;
     protected int XPtoNextLevel;
     protected int XPGainPattern;
-    protected Ability requiredAbility;
+    protected Ability[] requiredAbility = new Ability[3];
+
 
 //    constructors:
 
@@ -29,6 +30,10 @@ abstract public class Ability {
     }
 
     public String getName() { return this.name; }
+
+    public void setRequiredAbility(Ability[] requiredAbility) {
+        this.requiredAbility = requiredAbility;
+    }
 
 
 //    other methods:

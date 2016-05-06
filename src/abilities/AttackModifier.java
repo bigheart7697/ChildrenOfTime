@@ -17,7 +17,7 @@ public class AttackModifier extends PassiveAbility {
 
 //    constructors:
 
-    public AttackModifier(String name, int level, int XPtoNextLevel, int XPGainPattern, int critRate, int critChance, int splashDmg, int splashPattern, int chancePattern, Hero user, Battlefield battlefield) {
+    public AttackModifier(String name, int level, int XPtoNextLevel, int XPGainPattern, int critRate, int splashPattern, int chancePattern, Hero user, Battlefield battlefield) {
         super(name, level, XPtoNextLevel, XPGainPattern);
         this.critRate = critRate;
         this.splashPattern = splashPattern;

@@ -36,7 +36,7 @@ public class Restorer extends ActiveAbility {
             System.out.println("You don't have enough magic point!");
         else {
             CD = (CDPattern / (int) Math.pow(10.0, (double) (level - 1))) % 10;
-            if (whichState == "health") {
+            if (whichState == "health point") {
                 amount = (amountPattern / (int) Math.pow(10.0, (double) ((level - 1) * 2)) % 100) * 10;
                 if (target.getHP() == target.getMaxHP())
                     System.out.println("Hero's HP is full!");
@@ -48,12 +48,14 @@ public class Restorer extends ActiveAbility {
                 if (target.getHP() > target.getMaxHP())
                     target.setHP(target.getMaxHP());
             } else if (whichState == "energy point") {
+//                In this part EPCost is the amount of enegy point which is given to other heros
+//                And amountPattern shows the amountPattern of energy point which should be spent in this ability
                 amount = amountPattern / (int) Math.pow(10.0, (double) (level - 1) % 10);
                 if (target.getEP() == target.getMaxEP())
                     System.out.println("Hero's EP is full!");
                 else {
-                    target.setEP(amount + target.getEP());
-                    user.setEP(user.getEP() - EPCost);
+                    target.setEP(EPCost + target.getEP());
+                    user.setEP(user.getEP() - amount);
                     user.setMP(user.getEP() - magicCost);
                 }
                 if (target.getEP() > target.getMaxEP())
