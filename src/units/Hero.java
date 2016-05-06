@@ -23,9 +23,11 @@ abstract public class Hero extends Unit{
     Hero(String n, int mhp, int dmg, int mmp, int hpr, int mpr, int epm, int invs) {
         super(n, mhp, dmg);
         this.maxMP = mmp;
+        this.MP = mmp;
         this.HPRefill = hpr;
         this.MPRefill = mpr;
         this.EPmax = epm;
+        this.EP = epm;
         this.invSize = invs;
         this.XPGained = 0;
         this.initializeAbilities();
@@ -67,6 +69,15 @@ abstract public class Hero extends Unit{
     public int getEP() { return this.EP;}
     public void setEP(int e) { this.EP = e; }
 
+    public ArrayList<ActiveAbility> getActAbs() {
+        ArrayList<ActiveAbility> aa = new ArrayList<>();
+        for (Ability a: this.abilities)
+            if (a instanceof ActiveAbility) aa.add((ActiveAbility) a);
+        return aa;
+    }
+
+    public ArrayList<Item> getItems() { return this.inventory; }
+
 
     //Other methods
 
@@ -80,7 +91,7 @@ abstract public class Hero extends Unit{
         Ability a = this.abilities.get(abilityNo);
         if (a instanceof ActiveAbility) {
             this.setTarget();
-            ((ActiveAbility) a).cast(this.target);
+            ((ActiveAbility) a).cast();
             this.target.refreshStatus();
         }
         else System.out.println("The selected ability is passive.");

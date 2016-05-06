@@ -14,9 +14,9 @@ public class Player {
 
     //Constructor
 
-    Player(String n, int startingGold) {
+    public Player(String n, int startingGold, int initXP) {
         this.name = n;
-        this.XP = 0;
+        this.XP = initXP;
         this.gold = startingGold;
         this.IMPotion = 3;
         this.heroes = new ArrayList<>();

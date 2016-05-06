@@ -24,11 +24,11 @@ abstract public class Ability {
     public void setXP(int quantity) {
         currentXP = quantity;
     }
-
-
     public int getCurrentXP(){
         return  currentXP;
     }
+
+    public String getName() { return this.name; }
 
 
 //    other methods:

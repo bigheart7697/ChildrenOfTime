@@ -13,7 +13,11 @@ abstract public class Unit {
     //Constructor
 
     Unit(String n, int hp, int dmg) {
-        this.name = n; this.maxHP = hp; this.attDmg = dmg; this.isDead = false;
+        this.name = n;
+        this.maxHP = hp;
+        this.HP = hp;
+        this.attDmg = dmg;
+        this.isDead = false;
     }
 
 

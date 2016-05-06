@@ -2,6 +2,8 @@ package units;
 
 public class Tank extends Enemy {
 
+    //Constructors
+
     Tank(int version, String n, int h, int dmg) {
         super(n, h, dmg);
         if (version == 0) {
@@ -14,7 +16,6 @@ public class Tank extends Enemy {
             setAttDmg(90);
             this.version = version;
         }
-
     }
 
     @Override

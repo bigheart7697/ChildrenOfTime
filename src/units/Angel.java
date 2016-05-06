@@ -1,8 +1,12 @@
 package units;
 
 public class Angel extends Enemy {
-    Angel(int version, String n, int h, int dmg) {
-        super(n, h, dmg);
+
+    //Constructors
+
+    public Angel(int version, int id) {
+        super("Angel", 0,0);
+        this.id = id;
         if (version == 0) {
             setMaxHP(150);
             setAttDmg(100);
@@ -13,7 +17,21 @@ public class Angel extends Enemy {
             setAttDmg(150);
             this.version = version;
         }
-        else System.out.println("Error: wrong version input in angel constructor"); //for test purposes
+    }
+
+    public Angel(int version) {
+        super("Angel", 0,0);
+        this.id = 0;
+        if (version == 0) {
+            setMaxHP(150);
+            setAttDmg(100);
+            this.version = version;
+        }
+        if (version == 1) {
+            setMaxHP(250);
+            setAttDmg(150);
+            this.version = version;
+        }
     }
 
     @Override

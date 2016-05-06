@@ -20,6 +20,8 @@ public class Item {
     public String getTargetStat() { return this.targetStat; }
     public void setTargetStat(String ts) { this.targetStat = ts; }
 
+    public String getName() { return this.name; }
+
     public int getCost() { return this.cost; }
     public void setCost(int c) { this.cost = c; }
 

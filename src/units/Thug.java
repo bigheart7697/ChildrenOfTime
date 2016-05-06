@@ -2,8 +2,11 @@ package units;
 
 public class Thug extends Enemy {
 
-    Thug(int version, String n, int h, int dmg) {
-        super(n, h, dmg);
+    //Constructors
+
+    public Thug(int version, int id) {
+        super("Thug", 0, 0);
+        this.id = id;
         if (version == 0) {
             setMaxHP(200);
             setAttDmg(50);
@@ -19,7 +22,26 @@ public class Thug extends Enemy {
             setAttDmg(150);
             this.version = version;
         }
-        else System.out.println("Error: wrong version input in thug constructor"); //for test purposes
+    }
+
+    public Thug(int version) {
+        super("Thug", 0, 0);
+        this.id = 0;
+        if (version == 0) {
+            setMaxHP(200);
+            setAttDmg(50);
+            this.version = version;
+        }
+        if (version == 1) {
+            setMaxHP(300);
+            setAttDmg(90);
+            this.version = version;
+        }
+        if (version == 2) {
+            setMaxHP(400);
+            setAttDmg(150);
+            this.version = version;
+        }
     }
 
     @Override

@@ -12,7 +12,7 @@ public class Battlefield {
 
     //Constructor
 
-    Battlefield() {
+    public Battlefield() {
         this.turn = 0;
         this.units = new ArrayList<>();
     }
