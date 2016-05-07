@@ -2,6 +2,7 @@ package abilities;
 
 import units.Enemy;
 import units.Hero;
+import units.Unit;
 
 public class Attacker extends ActiveAbility {
     protected int multiplier, multiplierPattern;
@@ -22,8 +23,9 @@ public class Attacker extends ActiveAbility {
 
 //    getters and setters:
 
-    public void setTarget(Enemy target) {
-        this.target = target;
+    @Override
+    public void setTarget(Unit target) {
+        this.target = (Enemy)target;
     }
 
 //    other methods:

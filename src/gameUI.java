@@ -94,6 +94,57 @@ public class gameUI {
                             System.out.println(ability.getDescription());
                             InvalidCommandSpecifier = false;
                         }
+                        for (Enemy enemy : battlefield.getEnemies()) {
+                            if (playerCommand.equalsIgnoreCase(hero.getName() + " attack " + enemy.getName())) {
+                                if (2 > hero.getMP()) {
+                                    System.out.println("You don't have enough energy points");
+                                }
+                                else {
+                                    enemy.setHP(enemy.getHP() - hero.getAttDmg());
+                                    System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + "power");
+                                }
+                            }
+                            if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + enemy.getName())) {
+                                if (ability.getMagicCost() > hero.getMP())
+                                    System.out.println("You don't have enough magic points");
+                                else if (ability.getEPCost() > hero.getMP()) {
+                                    System.out.println("You don't have enough energy points");
+                                }
+                                else if (ability.getRemainingCD() > 0) {
+                                    System.out.println("Your desired ability is still in cooldown");
+                                }
+                                else if (ability.getLevel() == 0) {
+                                    System.out.println("You have not yet acquired this ability");
+                                }
+                                else {
+                                    ability.setTarget(enemy);
+                                    ability.cast();
+                                    InvalidCommandSpecifier = false;
+                                    System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + enemy.getName() + " successfully!");
+                                }
+                            }
+                        }
+                        for (Hero h : battlefield.getHeroes()) {
+                            if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + h.getName())) {
+                                if (ability.getMagicCost() > hero.getMP())
+                                    System.out.println("You don't have enough magic points");
+                                else if (ability.getEPCost() > hero.getMP()) {
+                                    System.out.println("You don't have enough energy points");
+                                }
+                                else if (ability.getRemainingCD() > 0) {
+                                    System.out.println("Your desired ability is still in cooldown");
+                                }
+                                else if (ability.getLevel() == 0) {
+                                    System.out.println("You have not yet acquired this ability");
+                                }
+                                else {
+                                    ability.setTarget(h);
+                                    ability.cast();
+                                    InvalidCommandSpecifier = false;
+                                    System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + h.getName() + " successfully!");
+                                }
+                            }
+                        }
                     }
                     for (Item item : hero.getItems()) {
                         if (item.getName().equalsIgnoreCase(playerCommand + "?")) {
@@ -101,6 +152,7 @@ public class gameUI {
                             InvalidCommandSpecifier = false;
                         }
                     }
+
                 }
                 for (Enemy enemy : battlefield.getEnemies()) {
                     if (enemy.getName().equals(playerCommand + "?")) {
@@ -110,6 +162,14 @@ public class gameUI {
                 }
                 if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
                     System.out.println("Invalid command\n");
+                }
+            }
+            for (Hero hero : battlefield.getHeroes()) {
+                for (ActiveAbility ability : hero.getActAbs()) {
+                    ability.setRemainingCD(ability.getRemainingCD() - 1);
+                    if (ability.getRemainingCD() < 0) {
+                        ability.setRemainingCD(ability.getCD());
+                    }
                 }
             }
         }

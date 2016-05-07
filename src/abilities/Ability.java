@@ -44,6 +44,20 @@ abstract public class Ability {
         this.description = description;
     }
 
+    abstract public void setTarget(Unit target);
+
+    abstract public int getRemainingCD();
+
+    abstract public int getEPCost();
+
+    abstract public int getMagicCost();
+
+    public int getLevel() {
+        return level;
+    }
+
+    abstract public void setRemainingCD(int remainingCD);
+
 
 //    other methods:
 

@@ -28,8 +28,9 @@ public class AttackModifier extends PassiveAbility {
 
 //    getters and setters:
 
-    public void setTarget(Enemy target) {
-        this.target = target;
+    @Override
+    public void setTarget(Unit target) {
+        this.target = (Enemy)target;
     }
 
 //  other methods:

@@ -17,8 +17,9 @@ public class SelfBoost extends PassiveAbility {
 
 //    getters and setters:
 
-    public void setTarget(Hero target) {
-        this.target = target;
+    @Override
+    public void setTarget(Unit target) {
+        this.target = (Hero)target;
     }
 
     public Hero getTarget(){

@@ -2,6 +2,7 @@ package abilities;
 
 
 import units.Hero;
+import units.Unit;
 
 public class Restorer extends ActiveAbility {
     protected String whichState;
@@ -22,8 +23,9 @@ public class Restorer extends ActiveAbility {
 
 //    getters and setters:
 
-    public void setTarget(Hero target) {
-        this.target = target;
+    @Override
+    public void setTarget(Unit target) {
+        this.target = (Hero)target;
     }
 
 //    other methods:
