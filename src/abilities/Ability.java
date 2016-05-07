@@ -9,6 +9,7 @@ abstract public class Ability {
     protected int XPtoNextLevel;
     protected int XPGainPattern;
     protected Ability[] requiredAbility = new Ability[3];
+    private String description;
 
 
 //    constructors:
@@ -35,6 +36,14 @@ abstract public class Ability {
         this.requiredAbility = requiredAbility;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
 
 //    other methods:
 
@@ -50,5 +59,6 @@ abstract public class Ability {
             System.out.println("You don't have enough experience!");
         }
     }
+
 
 }

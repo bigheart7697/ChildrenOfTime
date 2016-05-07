@@ -76,6 +76,10 @@ abstract public class Hero extends Unit{
         return aa;
     }
 
+    public ArrayList<Ability> getAbilities() {
+        return abilities;
+    }
+
     public ArrayList<Item> getItems() { return this.inventory; }
 
 

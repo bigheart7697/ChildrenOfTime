@@ -9,6 +9,113 @@ import java.util.Scanner;
 
 public class gameUI {
 
+    public static void printEachTurnsInformation(ArrayList<Unit> enemies, Player player, Battlefield battlefield) {
+        for (Hero h: battlefield.getHeroes()) {
+            System.out.println(h.getName());
+            System.out.println("Health: " + h.getHP() + "/" + h.getMaxHP());
+            System.out.println("Magic: " + h.getMP() + "/" + h.getMaxMP());
+            System.out.println("Energy Points: " + h.getEP());
+            System.out.println("Attack Power: " + h.getAttDmg());
+            if (h.getActAbs().size() > 0) {
+                System.out.println("Can cast:");
+                for (ActiveAbility aa: h.getActAbs())
+                    System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
+                            aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
+            }
+            if (h.getItems().size() > 0) {
+                System.out.println("Can use:");
+                for (Item i: h.getItems())
+                    System.out.println(i.getName());
+            }
+            System.out.println();
+        }
+        for (Unit enemy : enemies) {
+            System.out.println(enemy.getName());
+            System.out.println("Health: " + enemy.getHP() + "/" + enemy.getMaxHP());
+        }
+    }
+
+    public static void battle(ArrayList<Unit> enemies, Player player, Battlefield battlefield, String primitiveInformation) {
+        boolean InvalidCommandSpecifier;
+        battlefield.addUnits(enemies);
+        String playerCommand;
+        Scanner scanner = new Scanner(System.in);
+//        System.out.println("The battle begins!\n");
+        System.out.println(primitiveInformation);
+        playerCommand = scanner.next();
+
+        while (!playerCommand.equalsIgnoreCase("Done")) {
+            InvalidCommandSpecifier = true;
+
+            if (playerCommand.equalsIgnoreCase("Again")) {
+                System.out.println("You've encountered 3 weak thug(s), 1 weak angel(s)\n");
+                InvalidCommandSpecifier = false;
+            }
+            else if (playerCommand.equalsIgnoreCase("Help")) {
+                System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
+                InvalidCommandSpecifier = false;
+            }
+
+            for (Enemy enemy : battlefield.getEnemies()) {
+                if (enemy.getName().equals(playerCommand + "?")) {
+                    System.out.println(enemy.getDescription());
+                    InvalidCommandSpecifier = false;
+                }
+            }
+            if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
+                System.out.println("Invalid command\n");
+            }
+            playerCommand = scanner.next();
+        }
+
+        playerCommand = scanner.nextLine();
+        while (enemies.size() != 0) {
+            printEachTurnsInformation(enemies, player, battlefield);
+            while (!playerCommand.equalsIgnoreCase("Done")) {
+                playerCommand = scanner.nextLine();
+                InvalidCommandSpecifier = true;
+                if (playerCommand.equalsIgnoreCase("Again")) {
+                    printEachTurnsInformation(enemies, player, battlefield);
+                    InvalidCommandSpecifier = false;
+                }
+
+                else if (playerCommand.equalsIgnoreCase("Help")) {
+                    System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
+                    InvalidCommandSpecifier = false;
+                }
+
+                for (Hero hero : battlefield.getHeroes()) {
+                    if (hero.getName().equalsIgnoreCase(playerCommand + "?")) {
+                        System.out.println(hero.getDescription());
+                        InvalidCommandSpecifier = false;
+                    }
+                    for (Ability ability : hero.getAbilities()) {
+                        if (ability.getName().equalsIgnoreCase(playerCommand + "?")) {
+                            System.out.println(ability.getDescription());
+                            InvalidCommandSpecifier = false;
+                        }
+                    }
+                    for (Item item : hero.getItems()) {
+                        if (item.getName().equalsIgnoreCase(playerCommand + "?")) {
+                            System.out.println(item.getDescription());
+                            InvalidCommandSpecifier = false;
+                        }
+                    }
+                }
+                for (Enemy enemy : battlefield.getEnemies()) {
+                    if (enemy.getName().equals(playerCommand + "?")) {
+                        System.out.println(enemy.getDescription());
+                        InvalidCommandSpecifier = false;
+                    }
+                }
+                if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
+                    System.out.println("Invalid command\n");
+                }
+            }
+        }
+
+    }
+
     public static void main(String[] args) {
         Scanner playerInput = new Scanner(System.in);
         System.out.print("Enter your name: ");
@@ -22,6 +129,62 @@ public class gameUI {
         Hero Chrome = new Fighter("Chrome");
         Hero Meryl = new Supporter("Meryl");
         Hero Bolti = new Supporter("Bolti");
+
+//        Add description to the heroes:
+
+        Eley.setDescription("Eley:\n" +
+                "Class: Fighter\n" +
+                "Ability 3: Overpowered attack\n" +
+                "Attacks an enemy with N times power for 2 energy points and 50 magic points\n" +
+                "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1\n" +
+                "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2\n" +
+                "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3\n" +
+                "Ability 4: Swirling attack\n" +
+                "While attacking, non-targeted enemies also take P percent of its damage\n" +
+                "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1\n" +
+                "Upgrade 2: P=20 for 3 xp points\n" +
+                "Upgrade 3: P=30 for 4 xp points\n");
+
+        Chrome.setDescription("Chrome:\n" +
+                "Class: Fighter\n" +
+                "Ability 3: Sacrifice\n" +
+                "Damages all the enemies with 3H power at the cost of H of his own \n health," +
+                " needs 3 energy points, 60 magic points and has a 1 turn cooldown\n" +
+                "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1\n" +
+                "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2\n" +
+                "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3\n" +
+                "Ability 4: Critical strike\n" +
+                "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities)\n" +
+                "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1\n" +
+                "Upgrade 2: P=30 for 3 xp points\n" +
+                "Upgrade 3: P=40 for 4 xp points\n");
+
+        Meryl.setDescription("Class: Supporter\n" +
+                "Ability 3: Elixir\n" +
+                "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points\n" +
+                "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down\n" +
+                "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1\n" +
+                "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2\n" +
+                "Ability 4: Caretaker\n" +
+                "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of \n" +
+                "the battle and is only usable during the current turn)\n" +
+                "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1\n" +
+                "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2\n" +
+                "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3\n");
+
+        Bolti.setDescription("Bolti:\n" +
+                "Class: Supporter\n" +
+                "Ability 3: Boost\n" +
+                "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for \n" +
+                "2 energy points and 50 magic points (this bonus attack power can stack up)\n" +
+                "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down\n" +
+                "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down\n" +
+                "Upgrade 3: A=30 for 5 xp points and cools down instantly\n" +
+                "Ability 4: Mana beam\n" +
+                "Gives M magic points to himself or an ally for 1 energy point and 50 magic points\n" +
+                "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1\n" +
+                "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2\n" +
+                "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3\n");
 
 
         //Add specific abilities for heroes here
@@ -77,6 +240,7 @@ public class gameUI {
             ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt, 0, 0, "", 0);
         ManaBeam.setRequiredAbility(ManaBeamsRequiredAbility);
 
+//        Adding abilities to the heroes:
         Eley.addAbility(OverpoweredAttack);
         Eley.addAbility(SwirlingAttack);
         Chrome.addAbility(Sacrifice);
@@ -106,19 +270,19 @@ public class gameUI {
         System.out.println("Eley (Fighter) – Chrome (Fighter) – Meryl (Supporter) – Bolti (Supporter)\n");
 
         String inp = "";
-        while (!inp.contentEquals("Done")) {
+        while (!inp.equalsIgnoreCase("Done")) {
             inp = playerInput.next();
 
-            if (inp.contentEquals("Again")) {
+            if (inp.equalsIgnoreCase("Again")) {
                 System.out.println("Eley (Fighter) – Chrome (Fighter) – Meryl (Supporter) – Bolti (Supporter)\n");
             }
 
-            else if (inp.contentEquals("Help")) {
+            else if (inp.equalsIgnoreCase("Help")) {
                 System.out.println("(Class name) + “?” \uF0E0 (class description)\n" +
                         "(hero name) + “?” \uF0E0 (hero description)\n");
             }
 
-            else if (inp.contentEquals("Fighter?")) {
+            else if (inp.equalsIgnoreCase("Fighter?")) {
                 System.out.println("All heroes have access to regular attack ability, " +
                         "which costs 2 energy points and damages an enemy with the amount of hero’s attack power.\n" +
                         "At the beginning of each turn, hero’s current health and current" +
@@ -143,7 +307,7 @@ public class gameUI {
                         "Upgrade 3: +50 maximum health for 4 xp points\n");
             }
 
-            else if (inp.contentEquals("Supporter?")) {
+            else if (inp.equalsIgnoreCase("Supporter?")) {
                 System.out.println("All heroes have access to regular attack ability, " +
                         "which costs 2 energy points and damages an enemy with the amount of hero’s attack power.\n" +
                         "At the beginning of each turn, hero’s current health and current" +
@@ -168,69 +332,23 @@ public class gameUI {
                         "Upgrade 3: +50 maximum magic for 4 xp points\n");
             }
 
-            else if (inp.contentEquals("Eley?")) {
-                System.out.println("Eley:\n" +
-                        "Class: Fighter\n" +
-                        "Ability 3: Overpowered attack\n" +
-                        "Attacks an enemy with N times power for 2 energy points and 50 magic points\n" +
-                        "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1\n" +
-                        "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2\n" +
-                        "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3\n" +
-                        "Ability 4: Swirling attack\n" +
-                        "While attacking, non-targeted enemies also take P percent of its damage\n" +
-                        "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1\n" +
-                        "Upgrade 2: P=20 for 3 xp points\n" +
-                        "Upgrade 3: P=30 for 4 xp points\n");
+            else if (inp.equalsIgnoreCase("Eley?")) {
+                System.out.println(Eley.getDescription());
             }
 
-            else if (inp.contentEquals("Chrome?")) {
-                System.out.println("Chrome:\n" +
-                        "Class: Fighter\n" +
-                        "Ability 3: Sacrifice\n" +
-                        "Damages all the enemies with 3H power at the cost of H of his own \n health," +
-                        " needs 3 energy points, 60 magic points and has a 1 turn cooldown\n" +
-                        "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1\n" +
-                        "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2\n" +
-                        "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3\n" +
-                        "Ability 4: Critical strike\n" +
-                        "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities)\n" +
-                        "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1\n" +
-                        "Upgrade 2: P=30 for 3 xp points\n" +
-                        "Upgrade 3: P=40 for 4 xp points\n");
+            else if (inp.equalsIgnoreCase("Chrome?")) {
+                System.out.println(Chrome.getDescription());
             }
 
-            else if (inp.contentEquals("Meryl?")) {
-                System.out.println("Class: Supporter\n" +
-                        "Ability 3: Elixir\n" +
-                        "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points\n" +
-                        "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down\n" +
-                        "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1\n" +
-                        "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2\n" +
-                        "Ability 4: Caretaker\n" +
-                        "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of \n" +
-                        "the battle and is only usable during the current turn)\n" +
-                        "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1\n" +
-                        "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2\n" +
-                        "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3\n");
+            else if (inp.equalsIgnoreCase("Meryl?")) {
+                System.out.println(Meryl.getDescription());
             }
 
-            else if (inp.contentEquals("Bolti?")) {
-                System.out.println("Bolti:\n" +
-                        "Class: Supporter\n" +
-                        "Ability 3: Boost\n" +
-                        "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for \n" +
-                        "2 energy points and 50 magic points (this bonus attack power can stack up)\n" +
-                        "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down\n" +
-                        "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down\n" +
-                        "Upgrade 3: A=30 for 5 xp points and cools down instantly\n" +
-                        "Ability 4: Mana beam\n" +
-                        "Gives M magic points to himself or an ally for 1 energy point and 50 magic points\n" +
-                        "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1\n" +
-                        "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2\n" +
-                        "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3\n");
+            else if (inp.equalsIgnoreCase("Bolti?")) {
+                System.out.println(Bolti.getDescription());
             }
 
-            else if (!inp.contentEquals("Done"))
+            else if (!inp.equalsIgnoreCase("Done"))
                 System.out.println("Invalid command\n");
 
         }
@@ -238,11 +356,14 @@ public class gameUI {
 
         //Stage2: Entering the castle, first battle
 
-        System.out.println("\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
-                " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
-                " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n");
+//        System.out.println("\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
+//                " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
+//                " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n");
 
-        System.out.println("\nYou've encountered 3 weak thug(s), 1 weak angel(s)\n");
+        String primitiveInformation = "\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
+                " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
+                " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n\n" + "\nYou've encountered 3 weak thug(s), 1 weak angel(s)\n";
+        System.out.println(primitiveInformation);
 
         ArrayList<Unit> Enemies = new ArrayList<>();
         Enemies.add(new Thug(0,1));
@@ -252,18 +373,18 @@ public class gameUI {
         battlefield.addUnits(Enemies);
 
         inp = "";
-        while (!inp.contentEquals("Done")) {
+        while (!inp.equalsIgnoreCase("Done")) {
             inp = playerInput.next();
 
-            if (inp.contentEquals("Again")) {
+            if (inp.equalsIgnoreCase("Again")) {
                 System.out.println("You've encountered 3 weak thug(s), 1 weak angel(s)\n");
             }
 
-            else if (inp.contentEquals("Help")) {
+            else if (inp.equalsIgnoreCase("Help")) {
                 System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
             }
 
-            else if (inp.contentEquals("thug?")) {
+            else if (inp.equalsIgnoreCase("thug?")) {
                 System.out.println("Thug:\n" +
                         "Attacks one of your heroes in each turn\n" +
                         "Weak version: Attack Power=50, Maximum health=200\n" +
@@ -271,14 +392,14 @@ public class gameUI {
                         "Mighty version: Attack Power=150, Maximum health=400\n");
             }
 
-            else if (inp.contentEquals("angel?")) {
+            else if (inp.equalsIgnoreCase("angel?")) {
                 System.out.println("Angel:\n" +
                         "Heals one of her allies in each turn\n" +
                         "Weak version: Healing Amount=100, Maximum health=150\n" +
                         "Able version: Healing Amount =150, Maximum health=250\n");
             }
 
-            else if (!inp.contentEquals("Done")) System.out.println("Invalid command\n");
+            else if (!inp.equalsIgnoreCase("Done")) System.out.println("Invalid command\n");
         }
 
 

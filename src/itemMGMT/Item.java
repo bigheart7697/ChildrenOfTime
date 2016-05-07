@@ -6,6 +6,7 @@ public class Item {
     protected int invSpaceNeeded;
     protected String targetStat;
     protected int effect;
+    private String description;
 
 
     //Constructor
@@ -31,4 +32,11 @@ public class Item {
     public int getEffect() { return this.effect; }
     public void setEffect(int e) { this.effect = e; }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

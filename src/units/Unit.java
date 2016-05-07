@@ -9,6 +9,7 @@ abstract public class Unit {
     protected int attDmg;
     protected Battlefield field;
     protected Unit target;
+    private String description;
 
     //Constructor
 
@@ -49,4 +50,12 @@ abstract public class Unit {
 
     public abstract void setTarget();
     public abstract void update();
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }
