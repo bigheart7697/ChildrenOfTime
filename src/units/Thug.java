@@ -59,6 +59,7 @@ public class Thug extends Enemy {
     public void action() {
         this.target.setHP(this.target.getHP() - getAttDmg());
         this.target.refreshStatus();
+        System.out.println("Thug just attacked " + target.getName() + " with " + getAttDmg() + " power");
     }
 
 }

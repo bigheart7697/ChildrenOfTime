@@ -10,6 +10,12 @@ abstract public class Enemy extends Unit {
         super(n, h, dmg);
     }
 
+//    getter and setters:
+
+    public int getId() {
+        return id;
+    }
+
     //Other Methods
     abstract public void action();
 

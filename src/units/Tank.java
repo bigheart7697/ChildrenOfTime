@@ -18,6 +18,21 @@ public class Tank extends Enemy {
         }
     }
 
+    Tank(int version, String n, int h, int dmg, int id) {
+        super(n, h, dmg);
+        this.id = id;
+        if (version == 0) {
+            setMaxHP(400);
+            setAttDmg(30);
+            this.version = version;
+        }
+        if (version == 1) {
+            setMaxHP(500);
+            setAttDmg(90);
+            this.version = version;
+        }
+    }
+
     @Override
     public void action() {
         for (Hero h: this.field.getHeroes()) {
@@ -26,6 +41,7 @@ public class Tank extends Enemy {
                 h.refreshStatus();
             }
         }
+        System.out.println("Tank just damaged all of your heroes with " + getAttDmg() + " power");
     }
 
     @Override

@@ -40,7 +40,6 @@ public class gameUI {
         battlefield.addUnits(enemies);
         String playerCommand;
         Scanner scanner = new Scanner(System.in);
-//        System.out.println("The battle begins!\n");
         System.out.println(primitiveInformation);
         playerCommand = scanner.next();
 
@@ -48,7 +47,7 @@ public class gameUI {
             InvalidCommandSpecifier = true;
 
             if (playerCommand.equalsIgnoreCase("Again")) {
-                System.out.println("You've encountered 3 weak thug(s), 1 weak angel(s)\n");
+                System.out.println(primitiveInformation);
                 InvalidCommandSpecifier = false;
             }
             else if (playerCommand.equalsIgnoreCase("Help")) {
@@ -68,8 +67,9 @@ public class gameUI {
             playerCommand = scanner.next();
         }
 
+        System.out.println("The battle begins!\n");
         playerCommand = scanner.nextLine();
-        while (enemies.size() != 0) {
+        outer:while (battlefield.getEnemies().size() != 0) {
             printEachTurnsInformation(enemies, player, battlefield);
             while (!playerCommand.equalsIgnoreCase("Done")) {
                 playerCommand = scanner.nextLine();
@@ -80,7 +80,28 @@ public class gameUI {
                 }
 
                 else if (playerCommand.equalsIgnoreCase("Help")) {
+                    System.out.println("(Item Name) + “?” \uF0E0 (Item description)\n");
+                    System.out.println("(Ability Name) + “?” \uF0E0 (Ability description)\n");
+                    System.out.println("(Hero Name) + “?” \uF0E0 (Hero description)\n");
                     System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
+                    System.out.println("(hero name) + “ cast “ + (ability name) + “ on “ + (hero name / enemy name and id)  (ability success message)\nOr:\n" +
+                            "“You don’t have enough magic points”\n" +
+                            "Or:\n" +
+                            "“You don’t have enough energy points”\n" +
+                            "Or:\n" +
+                            "“Your desired ability is still in cooldown”\n" +
+                            "Or:\n" +
+                            "“You have not yet acquired this ability”");
+                    System.out.println("(hero name) + “ use “ + (item name) + “ on “ + (hero name / enemy name and id) (item success message)\nOr:\n" +
+                            "“You don’t have enough magic points”\n" +
+                            "Or:\n" +
+                            "“You don’t have enough energy points”\n" +
+                            "Or:\n" +
+                            "“Your desired item is still in cooldown”\n" +
+                            "Or:\n" +
+                            "“You don’t have this item”");
+                    System.out.println("(hero name) + “ attack “ + (enemy name and id) \uF0E0 (hero name) + “ has successfully attacked “ + (enemy name and id) + “ with “ + (attack power) + “ power”\nOr:\n" +
+                            "“You don’t have enough energy points”");
                     InvalidCommandSpecifier = false;
                 }
 
@@ -102,6 +123,15 @@ public class gameUI {
                                 else {
                                     enemy.setHP(enemy.getHP() - hero.getAttDmg());
                                     System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + "power");
+                                    if (enemy.getHP() <= 0) {
+                                        if (battlefield.getEnemies().size() == 1) {
+                                            System.out.println("Victory! You’ve defeated all of your enemies");
+                                            break outer;
+                                        }
+                                        else {
+                                            System.out.println(enemy.getName() + " has died");
+                                        }
+                                    }
                                 }
                             }
                             if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + enemy.getName())) {
@@ -121,6 +151,15 @@ public class gameUI {
                                     ability.cast();
                                     InvalidCommandSpecifier = false;
                                     System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + enemy.getName() + " successfully!");
+                                    if (enemy.getHP() <= 0) {
+                                        if (battlefield.getEnemies().size() == 1) {
+                                            System.out.println("Victory! You’ve defeated all of your enemies");
+                                            break outer;
+                                        }
+                                        else {
+                                            System.out.println(enemy.getName() + " has died");
+                                        }
+                                    }
                                 }
                             }
                         }
@@ -142,6 +181,7 @@ public class gameUI {
                                     ability.cast();
                                     InvalidCommandSpecifier = false;
                                     System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + h.getName() + " successfully!");
+
                                 }
                             }
                         }
@@ -162,6 +202,28 @@ public class gameUI {
                 }
                 if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
                     System.out.println("Invalid command\n");
+                }
+                if (battlefield.getEnemies().size() == 0) {
+                    break;
+                }
+            }
+            battlefield.updateBattlefield();
+            for (Enemy enemy : battlefield.getEnemies()) {
+                enemy.setTarget();
+                enemy.action();
+                for (Hero hero : battlefield.getHeroes()) {
+                    if (hero.getHP() <= 0) {
+                        player.useIMPotion(hero);
+                        if (hero.isDead()) {
+                            System.out.println(hero.getName() + " is dead and so is the spirit of this adventure, Game Over!");
+                            break outer;
+                        }
+                        else {
+                            System.out.println(hero.getName() + " is dying, immortality potion was used for reincarnation process, you now have "
+                                    + player.getIMPotionRemaining() + "immortality potions left");
+                            hero.refreshStatus();
+                        }
+                    }
                 }
             }
             for (Hero hero : battlefield.getHeroes()) {

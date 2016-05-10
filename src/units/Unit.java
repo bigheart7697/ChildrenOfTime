@@ -36,6 +36,10 @@ abstract public class Unit {
     public void died() { this.isDead = true; }
     public void revived() { this.isDead = false;}
 
+    public boolean isDead() {
+        return isDead;
+    }
+
     public int getHP() { return this.HP; }
     public void setHP(int h) { this.HP = h; }
 

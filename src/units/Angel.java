@@ -37,7 +37,10 @@ public class Angel extends Enemy {
     @Override
     public void action() {
         this.target.setHP(this.target.getHP() + getAttDmg());
-        if (this.target.getHP() > this.target.getMaxHP()) this.target.setHP(this.target.getMaxHP());
+        if (this.target.getHP() > this.target.getMaxHP()) {
+            this.target.setHP(this.target.getMaxHP());
+            System.out.println("Angel just healed " + target.getName() + " with " + getAttDmg() + " health points");
+        }
     }
 
     @Override
