@@ -16,11 +16,21 @@ public class gameUI {
             System.out.println("Magic: " + h.getMP() + "/" + h.getMaxMP());
             System.out.println("Energy Points: " + h.getEP());
             System.out.println("Attack Power: " + h.getAttDmg());
-            if (h.getActAbs().size() > 0) {
+            boolean hasAbility = false;
+            for (Ability a : h.getAbilities()) {
+                if(a.getLevel() > 0)
+                    hasAbility = true;
+            }
+            if (hasAbility) {
                 System.out.println("Can cast:");
                 for (ActiveAbility aa: h.getActAbs())
                     System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
                             aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
+                for (Ability a : h.getAbilities()) {
+                    if (a instanceof PassiveAbility) {
+                        System.out.println(a.getName());
+                    }
+                }
             }
             if (h.getItems().size() > 0) {
                 System.out.println("Can use:");
@@ -66,6 +76,87 @@ public class gameUI {
             }
             playerCommand = scanner.next();
         }
+
+        for (Hero hero : battlefield.getHeroes()) {
+            System.out.println(hero.getName());
+            System.out.println("Health: " + hero.getHP() + "/" + hero.getMaxHP());
+            System.out.println("Magic: " + hero.getMP() + "/" + hero.getMaxMP());
+            System.out.println("Energy Points: " + hero.getEP());
+            System.out.println("Attack Power: " + hero.getAttDmg());
+            for (Ability ability : hero.getAbilities()) {
+                System.out.print(ability.getName());
+                if (ability.getLevel() == 0)
+                    System.out.println(" : not acquired");
+                else
+                    System.out.println(ability.getLevel());
+            }
+        }
+        playerCommand = scanner.next();
+        while (!playerCommand.equalsIgnoreCase("Done")) {
+            InvalidCommandSpecifier = true;
+            if (playerCommand.equalsIgnoreCase("Again")) {
+                InvalidCommandSpecifier = false;
+                for (Hero hero : battlefield.getHeroes()) {
+                    System.out.println(hero.getName());
+                    System.out.println("Health: " + hero.getHP() + "/" + hero.getMaxHP());
+                    System.out.println("Magic: " + hero.getMP() + "/" + hero.getMaxMP());
+                    System.out.println("Energy Points: " + hero.getEP());
+                    System.out.println("Attack Power: " + hero.getAttDmg());
+                    for (Ability ability : hero.getAbilities()) {
+                        System.out.print(ability.getName());
+                        if (ability.getLevel() == 0)
+                            System.out.println(" : not acquired");
+                        else
+                            System.out.println(ability.getLevel());
+                    }
+                }
+            }
+
+            if (playerCommand.equalsIgnoreCase("Help")) {
+                InvalidCommandSpecifier = false;
+                System.out.println("(hero name) + “ “ +(ability name) + “?”\uF0E0 (ability description) + “\\n“ + (this upgrade description) + “\\n” + “You need “ + (required xp) + “ experience points”\n" +
+                        "“Acquire “ + (ability name) + “ for “ + (hero name)\uF0E0\n" +
+                        "(ability name) (“acquired”/”upgraded”) + “ successfully, your current experience is: ” + (current xp)\n" +
+                        "Or:\n" +
+                        "“Your experience is insufficient”\n" +
+                        "Or:\n" +
+                        "“This ability cannot be upgraded anymore”\n" +
+                        "Or:\n" +
+                        "“Required abilities aren’t acquired”");
+            }
+
+            for (Hero hero : battlefield.getHeroes()) {
+                for (Ability ability : hero.getAbilities()) {
+
+                    if (playerCommand.equalsIgnoreCase((hero.getName() + " " + ability.getName() + "?"))) {
+                        InvalidCommandSpecifier = false;
+                        int tmp = ability.getLevel() + 1;
+                        System.out.println(ability.getDescription() + "\n" +
+                                "if you want to upgrade it to level" + tmp + "\n" + "You need " + ability.getXPtoNextLevel() + " experience points");
+                    }
+                    if (playerCommand.equalsIgnoreCase("Acquire " + (ability.getName()) + " for " + (hero.getName()))) {
+                        InvalidCommandSpecifier = false;
+                        ability.setXP(player.getXP());
+                        if (player.getXP() < ability.getXPtoNextLevel())
+                            System.out.println("Your experience is insufficient");
+                        else if (ability.getLevel() == 3)
+                            System.out.println("This ability cannot be upgraded anymore");
+                        else if (!ability.hasRequiredAbility(hero)) {
+                            System.out.println("Required abilities aren’t acquired");
+                        }
+                        else
+                            System.out.println((ability.getName()) + "acquired/upgraded successfully, your current experience is: " + (player.getXP()));
+                    }
+                }
+            }
+
+            if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
+                System.out.println("Invalid command\n");
+            }
+            playerCommand = scanner.next();
+        }
+
+//        implement buying items here. it's structure should be like aquiring abilities which is implemented in above. It seems you should add a shop to the method's variables
 
         System.out.println("The battle begins!\n");
         playerCommand = scanner.nextLine();
@@ -162,6 +253,9 @@ public class gameUI {
                                     }
                                 }
                             }
+
+//                            implement using items here as the ability was implemented above here
+
                         }
                         for (Hero h : battlefield.getHeroes()) {
                             if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + h.getName())) {
@@ -385,6 +479,8 @@ public class gameUI {
         player.addHero(Meryl);
         player.addHero(Bolti);
 
+//        implement shop and items here
+
 
 
         //Stage1: Hero and Class description
@@ -527,24 +623,24 @@ public class gameUI {
 
         System.out.println("The battle begins!\n");
 
-        for (Hero h: battlefield.getHeroes()) {
-            System.out.println(h.getName());
-            System.out.println("Health: " + h.getHP() + "/" + h.getMaxHP());
-            System.out.println("Magic: " + h.getMP() + "/" + h.getMaxMP());
-            System.out.println("Energy Points: " + h.getEP());
-            System.out.println("Attack Power: " + h.getAttDmg());
-            if (h.getActAbs().size() > 0) {
-                System.out.println("Can cast:");
-                for (ActiveAbility aa: h.getActAbs())
-                    System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
-                            aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
-            }
-            if (h.getItems().size() > 0) {
-                System.out.println("Can use:");
-                for (Item i: h.getItems())
-                    System.out.println(i.getName());
-            }
-            System.out.println();
-        }
+//        for (Hero h: battlefield.getHeroes()) {
+//            System.out.println(h.getName());
+//            System.out.println("Health: " + h.getHP() + "/" + h.getMaxHP());
+//            System.out.println("Magic: " + h.getMP() + "/" + h.getMaxMP());
+//            System.out.println("Energy Points: " + h.getEP());
+//            System.out.println("Attack Power: " + h.getAttDmg());
+//            if (h.getActAbs().size() > 0) {
+//                System.out.println("Can cast:");
+//                for (ActiveAbility aa: h.getActAbs())
+//                    System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
+//                            aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
+//            }
+//            if (h.getItems().size() > 0) {
+//                System.out.println("Can use:");
+//                for (Item i: h.getItems())
+//                    System.out.println(i.getName());
+//            }
+//            System.out.println();
+//        }
     }
 }

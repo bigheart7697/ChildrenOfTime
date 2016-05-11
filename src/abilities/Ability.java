@@ -1,5 +1,6 @@
 package abilities;
 
+import units.Hero;
 import units.Unit;
 
 abstract public class Ability {
@@ -32,6 +33,10 @@ abstract public class Ability {
 
     public String getName() { return this.name; }
 
+    public int getXPtoNextLevel() {
+        return XPtoNextLevel;
+    }
+
     public void setRequiredAbility(Ability[] requiredAbility) {
         this.requiredAbility = requiredAbility;
     }
@@ -60,6 +65,14 @@ abstract public class Ability {
 
 
 //    other methods:
+
+    public boolean hasRequiredAbility(Hero hero) {
+        for (Ability ability : hero.getAbilities()) {
+            if (ability.getName().equalsIgnoreCase(requiredAbility[level - 1].getName()) && requiredAbility[level - 1].getLevel() <= ability.getLevel())
+                return true;
+        }
+        return false;
+    }
 
     public abstract void cast();
 
