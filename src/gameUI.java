@@ -573,15 +573,17 @@ public class gameUI {
 
 
         //Stage2: Entering the castle, first battle
-
 //        System.out.println("\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
 //                " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
 //                " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n");
 
+//        ******
+//        battle1
+//        ******
         String primitiveInformation = "\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
                 " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
                 " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n\n" + "\nYou've encountered 3 weak thug(s), 1 weak angel(s)\n";
-        System.out.println(primitiveInformation);
+//        System.out.println(primitiveInformation);
 
         ArrayList<Unit> Enemies = new ArrayList<>();
         Enemies.add(new Thug(0,1));
@@ -590,38 +592,114 @@ public class gameUI {
         Enemies.add(new Angel(0));
         battlefield.addUnits(Enemies);
 
-        inp = "";
-        while (!inp.equalsIgnoreCase("Done")) {
-            inp = playerInput.next();
+        battle(Enemies, player, battlefield, primitiveInformation);
 
-            if (inp.equalsIgnoreCase("Again")) {
-                System.out.println("You've encountered 3 weak thug(s), 1 weak angel(s)\n");
-            }
-
-            else if (inp.equalsIgnoreCase("Help")) {
-                System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
-            }
-
-            else if (inp.equalsIgnoreCase("thug?")) {
-                System.out.println("Thug:\n" +
-                        "Attacks one of your heroes in each turn\n" +
-                        "Weak version: Attack Power=50, Maximum health=200\n" +
-                        "Able version: Attack Power=90, Maximum health=300\n" +
-                        "Mighty version: Attack Power=150, Maximum health=400\n");
-            }
-
-            else if (inp.equalsIgnoreCase("angel?")) {
-                System.out.println("Angel:\n" +
-                        "Heals one of her allies in each turn\n" +
-                        "Weak version: Healing Amount=100, Maximum health=150\n" +
-                        "Able version: Healing Amount =150, Maximum health=250\n");
-            }
-
-            else if (!inp.equalsIgnoreCase("Done")) System.out.println("Invalid command\n");
-        }
+//        ******
+//        battle2
+//        ******
+        primitiveInformation = "As you wander into the hall you realize the surrounding doors can lead your destiny to\n"
+                + "something far worse than you expected. You know what’s anticipating you behind the only\n" +
+                "open door but there’s no other choice.\n\n" + "\nYou've encountered 2 able thugs, 1 weak angel, 1 weak tank\n";
 
 
-        System.out.println("The battle begins!\n");
+        Enemies.clear();
+        Enemies.add(new Thug(1,1));
+        Enemies.add(new Thug(1,2));
+        Enemies.add(new Angel(0));
+        Enemies.add(new Tank(0));
+        battlefield.addUnits(Enemies);
+
+        battle(Enemies, player, battlefield, primitiveInformation);
+
+//        ******
+//        battle3
+//        ******
+        primitiveInformation = "The door behind you is shut with a thunderous sound and you progress into the next hall" +
+                "holding the first key that you’ve found, hoping to seek the second one.\n\n" +
+                "\nYou've encountered two 1 able thug, 1 mighty thug, 1 able angel, 1 weak tank\n";
+
+
+        Enemies.clear();
+        Enemies.add(new Thug(1));
+        Enemies.add(new Thug(2));
+        Enemies.add(new Angel(0));
+        Enemies.add(new Tank(0));
+        battlefield.addUnits(Enemies);
+
+        battle(Enemies, player, battlefield, primitiveInformation);
+
+//        ******
+//        battle4
+//        ******
+        primitiveInformation = "Running with the second key in your hand, you unlock the door back to the first hall and"
+                + "use the first key to burst into your most terrifying nightmares.\n\n" +
+                "\nYou've encountered 2 mighty thugs, 1 able angel, 2 able tanks\n";
+
+
+        Enemies.clear();
+        Enemies.add(new Thug(2,1));
+        Enemies.add(new Thug(2,2));
+        Enemies.add(new Angel(1));
+        Enemies.add(new Tank(1,1));
+        Enemies.add(new Tank(1,2));
+        battlefield.addUnits(Enemies);
+
+        battle(Enemies, player, battlefield, primitiveInformation);
+
+//        ******
+//        battle3
+//        ******
+        primitiveInformation = "You feel hopeless and exhausted as you stalk to the final door. What’s behind that door" +
+                "makes your hearts pound and your spines shake with fear, but you came here to do one" +
+                "thing and backing down is not an option.\n\n" +
+                "\nYou've encountered The collector\n";
+
+
+        Enemies.clear();
+        Enemies.add(new FinalBoss());
+        battlefield.addUnits(Enemies);
+
+        battle(Enemies, player, battlefield, primitiveInformation);
+
+//        ******
+//        The final story
+//        ******
+        System.out.println("The collector falls down on his knees, he’s strained and desperate but still tries to" +
+                "drag himself toward Epoch. He knows his era has come to an end. The ancient time machine" +
+                "calls you to end the disorder and bring unity under its glorious wings, now it’s your" +
+                "turn to be the MASTERS OF TIME!");
+//        inp = "";
+//        while (!inp.equalsIgnoreCase("Done")) {
+//            inp = playerInput.next();
+//
+//            if (inp.equalsIgnoreCase("Again")) {
+//                System.out.println("You've encountered 3 weak thug(s), 1 weak angel(s)\n");
+//            }
+//
+//            else if (inp.equalsIgnoreCase("Help")) {
+//                System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
+//            }
+//
+//            else if (inp.equalsIgnoreCase("thug?")) {
+//                System.out.println("Thug:\n" +
+//                        "Attacks one of your heroes in each turn\n" +
+//                        "Weak version: Attack Power=50, Maximum health=200\n" +
+//                        "Able version: Attack Power=90, Maximum health=300\n" +
+//                        "Mighty version: Attack Power=150, Maximum health=400\n");
+//            }
+//
+//            else if (inp.equalsIgnoreCase("angel?")) {
+//                System.out.println("Angel:\n" +
+//                        "Heals one of her allies in each turn\n" +
+//                        "Weak version: Healing Amount=100, Maximum health=150\n" +
+//                        "Able version: Healing Amount =150, Maximum health=250\n");
+//            }
+//
+//            else if (!inp.equalsIgnoreCase("Done")) System.out.println("Invalid command\n");
+//        }
+//
+//
+//        System.out.println("The battle begins!\n");
 
 //        for (Hero h: battlefield.getHeroes()) {
 //            System.out.println(h.getName());

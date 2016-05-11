@@ -25,6 +25,9 @@ abstract public class Unit {
     //Getters and Setters
 
     public String getName() { return name; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void refreshStatus() {
         if (this.getHP() <= 0) {

@@ -6,7 +6,7 @@ import java.util.Random;
 
 public class FinalBoss extends Enemy{
 
-    FinalBoss() { super("Collector", 1000, 150); }
+    public FinalBoss() { super("The Collector", 1000, 150); }
 
     @Override
     public void action() {

@@ -4,30 +4,38 @@ public class Tank extends Enemy {
 
     //Constructors
 
-    Tank(int version, String n, int h, int dmg) {
-        super(n, h, dmg);
+    public Tank(int version) {
+        super("Tank", 0, 0);
         if (version == 0) {
+            setName("Weak tank");
             setMaxHP(400);
+            setHP(400);
             setAttDmg(30);
             this.version = version;
         }
         if (version == 1) {
+            setName("Able tank");
             setMaxHP(500);
+            setHP(500);
             setAttDmg(90);
             this.version = version;
         }
     }
 
-    Tank(int version, String n, int h, int dmg, int id) {
-        super(n, h, dmg);
+    public Tank(int version, int id) {
+        super("Tank" + id, 0, 0);
         this.id = id;
         if (version == 0) {
+            setName("Weak tank" + id);
             setMaxHP(400);
+            setHP(400);
             setAttDmg(30);
             this.version = version;
         }
         if (version == 1) {
+            setName("Able tank" + id);
             setMaxHP(500);
+            setHP(500);
             setAttDmg(90);
             this.version = version;
         }

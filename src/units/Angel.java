@@ -5,14 +5,16 @@ public class Angel extends Enemy {
     //Constructors
 
     public Angel(int version, int id) {
-        super("Angel", 0,0);
+        super("Angel" + id, 0,0);
         this.id = id;
         if (version == 0) {
+            setName("Weak angel" + id);
             setMaxHP(150);
             setAttDmg(100);
             this.version = version;
         }
         if (version == 1) {
+            setName("Able angel" + id);
             setMaxHP(250);
             setAttDmg(150);
             this.version = version;
@@ -23,11 +25,13 @@ public class Angel extends Enemy {
         super("Angel", 0,0);
         this.id = 0;
         if (version == 0) {
+            setName("Weak angel");
             setMaxHP(150);
             setAttDmg(100);
             this.version = version;
         }
         if (version == 1) {
+            setName("Able angel");
             setMaxHP(250);
             setAttDmg(150);
             this.version = version;

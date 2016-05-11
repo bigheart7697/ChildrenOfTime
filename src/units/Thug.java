@@ -5,19 +5,22 @@ public class Thug extends Enemy {
     //Constructors
 
     public Thug(int version, int id) {
-        super("Thug", 0, 0);
+        super("Thug" + id, 0, 0);
         this.id = id;
         if (version == 0) {
+            setName("Weak thug");
             setMaxHP(200);
             setAttDmg(50);
             this.version = version;
         }
         if (version == 1) {
+            setName("Able thug");
             setMaxHP(300);
             setAttDmg(90);
             this.version = version;
         }
         if (version == 2) {
+            setName("Mighty thug");
             setMaxHP(400);
             setAttDmg(150);
             this.version = version;
@@ -28,16 +31,19 @@ public class Thug extends Enemy {
         super("Thug", 0, 0);
         this.id = 0;
         if (version == 0) {
+            setName("Weak thug" + id);
             setMaxHP(200);
             setAttDmg(50);
             this.version = version;
         }
         if (version == 1) {
+            setName("Able thug" + id);
             setMaxHP(300);
             setAttDmg(90);
             this.version = version;
         }
         if (version == 2) {
+            setName("Mighty thug" +id);
             setMaxHP(400);
             setAttDmg(150);
             this.version = version;
