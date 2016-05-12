@@ -48,6 +48,20 @@ public class Battlefield {
         return enemies;
     }
 
+    public ArrayList<Unit> getUnits() {
+        return units;
+    }
+
+    public void removeDeadUnit() {
+        for (int cnt = 0; cnt < units.size(); cnt++) {
+            if (units.get(cnt).getHP() <= 0) {
+                System.out.println(units.get(cnt).getName() + " has died");
+                units.remove(cnt);
+                break;
+            }
+        }
+    }
+
     public void updateBattlefield() {
         this.turn ++;
         for (Unit u: this.units) {

@@ -76,11 +76,12 @@ abstract public class Ability {
 
     public abstract void cast();
 
-    public void Upgrade() {
+    public void upgrade() {
         if (currentXP > XPtoNextLevel) {
             level++;
             XPtoNextLevel = XPGainPattern / 10;
             XPGainPattern = (XPGainPattern % 10) * 10;
+            currentXP -= XPtoNextLevel;
         }
         else {
             System.out.println("You don't have enough experience!");
