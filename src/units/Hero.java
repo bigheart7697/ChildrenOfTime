@@ -31,27 +31,14 @@ abstract public class Hero extends Unit{
         this.invSize = invs;
         this.XPGained = 0;
         this.initializeAbilities();
-        this.intializeInventory();
+        this.initializeInventory();
     }
 
     //Setting up ArrayLists
 
-    public void intializeInventory() { this.inventory = new ArrayList<>(); }
+    private void initializeInventory() { this.inventory = new ArrayList<>(); }
 
-    public void addItem(Item i) {
-        if (this.inventory.size() < this.invSize)
-            this.inventory.add(i);
-        else
-            System.out.println("Not enough room in inventory");
-        if (i instanceof Equipment) ((Equipment) i).setBuff();
-    }
-
-    public void removeItem(Item i) {
-        this.inventory.remove(i);
-        if (i instanceof Equipment) ((Equipment) i).isRemoved();
-    }
-
-    public void initializeAbilities() { this.abilities = new ArrayList<>(); }
+    private void initializeAbilities() { this.abilities = new ArrayList<>(); }
     public void addAbility(Ability a) { this.abilities.add(a); }
 
 
@@ -61,7 +48,7 @@ abstract public class Hero extends Unit{
     public void setMP(int m) { this.MP = m; }
 
     public int getMaxEP() { return this.EPmax; }
-    public void setMaxEP(int e) { this.EPmax = e; }
+    private void setMaxEP(int e) { this.EPmax = e; }
 
     public int getMaxMP() { return maxMP; }
     public void setMaxMP(int maxMP) { this.maxMP = maxMP; }
@@ -101,22 +88,80 @@ abstract public class Hero extends Unit{
         else System.out.println("The selected ability is passive.");
     }
 
-    public void useItem(Item i) {
-        if (i instanceof Consumable) {
+    public void buyItem(Item i) {
+        if (i.getInvSpaceNeeded() + this.inventory.size() > this.invSize)
+            System.out.println(this.getName() + "'s inventory is full.");
+
+        else {
+            if (!(i instanceof ImmediateEffect)) this.inventory.add(i);
+            this.itemAcquired(i);
+            System.out.print(i.getName() + " bought successfully, your current wealth is: "); //the wealth is then printed in gameUI :D
+
+        }
+    }
+
+    public void sellItem(Item i) {
+        this.inventory.remove(i);
+        this.itemRemoved(i);
+        System.out.println(i.getName() + " successfully sold, your current wealth is: "); // the wealth is printed in gameUI
+    }
+
+    private void itemAcquired(Item i) {
+        if (i instanceof ImmediateEffect || i instanceof Equipment) {
             switch (i.getTargetStat()) {
                 case "HP":
-                    this.setHP(this.getHP() + i.getEffect());
+                    this.setMaxHP(this.getMaxHP() + i.getEffect());
+                    break;
+                case "MP":
+                    this.setMaxMP(this.getMaxMP() + i.getEffect());
+                    break;
+                case "EP":
+                    this.setMaxEP(this.getMaxEP() + i.getEffect());
+                    break;
+                case "att":
+                    this.setAttDmg(this.getAttDmg() + i.getEffect());
+                    break;
+            }
+        }
+    }
+
+    private void itemRemoved(Item i) {
+        if (i instanceof Equipment) {
+            switch (i.getTargetStat()) {
+                case "HP":
+                    this.setMaxHP(this.getMaxHP() - i.getEffect());
+                    break;
+                case "MP":
+                    this.setMaxMP(this.getMaxMP() - i.getEffect());
+                    break;
+                case "EP":
+                    this.setMaxEP(this.getMaxEP() - i.getEffect());
+                    break;
+                case "att":
+                    this.setAttDmg(this.getAttDmg() - i.getEffect());
+                    break;
+            }
+        }
+    }
+
+    public void useItem(Item i) {
+        if (i instanceof Consumable) {
+            ((Consumable) i).isUsed();
+            switch (i.getTargetStat()) {
+                case "HP":
+                    ((Consumable) i).getTarget().setHP(((Consumable) i).getTarget().getHP() + i.getEffect());
                     refreshStatus();
                     break;
                 case "MP":
-                    this.setMP(this.getMP() + i.getEffect());
+                    ((Consumable) i).getTarget().setMP(((Consumable) i).getTarget().getMP() + i.getEffect());
                     refreshStatus();
                     break;
                 case "EP":
-                    this.setEP(this.getEP() + i.getEffect());
+                    ((Consumable) i).getTarget().setEP(((Consumable) i).getTarget().getEP() + i.getEffect());
                     refreshStatus();
                     break;
             }
+            if (((Consumable) i).isFinished()) this.inventory.remove(i);
         }
         else System.out.println("Selected Item is not Consumable");
     }

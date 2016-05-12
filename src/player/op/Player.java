@@ -39,10 +39,11 @@ public class Player {
     public void setGold(int gold) { this.gold = gold; }
 
     public int getIMPotionRemaining() { return IMPotion; }
+    public ArrayList<Hero> getHeroes() { return this.heroes; }
 
     // Other methods
 
-    public void addHero(Hero h) { heroes.add(h); }
+    public void addHero(Hero h) { this.heroes.add(h); }
 
     public void useIMPotion(Hero h) {
         if (IMPotion > 0) h.revived();
@@ -58,7 +59,6 @@ public class Player {
     }
 
     public boolean useXP(String playerCommand, Battlefield battlefield) {
-        //Code to be written. requires UI to be implemented.
         for (Hero hero : battlefield.getHeroes()) {
             for (Ability ability : hero.getAbilities()) {
                 if (playerCommand.equalsIgnoreCase("Acquire " + (ability.getName()) + " for " + (hero.getName()))) {
@@ -129,13 +129,13 @@ public class Player {
         return true;
     }
 
-    public boolean herosAbilityInformation(String playerCommand, Battlefield battlefield) {
+    public boolean heroesAbilityInformation(String playerCommand, Battlefield battlefield) {
         for (Hero hero : battlefield.getHeroes()) {
             for (Ability ability : hero.getAbilities()) {
                 if (playerCommand.equalsIgnoreCase((hero.getName() + " " + ability.getName() + "?"))) {
                     int tmp = ability.getLevel() + 1;
                     System.out.println(ability.getDescription() + "\n" +
-                            "]f you want to upgrade it for " + hero.getName() + " to level " + tmp + "\n" + " You need " + ability.getXPtoNextLevel() + " experience points");
+                            "if you want to upgrade it for " + hero.getName() + " to level " + tmp + "\n" + " You need " + ability.getXPtoNextLevel() + " experience points");
                     return false;
                 }
             }
