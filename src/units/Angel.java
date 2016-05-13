@@ -10,12 +10,14 @@ public class Angel extends Enemy {
         if (version == 0) {
             setName("Weak angel" + id);
             setMaxHP(150);
+            setHP(150);
             setAttDmg(100);
             this.version = version;
         }
         if (version == 1) {
             setName("Able angel" + id);
             setMaxHP(250);
+            setHP(250);
             setAttDmg(150);
             this.version = version;
         }
@@ -32,12 +34,14 @@ public class Angel extends Enemy {
         if (version == 0) {
             setName("Weak angel");
             setMaxHP(150);
+            setHP(150);
             setAttDmg(100);
             this.version = version;
         }
         if (version == 1) {
             setName("Able angel");
             setMaxHP(250);
+            setHP(250);
             setAttDmg(150);
             this.version = version;
         }

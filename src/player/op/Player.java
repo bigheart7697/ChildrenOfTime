@@ -200,7 +200,7 @@ public class Player {
 
     public boolean enemyInformation(String playerCommand, Battlefield battlefield) {
         for (Enemy enemy : battlefield.getEnemies()) {
-            if (playerCommand.equals(enemy.getName() + "?")) {
+            if (playerCommand.equalsIgnoreCase(enemy.getName() + "?")) {
                 System.out.println(enemy.getDescription());
                 System.out.println("Health: " + enemy.getHP() + "/" + enemy.getMaxHP());
                 System.out.println();
@@ -216,7 +216,7 @@ public class Player {
                 if (playerCommand.equalsIgnoreCase((hero.getName() + " " + ability.getName() + "?"))) {
                     int tmp = ability.getLevel() + 1;
                     System.out.println(ability.getDescription() + "\n" +
-                            "]f you want to upgrade it for " + hero.getName() + " to level " + tmp + "\n" + " You need " + ability.getXPtoNextLevel() + " experience points");
+                            "If you want to upgrade it for " + hero.getName() + " to level " + tmp + "\n" + " You need " + ability.getXPtoNextLevel() + " experience points");
                     System.out.println();
                     return false;
                 }

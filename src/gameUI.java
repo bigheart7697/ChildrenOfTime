@@ -57,15 +57,18 @@ public class gameUI {
                 if (ability.getLevel() == 0)
                     System.out.println(" : not acquired");
                 else
-                    System.out.println(ability.getLevel());
+                    System.out.println(ability.getLevel() + "");
             }
+            System.out.println();
         }
         System.out.println("Your current experience is: " + player.getXP());
+        System.out.println();
         System.out.println();
     }
 
     private static boolean shop(ArrayList<Item> availItems, Player player) {
         String playerCommand = "";
+        boolean InvalidCommandSpecifier;
         Scanner sc = new Scanner(System.in);
         System.out.print("This shop offers you: ");
         for (Item i: availItems) {
@@ -85,37 +88,59 @@ public class gameUI {
             System.out.println();
         }
 
-        System.out.println("Your current wealth is: " + player.getGold());
+        System.out.println("Your current wealth is: " + player.getGold() + "\n");
 
-        outer: while (!playerCommand.equalsIgnoreCase("done")) {
-            playerCommand = sc.nextLine();
+        playerCommand = sc.nextLine();
+        while (!playerCommand.equalsIgnoreCase("done")) {
+            InvalidCommandSpecifier = true;
+            if (playerCommand.equalsIgnoreCase("Again")) {
+                System.out.print("This shop offers you: ");
+                for (Item i: availItems) {
+                    if (availItems.indexOf(i) == availItems.size() - 1) System.out.print(i.getName() + " for " + i.getCost() + " dollars." );
+                    else System.out.print(i.getName() + " for " + i.getCost() + " dollars, " );
+
+                }
+                System.out.println();
+
+
+                for (Hero h: player.getHeroes()) {
+                    System.out.print(h.getName() + " has ");
+                    for (Item i: h.getItems()) {
+                        if (h.getItems().indexOf(i) == h.getItems().size() - 1) System.out.print(i.getName() + " worth " + (i.getCost()/2) + " dollars.");
+                        System.out.print(i.getName() + " worth " + (i.getCost()/2) + " dollars, ");
+                    }
+                    System.out.println();
+                }
+
+                System.out.println("Your current wealth is: " + player.getGold() + "\n");
+            }
             for (Item i : availItems)
-                if (i.getName().equals(playerCommand + "?")) {
+                if (i.getName().equalsIgnoreCase(playerCommand + "?")) {
                     i.displayInfo();
-                    continue outer;
+                    InvalidCommandSpecifier = false;
                 }
 
             for (Hero h: player.getHeroes())
                 for (Item i: availItems) {
-                    if (playerCommand.equals("Buy " + i.getName() + " for " + h.getName())) {
+                    if (playerCommand.equalsIgnoreCase("Buy " + i.getName() + " for " + h.getName())) {
+                        InvalidCommandSpecifier = false;
                         if (player.getGold() < i.getCost()) System.out.println("You don't have enough money.");
                         else {
                             player.setGold(player.getGold() - i.getCost());
                             h.buyItem(i);
                             if (i instanceof ImmediateEffect) ((ImmediateEffect) i).increaseCost();
                             System.out.println(player.getGold());
-                            continue outer;
                         }
                     }
                 }
 
             for (Hero h: player.getHeroes())
                 for (Item i: availItems)
-                    if (playerCommand.equals("Sell " + i.getName() + " of " + h.getName())) {
+                    if (playerCommand.equalsIgnoreCase("Sell " + i.getName() + " of " + h.getName())) {
                         player.setGold(player.getGold() + i.getCost());
                         h.sellItem(i);
                         System.out.println(player.getGold());
-                        continue outer;
+                        InvalidCommandSpecifier = false;
                     }
 
             if (playerCommand.equalsIgnoreCase("Help")) {
@@ -128,10 +153,12 @@ public class gameUI {
                         "(hero name) +“’s inventory is full”\n" +
                         "“Sell “ + (item name) + “ of” + (hero name)\uF0E0\n" +
                         "(item name) + “ successfully sold, your current wealth is: “ + (current money)");
-                continue;
+                InvalidCommandSpecifier = false;
             }
 
-            System.out.println("Invalid command");
+            if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done"))
+                System.out.println("Invalid command");
+            playerCommand = sc.nextLine();
         }
 
         return true;
@@ -444,7 +471,7 @@ public class gameUI {
     public static void main(String[] args) {
         Scanner playerInput = new Scanner(System.in);
         System.out.print("Enter your name: ");
-        Player player = new Player(playerInput.next(), 40, 15);
+        Player player = new Player(playerInput.nextLine(), 40, 15);
 
         System.out.println();
 

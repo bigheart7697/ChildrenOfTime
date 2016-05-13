@@ -67,8 +67,10 @@ abstract public class Ability {
 //    other methods:
 
     public boolean hasRequiredAbility(Hero hero) {
+        if(level == 0)
+            return true;
         for (Ability ability : hero.getAbilities()) {
-            if (!requiredAbility[level - 1].getName().equals("") && ability.getName().equalsIgnoreCase(requiredAbility[level - 1].getName()) && requiredAbility[level - 1].getLevel() <= ability.getLevel())
+            if (requiredAbility[level - 1].getName().equals("") || ability.getName().equalsIgnoreCase(requiredAbility[level - 1].getName()) && requiredAbility[level - 1].getLevel() <= ability.getLevel())
                 return true;
         }
         return false;
@@ -79,9 +81,9 @@ abstract public class Ability {
     public void upgrade() {
         if (currentXP > XPtoNextLevel) {
             level++;
+            currentXP -= XPtoNextLevel;
             XPtoNextLevel = XPGainPattern / 10;
             XPGainPattern = (XPGainPattern % 10) * 10;
-            currentXP -= XPtoNextLevel;
         }
         else {
             System.out.println("You don't have enough experience!");
