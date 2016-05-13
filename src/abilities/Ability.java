@@ -11,6 +11,7 @@ abstract public class Ability {
     protected int XPGainPattern;
     protected Ability[] requiredAbility = new Ability[3];
     private String description;
+    private Hero user;
 
 
 //    constructors:
@@ -63,6 +64,14 @@ abstract public class Ability {
 
     abstract public void setRemainingCD(int remainingCD);
 
+    public Hero getUser() {
+        return user;
+    }
+
+    public void setUser(Hero user) {
+        this.user = user;
+    }
+
 
 //    other methods:
 
@@ -85,10 +94,6 @@ abstract public class Ability {
             XPtoNextLevel = XPGainPattern / 10;
             XPGainPattern = (XPGainPattern % 10) * 10;
         }
-        else {
-            System.out.println("You don't have enough experience!");
-        }
     }
-
 
 }

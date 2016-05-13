@@ -32,23 +32,33 @@ public class SelfBoost extends PassiveAbility {
     @Override
     public void cast() {
         if((whichStat == "magic point") && (XPGainPattern != 0)){
-            getTarget().setMaxMP(getTarget().getMaxMP() + amount);
+            getUser().setMaxMP( getUser().getMaxMP() + amount);
         }
 
         else if((whichStat == "health point") && XPGainPattern != 0) {
-            getTarget().setMaxHP(getTarget().getMaxHP() + amount);
+            getUser().setMaxHP( getUser().getMaxHP() + amount);
         }
 
         else if((whichStat == "attack power") && XPGainPattern != 0) {
-            getTarget().setAttDmg(getTarget().getAttDmg() + amount);
+            getUser().setAttDmg( getUser().getAttDmg() + amount);
         }
 
         else if((whichStat == "energy point") && XPGainPattern != 0) {
-            getTarget().setEP(getTarget().getEP() + amount);
+            getUser().setEP( getUser().getEP() + amount);
         }
 
     }
 
+    @Override
+    public void upgrade() {
+        if (currentXP > XPtoNextLevel) {
+            level++;
+            currentXP -= XPtoNextLevel;
+            XPtoNextLevel = XPGainPattern / 10;
+            XPGainPattern = (XPGainPattern % 10) * 10;
+            cast();
+        }
+    }
 
 
 }

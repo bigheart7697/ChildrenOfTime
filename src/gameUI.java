@@ -796,6 +796,8 @@ public class gameUI {
         Enemies.add(new Thug(0,2));
         Enemies.add(new Thug(0,3));
         Enemies.add(new Angel(0));
+        for (Unit enemy : Enemies)
+            enemy.setField(battlefield);
         battlefield.addUnits(Enemies);
 
         winPreviousLevel = battle(player, battlefield, primitiveInformation, Shop);
@@ -817,6 +819,8 @@ public class gameUI {
             Enemies.add(new Thug(1, 2));
             Enemies.add(new Angel(0));
             Enemies.add(new Tank(0));
+            for (Unit enemy : Enemies)
+                enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
 
             winPreviousLevel = battle(player, battlefield, primitiveInformation, Shop);
@@ -838,6 +842,8 @@ public class gameUI {
             Enemies.add(new Thug(2));
             Enemies.add(new Angel(0));
             Enemies.add(new Tank(0));
+            for (Unit enemy : Enemies)
+                enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
 
             winPreviousLevel = battle(player, battlefield, primitiveInformation, Shop);
@@ -860,6 +866,8 @@ public class gameUI {
             Enemies.add(new Angel(1));
             Enemies.add(new Tank(1, 1));
             Enemies.add(new Tank(1, 2));
+            for (Unit enemy : Enemies)
+                enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
 
             winPreviousLevel = battle(player, battlefield, primitiveInformation, Shop);
@@ -879,6 +887,8 @@ public class gameUI {
 
             Enemies.clear();
             Enemies.add(new FinalBoss());
+            for (Unit enemy : Enemies)
+                enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
 
             winPreviousLevel = battle(player, battlefield, primitiveInformation, Shop);

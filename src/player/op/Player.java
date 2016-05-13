@@ -1,8 +1,6 @@
 package player.op;
 
-import abilities.Ability;
-import abilities.ActiveAbility;
-import abilities.PassiveAbility;
+import abilities.*;
 import battleMechanics.Battlefield;
 import itemMGMT.Consumable;
 import itemMGMT.Item;
@@ -72,6 +70,7 @@ public class Player {
                         System.out.println("Required abilities aren’t acquired");
                         System.out.println();
                     } else {
+                        ability.setUser(hero);
                         ability.upgrade();
                         this.setXP(ability.getCurrentXP());
                         System.out.println((ability.getName()) + "acquired/upgraded successfully, your current experience is: " + (this.getXP()));
@@ -148,7 +147,7 @@ public class Player {
                 System.out.println("Attack Power: " + hero.getAttDmg());
                 boolean hasAbility = false;
                 for (Ability a : hero.getAbilities()) {
-                    if(a.getLevel() > 0)
+                    if(a.getLevel() > 0 && !(a instanceof SelfBoost))
                         hasAbility = true;
                 }
                 if (hasAbility) {
@@ -157,7 +156,7 @@ public class Player {
                         System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
                                 aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
                     for (Ability a : hero.getAbilities()) {
-                        if (a instanceof PassiveAbility) {
+                        if (a instanceof AttackModifier) {
                             System.out.println(a.getName());
                         }
                     }
@@ -229,7 +228,7 @@ public class Player {
         for (Hero hero : battlefield.getHeroes()) {
             for (Ability ability : hero.getAbilities()) {
                 for (Unit unit : battlefield.getUnits()) {
-                    if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + unit.getName())) {
+                    if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + unit.getName()) && !(ability instanceof SelfBoost)) {
                         if (ability.getMagicCost() > hero.getMP()) {
                             System.out.println("You don't have enough magic points");
                             System.out.println();
@@ -269,7 +268,7 @@ public class Player {
                     } else {
                         hero.setEP(hero.getEP() - 2);
                         enemy.setHP(enemy.getHP() - hero.getAttDmg());
-                        System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + "power");
+                        System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + " power");
                     }
                     System.out.println();
                     return false;
@@ -307,7 +306,7 @@ public class Player {
         }
 
         if (validItemname) System.out.println("You don't have the desired item.");
-        else System.out.println("invalid command");
+//        else System.out.println("invalid command");
 
         return true;
     }
