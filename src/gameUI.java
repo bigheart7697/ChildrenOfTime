@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 public class gameUI {
 
-    private static void printEachTurnsInformation(ArrayList<Unit> enemies, Battlefield battlefield) {
+    private static void printEachTurnsInformation(Battlefield battlefield) {
         for (Hero h: battlefield.getHeroes()) {
             System.out.println(h.getName());
             System.out.println("Health: " + h.getHP() + "/" + h.getMaxHP());
@@ -46,7 +46,7 @@ public class gameUI {
         }
     }
 
-    private static void printAbilityInformation(Battlefield battlefield) {
+    private static void printAbilityInformation(Battlefield battlefield, Player player) {
         for (Hero hero : battlefield.getHeroes()) {
             System.out.println(hero.getName());
             System.out.println("Health: " + hero.getHP() + "/" + hero.getMaxHP());
@@ -171,7 +171,7 @@ public class gameUI {
 
 //        Print the abilities information and then get the commands relating to acquiring and upgrading abilities.
 
-        printAbilityInformation(battlefield);
+        printAbilityInformation(battlefield, player);
         playerCommand = scanner.nextLine();
 
         while (!playerCommand.equalsIgnoreCase("Done")) {
