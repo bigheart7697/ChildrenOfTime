@@ -20,6 +20,11 @@ public class Tank extends Enemy {
             setAttDmg(90);
             this.version = version;
         }
+        setDescription("Tank:\n" +
+                "Attacks every one of your heroes in each turn\n" +
+                "Weak version: Attack Power=30, Maximum health=400\n" +
+                "Able version: Attack Power=90, Maximum health=500\n" +
+                "Action message: “Tank just damaged all of your heroes with “ + (attack power) + “ power”\n");
     }
 
     public Tank(int version, int id) {
@@ -39,6 +44,11 @@ public class Tank extends Enemy {
             setAttDmg(90);
             this.version = version;
         }
+        setDescription("Tank:\n" +
+                "Attacks every one of your heroes in each turn\n" +
+                "Weak version: Attack Power=30, Maximum health=400\n" +
+                "Able version: Attack Power=90, Maximum health=500\n" +
+                "Action message: “Tank just damaged all of your heroes with “ + (attack power) + “ power”\n");
     }
 
     @Override

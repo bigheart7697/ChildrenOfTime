@@ -9,7 +9,7 @@ import java.util.Scanner;
 
 public class gameUI {
 
-    public static void printEachTurnsInformation(ArrayList<Unit> enemies, Battlefield battlefield) {
+    public static void printEachTurnsInformation(Battlefield battlefield) {
         for (Hero h: battlefield.getHeroes()) {
             System.out.println(h.getName());
             System.out.println("Health: " + h.getHP() + "/" + h.getMaxHP());
@@ -39,13 +39,13 @@ public class gameUI {
             }
             System.out.println();
         }
-        for (Unit enemy : enemies) {
+        for (Unit enemy : battlefield.getEnemies()) {
             System.out.println(enemy.getName());
             System.out.println("Health: " + enemy.getHP() + "/" + enemy.getMaxHP());
         }
     }
 
-    public static void printAbilityInformation(Battlefield battlefield) {
+    public static void printAbilityInformation(Battlefield battlefield, Player player) {
         for (Hero hero : battlefield.getHeroes()) {
             System.out.println(hero.getName());
             System.out.println("Health: " + hero.getHP() + "/" + hero.getMaxHP());
@@ -60,11 +60,12 @@ public class gameUI {
                     System.out.println(ability.getLevel());
             }
         }
+        System.out.println("Your current experience is: " + player.getXP());
+        System.out.println();
     }
 
-    public static boolean battle(ArrayList<Unit> enemies, Player player, Battlefield battlefield, String primitiveInformation) {
+    public static boolean battle(Player player, Battlefield battlefield, String primitiveInformation) {
         boolean InvalidCommandSpecifier;
-        battlefield.addUnits(enemies);
         String playerCommand;
         Scanner scanner = new Scanner(System.in);
 //        Print the primitive information then get the primitive commands of each turn.
@@ -76,10 +77,12 @@ public class gameUI {
 
             if (playerCommand.equalsIgnoreCase("Again")) {
                 System.out.println(primitiveInformation);
+                System.out.println();
                 InvalidCommandSpecifier = false;
             }
             else if (playerCommand.equalsIgnoreCase("Help")) {
                 System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
+                System.out.println();
                 InvalidCommandSpecifier = false;
             }
 
@@ -88,19 +91,20 @@ public class gameUI {
 
             if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
                 System.out.println("Invalid command\n");
+                System.out.println();
             }
             playerCommand = scanner.nextLine();
         }
 
 //        Print the abilities information and then get the commands relating to acquiring and upgrading abilities.
-        printAbilityInformation(battlefield);
+        printAbilityInformation(battlefield, player);
         playerCommand = scanner.nextLine();
 
         while (!playerCommand.equalsIgnoreCase("Done")) {
             InvalidCommandSpecifier = true;
             if (playerCommand.equalsIgnoreCase("Again")) {
                 InvalidCommandSpecifier = false;
-                printAbilityInformation(battlefield);
+                printAbilityInformation(battlefield, player);
             }
 
             if (playerCommand.equalsIgnoreCase("Help")) {
@@ -113,7 +117,7 @@ public class gameUI {
                         "Or:\n" +
                         "“This ability cannot be upgraded anymore”\n" +
                         "Or:\n" +
-                        "“Required abilities aren’t acquired”");
+                        "“Required abilities aren’t acquired”\n");
             }
 
 //            **********************************************
@@ -149,6 +153,7 @@ public class gameUI {
 
             if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
                 System.out.println("Invalid command\n");
+                System.out.println();
             }
             playerCommand = scanner.nextLine();
         }
@@ -158,13 +163,13 @@ public class gameUI {
 //        The main battle will start here. The first "while" is for each turn and the second one is for each command.
         System.out.println("The battle begins!\n");
         while (battlefield.getEnemies().size() != 0) {
-            printEachTurnsInformation(enemies, battlefield);
+            printEachTurnsInformation(battlefield);
             playerCommand = scanner.nextLine();
             while (!playerCommand.equalsIgnoreCase("Done")) {
                 playerCommand = scanner.nextLine();
                 InvalidCommandSpecifier = true;
                 if (playerCommand.equalsIgnoreCase("Again")) {
-                    printEachTurnsInformation(enemies, battlefield);
+                    printEachTurnsInformation(battlefield);
                     InvalidCommandSpecifier = false;
                 }
 
@@ -190,7 +195,7 @@ public class gameUI {
                             "Or:\n" +
                             "“You don’t have this item”");
                     System.out.println("(hero name) + “ attack “ + (enemy name and id) \uF0E0 (hero name) + “ has successfully attacked “ + (enemy name and id) + “ with “ + (attack power) + “ power”\nOr:\n" +
-                            "“You don’t have enough energy points”");
+                            "“You don’t have enough energy points”\n");
                     InvalidCommandSpecifier = false;
                 }
 //                ***********************************************************
@@ -303,6 +308,7 @@ public class gameUI {
                     InvalidCommandSpecifier = player.itemInformation(playerCommand, battlefield);
                 if (InvalidCommandSpecifier) {
                     InvalidCommandSpecifier = player.attack(playerCommand, battlefield);
+                    battlefield.removeDeadUnit();
                     if (battlefield.getEnemies().size() == 0) {
                         System.out.println("Victory! You’ve defeated all of your enemies");
                         return true;
@@ -310,6 +316,7 @@ public class gameUI {
                 }
                 if (InvalidCommandSpecifier) {
                     InvalidCommandSpecifier = player.castAbility(playerCommand, battlefield);
+                    battlefield.removeDeadUnit();
                     if (battlefield.getEnemies().size() == 0) {
                         System.out.println("Victory! You’ve defeated all of your enemies");
                         return true;
@@ -431,18 +438,35 @@ public class gameUI {
         //Add specific abilities for heroes here
 
         Attacker OverpoweredAttack = new Attacker("Overpowered attack", 0, 2, 46, 50, 222, 0, 246, 0, false ,Eley);
+        OverpoweredAttack.setDescription("Overpowered attack\n" +
+                "Attacks an enemy with N times power for 2 energy points and 50 magic points\n" +
+                "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1\n" +
+                "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2\n" +
+                "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3\n" +
+                "Success message: “Eley just did an overpowered attack on “ + (target) + “ with “ + (damage done) + “ damage”\n");
         Ability[] OverpoweredAttacksRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             OverpoweredAttacksRequiredAbility[cnt] = new SelfBoost("Fight training", cnt, 0, 0, "", 0);
         OverpoweredAttack.setRequiredAbility(OverpoweredAttacksRequiredAbility);
 
         Attacker Sacrifice = new Attacker("Sacrifice", 0, 2, 34, 60, 333, 111, 0, 456, false, Chrome);
+        Sacrifice.setDescription("Sacrifice\n" +
+                "Damages all the enemies with 3H power at the cost of H of his own health, needs 3 energy points, 60 magic points and has a 1 turn cooldown\n" +
+                "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1\n" +
+                "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2\n" +
+                "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3\n" +
+                "Success message: “Chrome just sacrificed himself to damage all his enemies with “ + (damage done) + “ power“\n");
         Ability[] SacrificesRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt, 0, 0, "", 0);
         Sacrifice.setRequiredAbility(SacrificesRequiredAbility);
 
         AttackModifier SwirlingAttack = new AttackModifier("Attack modifier", 0, 2, 34, 1, 123, 0, Eley, battlefield);
+        SwirlingAttack.setDescription("Swirling attack\n" +
+                "While attacking, non-targeted enemies also take P percent of its damage\n" +
+                "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1\n" +
+                "Upgrade 2: P=20 for 3 xp points\n" +
+                "Upgrade 3: P=30 for 4 xp points");
         Ability[] SwirlingAttacksRequiredAbility = new Ability[3];
         SwirlingAttacksRequiredAbility[0] = new SelfBoost("Work out", 1, 0, 0, "", 0);
         SwirlingAttacksRequiredAbility[1] = new SelfBoost("", 0, 0, 0, "", 0);
@@ -450,6 +474,11 @@ public class gameUI {
         SwirlingAttack.setRequiredAbility(SwirlingAttacksRequiredAbility);
 
         AttackModifier CriticalStrike = new AttackModifier("Critical strike", 0, 2, 34, 2, 0, 234, Chrome, battlefield);
+        CriticalStrike.setDescription("Critical strike\n" +
+                "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities)\n" +
+                "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1\n" +
+                "Upgrade 2: P=30 for 3 xp points\n" +
+                "Upgrade 3: P=40 for 4 xp points\n");
         Ability[] CriticalStrikesRequiredAbility = new Ability[3];
         CriticalStrikesRequiredAbility[0] = new SelfBoost("Fight training", 1, 0, 0, "", 0);
         CriticalStrikesRequiredAbility[1] = new SelfBoost("", 0, 0, 0, "", 0);
@@ -457,6 +486,12 @@ public class gameUI {
         CriticalStrike.setRequiredAbility(CriticalStrikesRequiredAbility);
 
         Restorer Elixir = new Restorer("Elixir", 0, 2, 35, 60, 222, 110, "health point", 101515, Meryl);
+        Eley.setDescription("Elixir\n" +
+                "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points\n" +
+                "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down\n" +
+                "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1\n" +
+                "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2\n" +
+                "Success message: “Meryl just healed “ + (target) + “ with “ + (healing amount) + “ health points”\n");
         Ability[] ElixirsRequiredAbility = new Ability[3];
         ElixirsRequiredAbility[0] = new SelfBoost("", 0, 0, 0, "", 0);
         ElixirsRequiredAbility[1] = new SelfBoost("Magic lessons", 1, 0, 0, "", 0);
@@ -464,18 +499,36 @@ public class gameUI {
         Elixir.setRequiredAbility(ElixirsRequiredAbility);
 
         Restorer Caretaker = new Restorer("Caretaker", 0, 2, 35, 30, 221, 100, "energy point", 111, Meryl);
+        Caretaker.setDescription("Caretaker\n" +
+                "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of the battle and is only usable during the current turn)\n" +
+                "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1\n" +
+                "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2\n" +
+                "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3\n" +
+                "Success message: “Meryl just gave “ + (target) + “ 1 energy point”\n");
         Ability[] CaretakersRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             CaretakersRequiredAbility[cnt] = new SelfBoost("Quick as a bunny", cnt, 0, 0, "", 0);
         Caretaker.setRequiredAbility(CaretakersRequiredAbility);
 
         Restorer Boost = new Restorer("Boost", 0, 2, 35, 50, 222, 110, "attack power", 233, Bolti);
+        Boost.setDescription("Boost\n" +
+                "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for 2 energy points and 50 magic points (this bonus attack power can stack up)\n" +
+                "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down\n" +
+                "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down\n" +
+                "Upgrade 3: A=30 for 5 xp points and cools down instantly\n" +
+                "Success message: “Bolti just boosted “ + (target) + “ with “ + (A) + “ power”\n");
         Ability[] BoostsRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             BoostsRequiredAbility[cnt] = new SelfBoost("", 0, 0, 0, "", 0);
         Boost.setRequiredAbility(BoostsRequiredAbility);
 
         Restorer ManaBeam = new Restorer("Mana beam", 0, 2, 34, 50, 111, 110, "magic point", 588, Bolti);
+        ManaBeam.setDescription("Mana beam\n" +
+                "Gives M magic points to himself or an ally for 1 energy point and 50 magic points\n" +
+                "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1\n" +
+                "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2\n" +
+                "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3\n" +
+                "Success message: “Bolti just helped “ + (target) + “ with “ + (M) + “ magic points”\n");
         Ability[] ManaBeamsRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
             ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt, 0, 0, "", 0);
@@ -596,7 +649,7 @@ public class gameUI {
 
         }
 
-
+        boolean winPerviousLevel;
         //Stage2: Entering the castle, first battle
 //        System.out.println("\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
 //                " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
@@ -617,82 +670,93 @@ public class gameUI {
         Enemies.add(new Angel(0));
         battlefield.addUnits(Enemies);
 
-        battle(Enemies, player, battlefield, primitiveInformation);
+        winPerviousLevel = battle(player, battlefield, primitiveInformation);
 
 //        ******
 //        battle2
 //        ******
-        primitiveInformation = "As you wander into the hall you realize the surrounding doors can lead your destiny to\n"
-                + "something far worse than you expected. You know what’s anticipating you behind the only\n" +
-                "open door but there’s no other choice.\n\n" + "\nYou've encountered 2 able thugs, 1 weak angel, 1 weak tank\n";
+        if (winPerviousLevel) {
+            primitiveInformation = "As you wander into the hall you realize the surrounding doors can lead your destiny to\n"
+                    + "something far worse than you expected. You know what’s anticipating you behind the only\n" +
+                    "open door but there’s no other choice.\n\n" + "\nYou've encountered 2 able thugs, 1 weak angel, 1 weak tank\n";
 
 
-        Enemies.clear();
-        Enemies.add(new Thug(1,1));
-        Enemies.add(new Thug(1,2));
-        Enemies.add(new Angel(0));
-        Enemies.add(new Tank(0));
-        battlefield.addUnits(Enemies);
+            Enemies.clear();
+            Enemies.add(new Thug(1, 1));
+            Enemies.add(new Thug(1, 2));
+            Enemies.add(new Angel(0));
+            Enemies.add(new Tank(0));
+            battlefield.addUnits(Enemies);
 
-        battle(Enemies, player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+        }
 
 //        ******
 //        battle3
 //        ******
-        primitiveInformation = "The door behind you is shut with a thunderous sound and you progress into the next hall" +
-                "holding the first key that you’ve found, hoping to seek the second one.\n\n" +
-                "\nYou've encountered two 1 able thug, 1 mighty thug, 1 able angel, 1 weak tank\n";
+        if (winPerviousLevel) {
+            primitiveInformation = "The door behind you is shut with a thunderous sound and you progress into the next hall" +
+                    "holding the first key that you’ve found, hoping to seek the second one.\n\n" +
+                    "\nYou've encountered two 1 able thug, 1 mighty thug, 1 able angel, 1 weak tank\n";
 
 
-        Enemies.clear();
-        Enemies.add(new Thug(1));
-        Enemies.add(new Thug(2));
-        Enemies.add(new Angel(0));
-        Enemies.add(new Tank(0));
-        battlefield.addUnits(Enemies);
+            Enemies.clear();
+            Enemies.add(new Thug(1));
+            Enemies.add(new Thug(2));
+            Enemies.add(new Angel(0));
+            Enemies.add(new Tank(0));
+            battlefield.addUnits(Enemies);
 
-        battle(Enemies, player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+        }
 
 //        ******
 //        battle4
 //        ******
-        primitiveInformation = "Running with the second key in your hand, you unlock the door back to the first hall and"
-                + "use the first key to burst into your most terrifying nightmares.\n\n" +
-                "\nYou've encountered 2 mighty thugs, 1 able angel, 2 able tanks\n";
+        if (winPerviousLevel) {
+            primitiveInformation = "Running with the second key in your hand, you unlock the door back to the first hall and"
+                    + "use the first key to burst into your most terrifying nightmares.\n\n" +
+                    "\nYou've encountered 2 mighty thugs, 1 able angel, 2 able tanks\n";
 
 
-        Enemies.clear();
-        Enemies.add(new Thug(2,1));
-        Enemies.add(new Thug(2,2));
-        Enemies.add(new Angel(1));
-        Enemies.add(new Tank(1,1));
-        Enemies.add(new Tank(1,2));
-        battlefield.addUnits(Enemies);
+            Enemies.clear();
+            Enemies.add(new Thug(2, 1));
+            Enemies.add(new Thug(2, 2));
+            Enemies.add(new Angel(1));
+            Enemies.add(new Tank(1, 1));
+            Enemies.add(new Tank(1, 2));
+            battlefield.addUnits(Enemies);
 
-        battle(Enemies, player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+        }
 
 //        ******
 //        battle3
 //        ******
-        primitiveInformation = "You feel hopeless and exhausted as you stalk to the final door. What’s behind that door" +
-                "makes your hearts pound and your spines shake with fear, but you came here to do one" +
-                "thing and backing down is not an option.\n\n" +
-                "\nYou've encountered The collector\n";
+        if (winPerviousLevel) {
+            primitiveInformation = "You feel hopeless and exhausted as you stalk to the final door. What’s behind that door" +
+                    "makes your hearts pound and your spines shake with fear, but you came here to do one" +
+                    "thing and backing down is not an option.\n\n" +
+                    "\nYou've encountered The collector\n";
 
 
-        Enemies.clear();
-        Enemies.add(new FinalBoss());
-        battlefield.addUnits(Enemies);
+            Enemies.clear();
+            Enemies.add(new FinalBoss());
+            battlefield.addUnits(Enemies);
 
-        battle(Enemies, player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+        }
 
 //        ******
 //        The final story
 //        ******
-        System.out.println("The collector falls down on his knees, he’s strained and desperate but still tries to" +
-                "drag himself toward Epoch. He knows his era has come to an end. The ancient time machine" +
-                "calls you to end the disorder and bring unity under its glorious wings, now it’s your" +
-                "turn to be the MASTERS OF TIME!");
+        if (winPerviousLevel) {
+            System.out.println("The collector falls down on his knees, he’s strained and desperate but still tries to" +
+                    "drag himself toward Epoch. He knows his era has come to an end. The ancient time machine" +
+                    "calls you to end the disorder and bring unity under its glorious wings, now it’s your" +
+                    "turn to be the MASTERS OF TIME!");
+        }
+//        ************************************************************************************************
 //        inp = "";
 //        while (!inp.equalsIgnoreCase("Done")) {
 //            inp = playerInput.next();

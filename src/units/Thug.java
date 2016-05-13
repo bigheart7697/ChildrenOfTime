@@ -25,6 +25,12 @@ public class Thug extends Enemy {
             setAttDmg(150);
             this.version = version;
         }
+        setDescription("Thug:\n" +
+                "Attacks one of your heroes in each turn\n" +
+                "Weak version: Attack Power=50, Maximum health=200\n" +
+                "Able version: Attack Power=90, Maximum health=300\n" +
+                "Mighty version: Attack Power=150, Maximum health=400\n" +
+                "Action message: “Thug just attacked “ + (target) + “ with “ + (attack power) + “ power”\n");
     }
 
     public Thug(int version) {
@@ -48,6 +54,12 @@ public class Thug extends Enemy {
             setAttDmg(150);
             this.version = version;
         }
+        setDescription("Thug:\n" +
+                "Attacks one of your heroes in each turn\n" +
+                "Weak version: Attack Power=50, Maximum health=200\n" +
+                "Able version: Attack Power=90, Maximum health=300\n" +
+                "Mighty version: Attack Power=150, Maximum health=400\n" +
+                "Action message: “Thug just attacked “ + (target) + “ with “ + (attack power) + “ power”\n");
     }
 
     @Override

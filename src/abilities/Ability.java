@@ -68,7 +68,7 @@ abstract public class Ability {
 
     public boolean hasRequiredAbility(Hero hero) {
         for (Ability ability : hero.getAbilities()) {
-            if (ability.getName().equalsIgnoreCase(requiredAbility[level - 1].getName()) && requiredAbility[level - 1].getLevel() <= ability.getLevel())
+            if (!requiredAbility[level - 1].getName().equals("") && ability.getName().equalsIgnoreCase(requiredAbility[level - 1].getName()) && requiredAbility[level - 1].getLevel() <= ability.getLevel())
                 return true;
         }
         return false;

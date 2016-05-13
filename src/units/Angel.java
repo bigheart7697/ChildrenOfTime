@@ -19,6 +19,11 @@ public class Angel extends Enemy {
             setAttDmg(150);
             this.version = version;
         }
+        setDescription("Angel:\n" +
+                "Heals one of her allies in each turn\n" +
+                "Weak version: Healing Amount=100, Maximum health=150\n" +
+                "Able version: Healing Amount =150, Maximum health=250\n" +
+                "Action message: “Angel just healed “ + (target) + “ with “ + (healing amount) + “ health points”\n");
     }
 
     public Angel(int version) {
@@ -36,6 +41,11 @@ public class Angel extends Enemy {
             setAttDmg(150);
             this.version = version;
         }
+        setDescription("Angel:\n" +
+                "Heals one of her allies in each turn\n" +
+                "Weak version: Healing Amount=100, Maximum health=150\n" +
+                "Able version: Healing Amount =150, Maximum health=250\n" +
+                "Action message: “Angel just healed “ + (target) + “ with “ + (healing amount) + “ health points”\n");
     }
 
     @Override

@@ -6,7 +6,18 @@ import java.util.Random;
 
 public class FinalBoss extends Enemy{
 
-    public FinalBoss() { super("The Collector", 1000, 150); }
+    public FinalBoss() {
+        super("The Collector", 1000, 150);
+        setDescription("Final Boss:\n" +
+                "Burns 2 to 4 energy points of each hero and attacks 2 of them in each turn\n" +
+                "Maximum health: 1000\n" +
+                "Attack power when his current health is higher than 400: 150\n" +
+                "Attack power when his current health is below 400: 250\n" +
+                "Action messages:\n" +
+                "“Collector just attacked “ + (target) + “ with ” + (attack power) + “ power”\n" +
+                "“Collector just burned “ + (energy point count) + “ energy points from ” + (target)\n" +
+                "“Collector has mutated”\n");
+    }
 
     @Override
     public void action() {
