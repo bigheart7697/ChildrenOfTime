@@ -4,12 +4,13 @@ import battleMechanics.*;
 import player.op.Player;
 import units.*;
 
+import java.nio.file.attribute.AttributeView;
 import java.util.ArrayList;
 import java.util.Scanner;
 
 public class gameUI {
 
-    public static void printEachTurnsInformation(Battlefield battlefield) {
+    private static void printEachTurnsInformation(ArrayList<Unit> enemies, Battlefield battlefield) {
         for (Hero h: battlefield.getHeroes()) {
             System.out.println(h.getName());
             System.out.println("Health: " + h.getHP() + "/" + h.getMaxHP());
@@ -45,7 +46,7 @@ public class gameUI {
         }
     }
 
-    public static void printAbilityInformation(Battlefield battlefield, Player player) {
+    private static void printAbilityInformation(Battlefield battlefield) {
         for (Hero hero : battlefield.getHeroes()) {
             System.out.println(hero.getName());
             System.out.println("Health: " + hero.getHP() + "/" + hero.getMaxHP());
@@ -64,11 +65,86 @@ public class gameUI {
         System.out.println();
     }
 
-    public static boolean battle(Player player, Battlefield battlefield, String primitiveInformation) {
+    private static boolean shop(ArrayList<Item> availItems, Player player) {
+        String playerCommand = "";
+        Scanner sc = new Scanner(System.in);
+        System.out.print("This shop offers you: ");
+        for (Item i: availItems) {
+            if (availItems.indexOf(i) == availItems.size() - 1) System.out.print(i.getName() + " for " + i.getCost() + " dollars." );
+            else System.out.print(i.getName() + " for " + i.getCost() + " dollars, " );
+
+        }
+        System.out.println();
+
+
+        for (Hero h: player.getHeroes()) {
+            System.out.print(h.getName() + " has ");
+            for (Item i: h.getItems()) {
+                if (h.getItems().indexOf(i) == h.getItems().size() - 1) System.out.print(i.getName() + " worth " + (i.getCost()/2) + " dollars.");
+                System.out.print(i.getName() + " worth " + (i.getCost()/2) + " dollars, ");
+            }
+            System.out.println();
+        }
+
+        System.out.println("Your current wealth is: " + player.getGold());
+
+        outer: while (!playerCommand.equalsIgnoreCase("done")) {
+            playerCommand = sc.nextLine();
+            for (Item i : availItems)
+                if (i.getName().equals(playerCommand + "?")) {
+                    i.displayInfo();
+                    continue outer;
+                }
+
+            for (Hero h: player.getHeroes())
+                for (Item i: availItems) {
+                    if (playerCommand.equals("Buy " + i.getName() + " for " + h.getName())) {
+                        if (player.getGold() < i.getCost()) System.out.println("You don't have enough money.");
+                        else {
+                            player.setGold(player.getGold() - i.getCost());
+                            h.buyItem(i);
+                            if (i instanceof ImmediateEffect) ((ImmediateEffect) i).increaseCost();
+                            System.out.println(player.getGold());
+                            continue outer;
+                        }
+                    }
+                }
+
+            for (Hero h: player.getHeroes())
+                for (Item i: availItems)
+                    if (playerCommand.equals("Sell " + i.getName() + " of " + h.getName())) {
+                        player.setGold(player.getGold() + i.getCost());
+                        h.sellItem(i);
+                        System.out.println(player.getGold());
+                        continue outer;
+                    }
+
+            if (playerCommand.equalsIgnoreCase("Help")) {
+                System.out.println("(item name) + “?” \uF0E0 (item description)\n" +
+                        "“Buy “ + (item name) + “ for “ + (hero name)\uF0E0\n" +
+                        "\uF0E0 (item name) “ bought successfully, your current wealth is: ” + (current money)\n" +
+                        "Or:\n" +
+                        "“You don’t have enough money”\n" +
+                        "Or:\n" +
+                        "(hero name) +“’s inventory is full”\n" +
+                        "“Sell “ + (item name) + “ of” + (hero name)\uF0E0\n" +
+                        "(item name) + “ successfully sold, your current wealth is: “ + (current money)");
+                continue;
+            }
+
+            System.out.println("Invalid command");
+        }
+
+        return true;
+    }
+
+    private static boolean battle(ArrayList<Unit> enemies, Player player, Battlefield battlefield, String primitiveInformation, ArrayList<Item> availItems) {
         boolean InvalidCommandSpecifier;
         String playerCommand;
         Scanner scanner = new Scanner(System.in);
+
 //        Print the primitive information then get the primitive commands of each turn.
+
         System.out.println(primitiveInformation);
         playerCommand = scanner.nextLine();
 
@@ -77,12 +153,10 @@ public class gameUI {
 
             if (playerCommand.equalsIgnoreCase("Again")) {
                 System.out.println(primitiveInformation);
-                System.out.println();
                 InvalidCommandSpecifier = false;
             }
             else if (playerCommand.equalsIgnoreCase("Help")) {
                 System.out.println("(Enemy Name) + “?” \uF0E0 (Enemy description)\n");
-                System.out.println();
                 InvalidCommandSpecifier = false;
             }
 
@@ -91,13 +165,13 @@ public class gameUI {
 
             if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
                 System.out.println("Invalid command\n");
-                System.out.println();
             }
             playerCommand = scanner.nextLine();
         }
 
 //        Print the abilities information and then get the commands relating to acquiring and upgrading abilities.
-        printAbilityInformation(battlefield, player);
+
+        printAbilityInformation(battlefield);
         playerCommand = scanner.nextLine();
 
         while (!playerCommand.equalsIgnoreCase("Done")) {
@@ -145,6 +219,7 @@ public class gameUI {
 //                    }
 //                }
 //            *************************************************
+
             if (InvalidCommandSpecifier)
                 InvalidCommandSpecifier = player.herosAbilityInformation(playerCommand, battlefield);
 
@@ -153,12 +228,13 @@ public class gameUI {
 
             if (InvalidCommandSpecifier && !playerCommand.equalsIgnoreCase("Done")) {
                 System.out.println("Invalid command\n");
-                System.out.println();
             }
             playerCommand = scanner.nextLine();
         }
 
 //        implement buying items here. it's structure should be like acquiring abilities which is implemented in above. It seems you should add a shop to the method's variables
+        shop(availItems, player);
+
 
 //        The main battle will start here. The first "while" is for each turn and the second one is for each command.
         System.out.println("The battle begins!\n");
@@ -649,6 +725,33 @@ public class gameUI {
 
         }
 
+        ArrayList<Item> availItems = new ArrayList<>();
+
+        //List of items created and added to shop here
+
+            ImmediateEffect Toughen = new ImmediateEffect("Toughen", "HP", 20, "“Toughen”: +20 maximum health");
+            ImmediateEffect Guide = new ImmediateEffect("Guide", "MP", 20, "“Guide”: +20 maximum magic");
+            ImmediateEffect Defy = new ImmediateEffect("Defy", "att", 8, "“Defy”: +8 attack power");
+
+            Equipment Sword = new Equipment("Sword", 25, 1, "att", 80, "“Sword”: +80 attack power, costs 25 dollars");
+            Equipment EnergyBoots = new Equipment("Energy Boots", 20, 1, "EP", 1, "“Energy Boots”: +1 energy point, costs 20 dollars");
+            Equipment Armor = new Equipment("Armor", 25, 1, "HP", 200, "“Armor”: +200 maximum health, costs 25 dollars");
+            Equipment MagicStick = new Equipment("Magic Stick", 28, 1, "MP", 150, "“Magic stick”: +150 maximum magic, costs 28 dollars");
+
+            Consumable HealthPotion = new Consumable("Health Potion", "HP", 100, "“Health potion”: +100 health points for the user or one of his/her allies, costs 15 dollars");
+            Consumable MagicPotion = new Consumable("Magic Potion", "MP", 50, "“Magic potion”: +50 magic points for the user or one of his/her allies, costs 15 dollars");
+
+        availItems.add(Toughen);
+        availItems.add(Guide);
+        availItems.add(Defy);
+        availItems.add(Sword);
+        availItems.add(EnergyBoots);
+        availItems.add(Armor);
+        availItems.add(MagicStick);
+        availItems.add(HealthPotion);
+        availItems.add(MagicPotion);
+
+
         boolean winPerviousLevel;
         //Stage2: Entering the castle, first battle
 //        System.out.println("\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
@@ -661,7 +764,6 @@ public class gameUI {
         String primitiveInformation = "\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
                 " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
                 " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n\n" + "\nYou've encountered 3 weak thug(s), 1 weak angel(s)\n";
-//        System.out.println(primitiveInformation);
 
         ArrayList<Unit> Enemies = new ArrayList<>();
         Enemies.add(new Thug(0,1));
@@ -670,7 +772,8 @@ public class gameUI {
         Enemies.add(new Angel(0));
         battlefield.addUnits(Enemies);
 
-        winPerviousLevel = battle(player, battlefield, primitiveInformation);
+        winPerviousLevel = battle(Enemies, player, battlefield, primitiveInformation, availItems);
+
 
 //        ******
 //        battle2
@@ -688,7 +791,7 @@ public class gameUI {
             Enemies.add(new Tank(0));
             battlefield.addUnits(Enemies);
 
-            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(Enemies, player, battlefield, primitiveInformation, availItems);
         }
 
 //        ******
@@ -707,7 +810,7 @@ public class gameUI {
             Enemies.add(new Tank(0));
             battlefield.addUnits(Enemies);
 
-            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(Enemies, player, battlefield, primitiveInformation, availItems);
         }
 
 //        ******
@@ -727,7 +830,7 @@ public class gameUI {
             Enemies.add(new Tank(1, 2));
             battlefield.addUnits(Enemies);
 
-            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(Enemies, player, battlefield, primitiveInformation, availItems);
         }
 
 //        ******
@@ -744,7 +847,7 @@ public class gameUI {
             Enemies.add(new FinalBoss());
             battlefield.addUnits(Enemies);
 
-            winPerviousLevel = battle(player, battlefield, primitiveInformation);
+            winPerviousLevel = battle(Enemies, player, battlefield, primitiveInformation, availItems);
         }
 
 //        ******

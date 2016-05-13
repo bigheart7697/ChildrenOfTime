@@ -39,10 +39,11 @@ public class Player {
     public void setGold(int gold) { this.gold = gold; }
 
     public int getIMPotionRemaining() { return IMPotion; }
+    public ArrayList<Hero> getHeroes() { return this.heroes; }
 
     // Other methods
 
-    public void addHero(Hero h) { heroes.add(h); }
+    public void addHero(Hero h) { this.heroes.add(h); }
 
     public void useIMPotion(Hero h) {
         if (IMPotion > 0) h.revived();
@@ -58,7 +59,6 @@ public class Player {
     }
 
     public boolean useXP(String playerCommand, Battlefield battlefield) {
-        //Code to be written. requires UI to be implemented.
         for (Hero hero : battlefield.getHeroes()) {
             for (Ability ability : hero.getAbilities()) {
                 if (playerCommand.equalsIgnoreCase("Acquire " + (ability.getName()) + " for " + (hero.getName()))) {
@@ -182,7 +182,6 @@ public class Player {
             for (Item item : hero.getItems()) {
                 if (playerCommand.equalsIgnoreCase(item.getName() + "?")) {
                     System.out.println(item.getDescription());
-                    System.out.println();
                     return false;
                 }
             }
@@ -195,7 +194,6 @@ public class Player {
             for (Ability ability : hero.getAbilities()) {
                 if (playerCommand.equalsIgnoreCase(ability.getName() + "?")) {
                     System.out.println(ability.getDescription());
-                    System.out.println();
                     return false;
                 }
             }
