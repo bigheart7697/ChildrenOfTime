@@ -280,8 +280,11 @@ public class Player {
     }
 
     public boolean useItem(String playerCommand, Battlefield battlefield) {
+        boolean validItemname = false;
         for (Hero h: battlefield.getHeroes()) {
             for (Item i : h.getItems()) {
+                String[] tokens = playerCommand.split(" ");
+                if (tokens[2].equalsIgnoreCase(i.getName())) validItemname = true;
                 for (Unit u : battlefield.getUnits()) {
                     if (playerCommand.equalsIgnoreCase(h.getName() + " use " + i.getName() + " on " + u.getName())) {
 
@@ -302,7 +305,10 @@ public class Player {
                 }
             }
         }
-        System.out.println("You don't have this item.");
+
+        if (validItemname) System.out.println("You don't have the desired item.");
+        else System.out.println("invalid command");
+
         return true;
     }
 
