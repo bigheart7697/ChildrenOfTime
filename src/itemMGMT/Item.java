@@ -44,4 +44,5 @@ public class Item {
     //Other Methods
 
     public void displayInfo() { System.out.println(this.description); }
+
 }

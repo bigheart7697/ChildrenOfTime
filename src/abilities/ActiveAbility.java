@@ -41,7 +41,7 @@ abstract public class ActiveAbility extends Ability{
 //    other methods:
 
     @Override
-    public void Upgrade() {
+    public void upgrade() {
         if (currentXP > XPtoNextLevel) {
             level++;
             XPtoNextLevel = XPGainPattern / 10;

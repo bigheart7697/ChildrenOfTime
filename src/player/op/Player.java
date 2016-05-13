@@ -4,6 +4,7 @@ import abilities.Ability;
 import abilities.ActiveAbility;
 import abilities.PassiveAbility;
 import battleMechanics.Battlefield;
+import itemMGMT.Consumable;
 import itemMGMT.Item;
 import units.*;
 
@@ -33,7 +34,7 @@ public class Player {
     public String getName() { return name; }
 
     public int getXP() { return XP; }
-    public void setXP(int XP) { this.XP = XP; }
+    private void setXP(int XP) { this.XP = XP; }
 
     public int getGold() { return gold; }
     public void setGold(int gold) { this.gold = gold; }
@@ -52,10 +53,6 @@ public class Player {
 
     public void move() {
         //Not used in this stage. Will be implemented in graphical phase.
-    }
-
-    public void buy() {
-        //Code to be written. requires shop to be implemented.
     }
 
     public boolean useXP(String playerCommand, Battlefield battlefield) {
@@ -283,7 +280,29 @@ public class Player {
     }
 
     public boolean useItem(String playerCommand, Battlefield battlefield) {
-//        Code to be implemented;
+        for (Hero h: battlefield.getHeroes()) {
+            for (Item i : h.getItems()) {
+                for (Unit u : battlefield.getUnits()) {
+                    if (playerCommand.equalsIgnoreCase(h.getName() + " use " + i.getName() + " on " + u.getName())) {
+
+//                        Commented code below is for custom game phase were items can have EP/MP cost and/or CD
+
+//                        if (i.getMagicCost > h.getMP()) System.out.println("You don't have enough magic points.\n");
+//                        else if (i.getEPCost > h.getEP()) System.out.println("You don't have enough energy points.\n");
+//                        else if (i.getCD > 0) System.out.println("Your desired item is still in cooldown.");
+//                        else
+
+                        if (i instanceof Consumable) {
+                            ((Consumable) i).setTarget(u);
+                            h.useItem(i);
+                            System.out.println(h.getName() + ((Consumable) i).getSuccessMessage1() + u.getName() + ((Consumable) i).getSuccessMessage2());
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        System.out.println("You don't have this item.");
         return true;
     }
 

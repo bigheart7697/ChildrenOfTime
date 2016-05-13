@@ -1,11 +1,12 @@
 package itemMGMT;
 
-import units.Hero;
+import units.Unit;
 
 public class Consumable extends Usable {
     private int numberInStash;
-    private Hero target;
-    private String usageMessage;
+    private Unit target;
+    private String successMessage1;
+    private String successMessage2;
 
     //Constructor
 
@@ -17,10 +18,12 @@ public class Consumable extends Usable {
 
     //Other Methods
 
-    public void setUsageMessage(String um) { this.usageMessage = um; }
-    public String getUsageMessage() { return this.usageMessage; }
-    public void setTarget(Hero h) { this.target = h; }
-    public Hero getTarget() { return this.target; }
+    public void setTarget(Unit u) { this.target = u; }
+    public Unit getTarget() { return this.target; }
     public void isUsed() { this.numberInStash --; }
     public boolean isFinished() { return this.numberInStash == 0;}
+    public String getSuccessMessage1() { return this.successMessage1; }
+    public void setSuccessMessage1(String s) { this.successMessage1 = s; }
+    public String getSuccessMessage2() { return successMessage2; }
+    public void setSuccessMessage2(String successMessage2) { this.successMessage2 = successMessage2; }
 }

@@ -82,7 +82,7 @@ abstract public class Hero extends Unit{
         Ability a = this.abilities.get(abilityNo);
         if (a instanceof ActiveAbility) {
             this.setTarget();
-            ((ActiveAbility) a).cast();
+            a.cast();
             this.target.refreshStatus();
         }
         else System.out.println("The selected ability is passive.");
@@ -145,7 +145,8 @@ abstract public class Hero extends Unit{
     }
 
     public void useItem(Item i) {
-        if (i instanceof Consumable) {
+        if (!inventory.contains(i)) System.out.println("This hero doesn't have the desired item.");
+        else if (i instanceof Consumable) {
             ((Consumable) i).isUsed();
             switch (i.getTargetStat()) {
                 case "HP":
@@ -153,21 +154,23 @@ abstract public class Hero extends Unit{
                     refreshStatus();
                     break;
                 case "MP":
-                    ((Consumable) i).getTarget().setMP(((Consumable) i).getTarget().getMP() + i.getEffect());
+                    if (((Consumable) i).getTarget() instanceof Hero){
+                        Hero h = (Hero) ((Consumable) i).getTarget();
+                        h.setMP(h.getMP() + i.getEffect());
+                    }
                     refreshStatus();
                     break;
                 case "EP":
-                    ((Consumable) i).getTarget().setEP(((Consumable) i).getTarget().getEP() + i.getEffect());
+                    if (((Consumable) i).getTarget() instanceof Hero) {
+                        Hero h = (Hero) ((Consumable) i).getTarget();
+                        h.setEP(h.getEP() + i.getEffect());
+                    }
                     refreshStatus();
                     break;
             }
             if (((Consumable) i).isFinished()) this.inventory.remove(i);
         }
         else System.out.println("Selected Item is not Consumable");
-    }
-
-    public void addXP(int quantity, Ability target) {
-        //Code to be written
     }
 
     @Override
