@@ -306,7 +306,6 @@ public class Player {
         }
 
         if (validItemname) System.out.println("You don't have the desired item.");
-//        else System.out.println("invalid command");
 
         return true;
     }

@@ -222,31 +222,6 @@ public class gameUI {
                         "“Required abilities aren’t acquired”\n");
             }
 
-//            **********************************************
-//            for (Hero hero : battlefield.getHeroes()) {
-//                for (Ability ability : hero.getAbilities()) {
-//                    if (playerCommand.equalsIgnoreCase((hero.getName() + " " + ability.getName() + "?"))) {
-//                        InvalidCommandSpecifier = false;
-//                        int tmp = ability.getLevel() + 1;
-//                        System.out.println(ability.getDescription() + "\n" +
-//                                "]f you want to upgrade it for " + hero.getName() + " to level " + tmp + "\n" + " You need " + ability.getXPtoNextLevel() + " experience points");
-//                    }
-
-//                    if (playerCommand.equalsIgnoreCase("Acquire " + (ability.getName()) + " for " + (hero.getName()))) {
-//                        InvalidCommandSpecifier = false;
-//                        ability.setXP(player.getXP());
-//                        if (player.getXP() < ability.getXPtoNextLevel())
-//                            System.out.println("Your experience is insufficient");
-//                        else if (ability.getLevel() == 3)
-//                            System.out.println("This ability cannot be upgraded anymore");
-//                        else if (!ability.hasRequiredAbility(hero)) {
-//                            System.out.println("Required abilities aren’t acquired");
-//                        }
-//                        else
-//                            System.out.println((ability.getName()) + "acquired/upgraded successfully, your current experience is: " + (player.getXP()));
-//                    }
-//                }
-//            *************************************************
 
             if (InvalidCommandSpecifier)
                 InvalidCommandSpecifier = player.herosAbilityInformation(playerCommand, battlefield);
@@ -302,106 +277,6 @@ public class gameUI {
                     InvalidCommandSpecifier = false;
                 }
 
-//                ***********************************************************
-//                for (Hero hero : battlefield.getHeroes()) {
-//                    if (playerCommand.equalsIgnoreCase(hero.getName() + "?")) {
-//                        System.out.println(hero.getDescription());
-//                        InvalidCommandSpecifier = false;
-//                    }
-//                    for (Ability ability : hero.getAbilities()) {
-//                        if (ability.getName().equalsIgnoreCase(playerCommand + "?")) {
-//                            System.out.println(ability.getDescription());
-//                            InvalidCommandSpecifier = false;
-//                        }
-//                        for (Enemy enemy : battlefield.getEnemies()) {
-//                            if (playerCommand.equalsIgnoreCase(hero.getName() + " attack " + enemy.getName())) {
-//                                if (2 > hero.getMP()) {
-//                                    System.out.println("You don't have enough energy points");
-//                                }
-//                                else {
-//                                    enemy.setHP(enemy.getHP() - hero.getAttDmg());
-//                                    System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + "power");
-//                                    if (enemy.getHP() <= 0) {
-//                                        if (battlefield.getEnemies().size() == 1) {
-//                                            System.out.println("Victory! You’ve defeated all of your enemies");
-//                                            break outer;
-//                                        }
-//                                        else {
-//                                            System.out.println(enemy.getName() + " has died");
-//                                        }
-//                                    }
-//                                }
-//                            }
-//                            if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + enemy.getName())) {
-//                                if (ability.getMagicCost() > hero.getMP())
-//                                    System.out.println("You don't have enough magic points");
-//                                else if (ability.getEPCost() > hero.getMP()) {
-//                                    System.out.println("You don't have enough energy points");
-//                                }
-//                                else if (ability.getRemainingCD() > 0) {
-//                                    System.out.println("Your desired ability is still in cooldown");
-//                                }
-//                                else if (ability.getLevel() == 0) {
-//                                    System.out.println("You have not yet acquired this ability");
-//                                }
-//                                else {
-//                                    ability.setTarget(enemy);
-//                                    ability.cast();
-//                                    InvalidCommandSpecifier = false;
-//                                    System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + enemy.getName() + " successfully!");
-//                                    if (enemy.getHP() <= 0) {
-//                                        if (battlefield.getEnemies().size() == 1) {
-//                                            System.out.println("Victory! You’ve defeated all of your enemies");
-//                                            break outer;
-//                                        }
-//                                        else {
-//                                            System.out.println(enemy.getName() + " has died");
-//                                        }
-//                                    }
-//                                }
-//                            }
-//
-//                            implement using items here as the ability was implemented above here
-//
-//                        }
-//                        for (Hero h : battlefield.getHeroes()) {
-//                            if (playerCommand.equalsIgnoreCase(hero.getName() + " cast " + ability.getName() + " on " + h.getName())) {
-//                                if (ability.getMagicCost() > hero.getMP())
-//                                    System.out.println("You don't have enough magic points");
-//                                else if (ability.getEPCost() > hero.getMP()) {
-//                                    System.out.println("You don't have enough energy points");
-//                                }
-//                                else if (ability.getRemainingCD() > 0) {
-//                                    System.out.println("Your desired ability is still in cooldown");
-//                                }
-//                                else if (ability.getLevel() == 0) {
-//                                    System.out.println("You have not yet acquired this ability");
-//                                }
-//                                else {
-//                                    ability.setTarget(h);
-//                                    ability.cast();
-//                                    InvalidCommandSpecifier = false;
-//                                    System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + h.getName() + " successfully!");
-//
-//                                }
-//                            }
-//                        }
-//                    }
-//                    for (Item item : hero.getItems()) {
-//                        if (item.getName().equalsIgnoreCase(playerCommand + "?")) {
-//                            System.out.println(item.getDescription());
-//                            InvalidCommandSpecifier = false;
-//                        }
-//                    }
-//
-//                }
-//                for (Enemy enemy : battlefield.getEnemies()) {
-//                    if (enemy.getName().equals(playerCommand + "?")) {
-//                        System.out.println(enemy.getDescription());
-//                        InvalidCommandSpecifier = false;
-//                    }
-//                }
-//                ******************************************************************************
 
                 if (InvalidCommandSpecifier)
                     InvalidCommandSpecifier = player.heroInformation(playerCommand, battlefield);
