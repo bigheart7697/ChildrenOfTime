@@ -34,7 +34,7 @@ public class Player {
     public String getName() { return name; }
 
     public int getXP() { return XP; }
-    private void setXP(int XP) { this.XP = XP; }
+    public void setXP(int XP) { this.XP = XP; }
 
     public int getGold() { return gold; }
     public void setGold(int gold) { this.gold = gold; }

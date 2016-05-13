@@ -24,10 +24,11 @@ public class gameUI {
             if (hasAbility) {
                 System.out.println("Can cast:");
                 for (ActiveAbility aa: h.getActAbs())
-                    System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
-                            aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
+                    if (aa.getLevel() > 0)
+                        System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
+                                aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
                 for (Ability a : h.getAbilities()) {
-                    if (a instanceof PassiveAbility) {
+                    if (a instanceof PassiveAbility && a.getLevel() > 0) {
                         System.out.println(a.getName());
                     }
                 }
@@ -94,6 +95,7 @@ public class gameUI {
         while (!playerCommand.equalsIgnoreCase("done")) {
             InvalidCommandSpecifier = true;
             if (playerCommand.equalsIgnoreCase("Again")) {
+                InvalidCommandSpecifier = false;
                 System.out.print("This shop offers you: ");
                 for (Item i: availItems) {
                     if (availItems.indexOf(i) == availItems.size() - 1) System.out.print(i.getName() + " for " + i.getCost() + " dollars." );
@@ -115,7 +117,7 @@ public class gameUI {
                 System.out.println("Your current wealth is: " + player.getGold() + "\n");
             }
             for (Item i : availItems)
-                if (i.getName().equalsIgnoreCase(playerCommand + "?")) {
+                if (playerCommand.equalsIgnoreCase(i.getName() + "?")) {
                     i.displayInfo();
                     InvalidCommandSpecifier = false;
                 }
@@ -268,7 +270,6 @@ public class gameUI {
             printEachTurnsInformation(battlefield);
             playerCommand = scanner.nextLine();
             while (!playerCommand.equalsIgnoreCase("Done")) {
-                playerCommand = scanner.nextLine();
                 InvalidCommandSpecifier = true;
                 if (playerCommand.equalsIgnoreCase("Again")) {
                     printEachTurnsInformation(battlefield);
@@ -804,6 +805,8 @@ public class gameUI {
 //        battle2
 //        ******
         if (winPreviousLevel) {
+            player.setGold(player.getGold() + 50);
+            player.setXP(player.getXP() + 20);
             primitiveInformation = "As you wander into the hall you realize the surrounding doors can lead your destiny to\n"
                     + "something far worse than you expected. You know what’s anticipating you behind the only\n" +
                     "open door but there’s no other choice.\n\n" + "\nYou've encountered 2 able thugs, 1 weak angel, 1 weak tank\n";
@@ -823,6 +826,8 @@ public class gameUI {
 //        battle3
 //        ******
         if (winPreviousLevel) {
+            player.setGold(player.getGold() + 60);
+            player.setXP(player.getXP() + 25);
             primitiveInformation = "The door behind you is shut with a thunderous sound and you progress into the next hall" +
                     "holding the first key that you’ve found, hoping to seek the second one.\n\n" +
                     "\nYou've encountered two 1 able thug, 1 mighty thug, 1 able angel, 1 weak tank\n";
@@ -841,6 +846,8 @@ public class gameUI {
 //        ******
 //        battle4
 //        ******
+        player.setGold(player.getGold() + 70);
+        player.setXP(player.getXP() + 30);
         if (winPreviousLevel) {
             primitiveInformation = "Running with the second key in your hand, you unlock the door back to the first hall and"
                     + "use the first key to burst into your most terrifying nightmares.\n\n" +
@@ -859,9 +866,11 @@ public class gameUI {
         }
 
 //        ******
-//        battle3
+//        battle5
 //        ******
         if (winPreviousLevel) {
+            player.setGold(player.getGold() + 80);
+            player.setXP(player.getXP() + 35);
             primitiveInformation = "You feel hopeless and exhausted as you stalk to the final door. What’s behind that door" +
                     "makes your hearts pound and your spines shake with fear, but you came here to do one" +
                     "thing and backing down is not an option.\n\n" +
