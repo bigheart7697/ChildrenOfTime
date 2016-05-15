@@ -193,6 +193,7 @@ abstract public class Hero extends Unit{
         this.HP += this.HPRefill * this.maxHP / 100;
         this.MP += this.MPRefill * this.maxMP / 100;
         this.EP = this.EPmax;
+        refreshStatus();
     }
 
 }

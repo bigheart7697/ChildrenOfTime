@@ -33,14 +33,15 @@ public class Attacker extends ActiveAbility {
 
     @Override
     public void cast() {
-        EPCost = EPCostPattern / ((int)Math.pow(10.0, (double)(level - 1)) % 10);
+        EPCost = EPCostPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;
+        user.setEP(user.getEP() - EPCost);
         if(multiplierPattern > 0) {
-            multiplier = multiplierPattern / (int)Math.pow(10.0, (double)(level - 1)) % 10;
+            multiplier = multiplierPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;
             target.setHP(target.getHP() - user.getAttDmg() - user.getAttDmg() * multiplier / 10);
         }
         if(HPCostPattern > 0) {
-            HPCostPattern = HPCostPattern / (int)Math.pow(10.0, (double)(level - 1)) % 10;
-            target.setHP(target.getHP() - 3 *HPCost);
+            HPCost = (HPCostPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10) * 10;
+            target.setHP(target.getHP() - 3 * HPCost);
             user.setHP(user.getHP() - HPCost);
         }
     }

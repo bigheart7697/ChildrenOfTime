@@ -58,7 +58,7 @@ public class gameUI {
                 if (ability.getLevel() == 0)
                     System.out.println(" : not acquired");
                 else
-                    System.out.println(ability.getLevel() + "");
+                    System.out.println(" " + ability.getLevel());
             }
             System.out.println();
         }
@@ -290,7 +290,7 @@ public class gameUI {
                     InvalidCommandSpecifier = player.attack(playerCommand, battlefield);
                     battlefield.removeDeadUnit();
                     if (battlefield.getEnemies().size() == 0) {
-                        System.out.println("Victory! You’ve defeated all of your enemies");
+                        System.out.println("Victory! You’ve defeated all of your enemies\n");
                         return true;
                     }
                 }
@@ -298,7 +298,7 @@ public class gameUI {
                     InvalidCommandSpecifier = player.castAbility(playerCommand, battlefield);
                     battlefield.removeDeadUnit();
                     if (battlefield.getEnemies().size() == 0) {
-                        System.out.println("Victory! You’ve defeated all of your enemies");
+                        System.out.println("Victory! You’ve defeated all of your enemies\n");
                         return true;
                     }
                 }
@@ -313,6 +313,7 @@ public class gameUI {
                 playerCommand = scanner.nextLine();
             }
 
+//            Enemies take their actions
             for (Enemy enemy : battlefield.getEnemies()) {
                 enemy.setTarget();
                 enemy.action();
@@ -326,7 +327,7 @@ public class gameUI {
                         else {
                             System.out.println(hero.getName() + " is dying, immortality potion was used for reincarnation process, you now have "
                                     + player.getIMPotionRemaining() + "immortality potions left");
-                            hero.refreshStatus();
+                            player.useIMPotion(hero);
                         }
                     }
                 }
@@ -426,7 +427,7 @@ public class gameUI {
                 "Success message: “Eley just did an overpowered attack on “ + (target) + “ with “ + (damage done) + “ damage”\n");
         Ability[] OverpoweredAttacksRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
-            OverpoweredAttacksRequiredAbility[cnt] = new SelfBoost("Fight training", cnt, 0, 0, "", 0);
+            OverpoweredAttacksRequiredAbility[cnt] = new SelfBoost("Fight training", cnt + 1, 0, 0, "", 0);
         OverpoweredAttack.setRequiredAbility(OverpoweredAttacksRequiredAbility);
 
         Attacker Sacrifice = new Attacker("Sacrifice", 0, 2, 34, 60, 333, 111, 0, 456, false, Chrome);
@@ -438,7 +439,7 @@ public class gameUI {
                 "Success message: “Chrome just sacrificed himself to damage all his enemies with “ + (damage done) + “ power“\n");
         Ability[] SacrificesRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
-            SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt, 0, 0, "", 0);
+            SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt + 1, 0, 0, "", 0);
         Sacrifice.setRequiredAbility(SacrificesRequiredAbility);
 
         AttackModifier SwirlingAttack = new AttackModifier("Attack modifier", 0, 2, 34, 1, 123, 0, Eley, battlefield);
@@ -487,7 +488,7 @@ public class gameUI {
                 "Success message: “Meryl just gave “ + (target) + “ 1 energy point”\n");
         Ability[] CaretakersRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
-            CaretakersRequiredAbility[cnt] = new SelfBoost("Quick as a bunny", cnt, 0, 0, "", 0);
+            CaretakersRequiredAbility[cnt] = new SelfBoost("Quick as a bunny", cnt + 1, 0, 0, "", 0);
         Caretaker.setRequiredAbility(CaretakersRequiredAbility);
 
         Restorer Boost = new Restorer("Boost", 0, 2, 35, 50, 222, 110, "attack power", 233, Bolti);
@@ -511,7 +512,7 @@ public class gameUI {
                 "Success message: “Bolti just helped “ + (target) + “ with “ + (M) + “ magic points”\n");
         Ability[] ManaBeamsRequiredAbility = new Ability[3];
         for(int cnt = 0; cnt < 3; cnt++)
-            ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt, 0, 0, "", 0);
+            ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt + 1, 0, 0, "", 0);
         ManaBeam.setRequiredAbility(ManaBeamsRequiredAbility);
 
 //        Adding abilities to the heroes:

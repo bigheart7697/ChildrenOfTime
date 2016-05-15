@@ -73,7 +73,7 @@ public class Player {
                         ability.setUser(hero);
                         ability.upgrade();
                         this.setXP(ability.getCurrentXP());
-                        System.out.println((ability.getName()) + "acquired/upgraded successfully, your current experience is: " + (this.getXP()));
+                        System.out.println((ability.getName()) + " acquired/upgraded successfully, your current experience is: " + (this.getXP()));
                         System.out.println();
                     }
                     return false;
@@ -248,7 +248,7 @@ public class Player {
                         else {
                             ability.setTarget(unit);
                             ability.cast();
-                            System.out.println(hero.getName() + " was casted " + ability.getName() + " on " + unit.getName() + " successfully!");
+                            System.out.println(hero.getName() + " has casted " + ability.getName() + " on " + unit.getName() + " successfully!");
                             System.out.println();
                         }
                         return false;
