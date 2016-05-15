@@ -139,7 +139,7 @@ public class gameUI {
             for (Hero h: player.getHeroes())
                 for (Item i: availItems)
                     if (playerCommand.equalsIgnoreCase("Sell " + i.getName() + " of " + h.getName())) {
-                        player.setGold(player.getGold() + i.getCost());
+                        player.setGold(player.getGold() + (i.getCost() / 2));
                         h.sellItem(i);
                         System.out.println(player.getGold());
                         InvalidCommandSpecifier = false;
