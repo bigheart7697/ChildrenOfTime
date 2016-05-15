@@ -311,6 +311,9 @@ public class gameUI {
                 }
 
                 playerCommand = scanner.nextLine();
+                for (Hero h: battlefield.getHeroes()) {
+                    h.refreshStatus();
+                }
             }
 
 //            Enemies take their actions
@@ -341,6 +344,9 @@ public class gameUI {
                 }
             }
             battlefield.updateBattlefield();
+        }
+        for (Hero h: battlefield.getHeroes()) {
+            h.renew();
         }
         return true;
     }
@@ -663,6 +669,7 @@ public class gameUI {
 //        ******
 //        battle1
 //        ******
+
         String primitiveInformation = "\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
                 " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
                 " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n\n" + "\nYou've encountered 3 weak thug(s), 1 weak angel(s)\n";
@@ -682,6 +689,7 @@ public class gameUI {
 //        ******
 //        battle2
 //        ******
+
         if (winPreviousLevel) {
             player.setGold(player.getGold() + 50);
             player.setXP(player.getXP() + 20);
@@ -705,6 +713,7 @@ public class gameUI {
 //        ******
 //        battle3
 //        ******
+
         if (winPreviousLevel) {
             player.setGold(player.getGold() + 60);
             player.setXP(player.getXP() + 25);
@@ -728,6 +737,7 @@ public class gameUI {
 //        ******
 //        battle4
 //        ******
+
         player.setGold(player.getGold() + 70);
         player.setXP(player.getXP() + 30);
         if (winPreviousLevel) {
@@ -752,6 +762,7 @@ public class gameUI {
 //        ******
 //        battle5
 //        ******
+
         if (winPreviousLevel) {
             player.setGold(player.getGold() + 80);
             player.setXP(player.getXP() + 35);

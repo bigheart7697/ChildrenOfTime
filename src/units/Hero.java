@@ -72,21 +72,21 @@ abstract public class Hero extends Unit{
 
     //Other methods
 
-    public void attack() {
-        this.target.setHP(this.target.getHP() - getAttDmg());
-        this.EP -= 2;
-        this.target.refreshStatus();
-    }
-
-    public void magic(int abilityNo) {
-        Ability a = this.abilities.get(abilityNo);
-        if (a instanceof ActiveAbility) {
-            this.setTarget();
-            a.cast();
-            this.target.refreshStatus();
-        }
-        else System.out.println("The selected ability is passive.");
-    }
+//    public void attack() {
+//        this.target.setHP(this.target.getHP() - getAttDmg());
+//        this.EP -= 2;
+//        this.target.refreshStatus();
+//    }
+//
+//    public void magic(int abilityNo) {
+//        Ability a = this.abilities.get(abilityNo);
+//        if (a instanceof ActiveAbility) {
+//            this.setTarget();
+//            a.cast();
+//            this.target.refreshStatus();
+//        }
+//        else System.out.println("The selected ability is passive.");
+//    }
 
     public void buyItem(Item i) {
         if (i.getInvSpaceNeeded() + this.inventory.size() > this.invSize)
@@ -111,12 +111,15 @@ abstract public class Hero extends Unit{
             switch (i.getTargetStat()) {
                 case "HP":
                     this.setMaxHP(this.getMaxHP() + i.getEffect());
+                    this.setHP(this.getMaxHP());
                     break;
                 case "MP":
                     this.setMaxMP(this.getMaxMP() + i.getEffect());
+                    this.setMP(this.getMaxMP());
                     break;
                 case "EP":
                     this.setMaxEP(this.getMaxEP() + i.getEffect());
+                    this.setEP(this.getMaxEP());
                     break;
                 case "att":
                     this.setAttDmg(this.getAttDmg() + i.getEffect());
@@ -171,6 +174,13 @@ abstract public class Hero extends Unit{
             if (((Consumable) i).isFinished()) this.inventory.remove(i);
         }
         else System.out.println("Selected Item is not Consumable");
+    }
+
+    public void renew() {
+        this.setHP(this.getMaxHP());
+        this.setMP(this.getMaxMP());
+        this.setEP(this.getMaxEP());
+        //Insert cooldown reduction for active abilities here
     }
 
     @Override

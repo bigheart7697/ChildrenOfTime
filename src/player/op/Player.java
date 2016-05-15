@@ -263,7 +263,7 @@ public class Player {
         for (Hero hero : battlefield.getHeroes()) {
             for (Enemy enemy : battlefield.getEnemies()) {
                 if (playerCommand.equalsIgnoreCase(hero.getName() + " attack " + enemy.getName())) {
-                    if (2 > hero.getMP()) {
+                    if (hero.getEP() < 2) {
                         System.out.println("You don't have enough energy points");
                     } else {
                         hero.setEP(hero.getEP() - 2);
@@ -279,11 +279,11 @@ public class Player {
     }
 
     public boolean useItem(String playerCommand, Battlefield battlefield) {
-        boolean validItemname = false;
+        boolean validItemName = false;
         for (Hero h: battlefield.getHeroes()) {
             for (Item i : h.getItems()) {
                 String[] tokens = playerCommand.split(" ");
-                if (tokens[2].equalsIgnoreCase(i.getName())) validItemname = true;
+                if (tokens[2].equalsIgnoreCase(i.getName())) validItemName = true;
                 for (Unit u : battlefield.getUnits()) {
                     if (playerCommand.equalsIgnoreCase(h.getName() + " use " + i.getName() + " on " + u.getName())) {
 
@@ -305,7 +305,7 @@ public class Player {
             }
         }
 
-        if (validItemname) System.out.println("You don't have the desired item.");
+        if (validItemName) System.out.println("You don't have the desired item.");
 
         return true;
     }
