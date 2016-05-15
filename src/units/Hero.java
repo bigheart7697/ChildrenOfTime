@@ -48,7 +48,7 @@ abstract public class Hero extends Unit{
     public void setMP(int m) { this.MP = m; }
 
     public int getMaxEP() { return this.EPmax; }
-    private void setMaxEP(int e) { this.EPmax = e; }
+    public void setMaxEP(int e) { this.EPmax = e; }
 
     public int getMaxMP() { return maxMP; }
     public void setMaxMP(int maxMP) { this.maxMP = maxMP; }
@@ -180,7 +180,9 @@ abstract public class Hero extends Unit{
         this.setHP(this.getMaxHP());
         this.setMP(this.getMaxMP());
         this.setEP(this.getMaxEP());
-        //Insert cooldown reduction for active abilities here
+        for (Ability a : getAbilities()) {
+            a.setRemainingCD(0);
+        }
     }
 
     @Override

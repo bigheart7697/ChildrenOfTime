@@ -35,6 +35,7 @@ public class Attacker extends ActiveAbility {
     public void cast() {
         EPCost = EPCostPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;
         user.setEP(user.getEP() - EPCost);
+        user.setMP(user.getMP() - magicCost);
         if(multiplierPattern > 0) {
             multiplier = multiplierPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;
             target.setHP(target.getHP() - user.getAttDmg() - user.getAttDmg() * multiplier / 10);

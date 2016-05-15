@@ -86,7 +86,7 @@ abstract public class Ability {
     public abstract void cast();
 
     public void upgrade() {
-        if (currentXP > XPtoNextLevel) {
+        if (currentXP >= XPtoNextLevel) {
             level++;
             currentXP -= XPtoNextLevel;
             XPtoNextLevel = XPGainPattern / 10;

@@ -26,7 +26,7 @@ public class gameUI {
                 for (ActiveAbility aa: h.getActAbs())
                     if (aa.getLevel() > 0)
                         System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
-                                aa.getMagicCost() + " magic points and a " + aa.getCD() + " turn cooldown");
+                                aa.getMagicCost() + " magic points and a " + aa.getRemainingCD() + " turn cooldown");
                 for (Ability a : h.getAbilities()) {
                     if (a instanceof PassiveAbility && a.getLevel() > 0) {
                         System.out.println(a.getName());
@@ -448,7 +448,7 @@ public class gameUI {
             SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt + 1, 0, 0, "", 0);
         Sacrifice.setRequiredAbility(SacrificesRequiredAbility);
 
-        AttackModifier SwirlingAttack = new AttackModifier("Attack modifier", 0, 2, 34, 1, 123, 0, Eley, battlefield);
+        AttackModifier SwirlingAttack = new AttackModifier("Swirling attack", 0, 2, 34, 1, 123, 0, Eley, battlefield);
         SwirlingAttack.setDescription("Swirling attack\n" +
                 "While attacking, non-targeted enemies also take P percent of its damage\n" +
                 "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1\n" +

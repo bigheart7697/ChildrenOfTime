@@ -33,10 +33,12 @@ public class SelfBoost extends PassiveAbility {
     public void cast() {
         if((whichStat == "magic point") && (XPGainPattern != 0)){
             getUser().setMaxMP( getUser().getMaxMP() + amount);
+            getUser().setMP(getUser().getMaxMP());
         }
 
         else if((whichStat == "health point") && XPGainPattern != 0) {
             getUser().setMaxHP( getUser().getMaxHP() + amount);
+            getUser().setHP(getUser().getMaxHP());
         }
 
         else if((whichStat == "attack power") && XPGainPattern != 0) {
@@ -44,6 +46,7 @@ public class SelfBoost extends PassiveAbility {
         }
 
         else if((whichStat == "energy point") && XPGainPattern != 0) {
+            getUser().setMaxEP(getUser().getMaxEP() + amount);
             getUser().setEP( getUser().getEP() + amount);
         }
 
