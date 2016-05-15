@@ -38,7 +38,8 @@ public class Restorer extends ActiveAbility {
         else if(user.getMP() < magicCost)
             System.out.println("You don't have enough magic point!");
         else {
-            CD = (CDPattern / (int) Math.pow(10.0, (double) (level - 1))) % 10;
+            CD = (CDPattern / (int) Math.pow(10.0, (double) (3 - level))) % 10;
+            setRemainingCD(CD + 1);
             if (whichState == "health point") {
                 amount = (amountPattern / (int) Math.pow(10.0, (double) ((3 - level) * 2)) % 100) * 10;
                 if (target.getHP() == target.getMaxHP())

@@ -24,9 +24,12 @@ public class gameUI {
             if (hasAbility) {
                 System.out.println("Can cast:");
                 for (ActiveAbility aa: h.getActAbs())
-                    if (aa.getLevel() > 0)
+                    if (aa.getLevel() > 0 && aa.getRemainingCD() > 0)
                         System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
                                 aa.getMagicCost() + " magic points and a " + aa.getRemainingCD() + " turn cooldown");
+                    else if (aa.getLevel() > 0 && aa.getRemainingCD() <= 0)
+                        System.out.println(aa.getName() + " for " + aa.getEPCost() + " energy points, " +
+                                aa.getMagicCost() + " magic points and a " + 0 + " turn cooldown");
                 for (Ability a : h.getAbilities()) {
                     if (a instanceof PassiveAbility && a.getLevel() > 0) {
                         System.out.println(a.getName());
@@ -338,9 +341,6 @@ public class gameUI {
             for (Hero hero : battlefield.getHeroes()) {
                 for (ActiveAbility ability : hero.getActAbs()) {
                     ability.setRemainingCD(ability.getRemainingCD() - 1);
-                    if (ability.getRemainingCD() < 0) {
-                        ability.setRemainingCD(ability.getCD());
-                    }
                 }
             }
             battlefield.updateBattlefield();
