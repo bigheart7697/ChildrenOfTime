@@ -32,11 +32,10 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.setLayout(EM.deck);
         EM.frame.setResizable(false);
 
-        EM.MM = new MainMenu(new MainMenuListener() {
-            @Override
-            public void switchTo(String target) {
-                EM.deck.show(EM.frame.getContentPane(), target);
-            }
+        EM.MM = new MainMenu(target -> {
+            EM.deck.show(EM.frame.getContentPane(), target);
+            EM.frame.setSize(1206, 935);
+            EM.frame.setLocationRelativeTo(null);
         });
         EM.GE = new GameEnv();
         EM.SPM = new SinglePlayerMenu();
@@ -51,7 +50,9 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.PvPBM, "pvp");
         EM.frame.add(EM.SM, "settings");
 
-        EM.deck.show(EM.frame.getContentPane(), "main");
+        EM.frame.setSize(1206, 935);
+        EM.frame.setLocationRelativeTo(null);
+        EM.deck.show(EM.frame.getContentPane(), "game");
 
         EM.timer.start();
 
@@ -61,6 +62,6 @@ public class EnvironmentMgr implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-//        MM.update();
+        MM.update();
     }
 }

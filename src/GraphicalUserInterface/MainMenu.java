@@ -17,7 +17,7 @@ class MainMenu extends JComponent{
 
     private BufferedImage BG;
     private Font mmFont;
-    private Color fontColor, buttonColor;
+    private Color fontColor, buttonColor, c1, c2, c3, c4, c5;
 
     private RoundRectangle2D.Double singlePlayButton, customGameButton, multiPlayButton;
     private Ellipse2D.Double settingsButton, exitButton;
@@ -27,10 +27,10 @@ class MainMenu extends JComponent{
         mmListener = mml;
 
         fontColor = new Color(166, 143, 78);
-        buttonColor = new Color(60, 60, 60);
+        c1 = c2 = c3 = c4 = c5 = buttonColor = new Color(60, 60, 60);
 
         try {
-            mmFont = Font.createFont(Font.TRUETYPE_FONT, new File("mainMenuFont.ttf"));
+            mmFont = Font.createFont(Font.TRUETYPE_FONT, new File("MainMenuGraphics/mainMenuFont.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(mmFont);
         } catch (FontFormatException | IOException e) {
@@ -38,7 +38,7 @@ class MainMenu extends JComponent{
         }
 
         try {
-            BG = ImageIO.read(new File("BG.jpg"));
+            BG = ImageIO.read(new File("MainMenuGraphics/BG.jpg"));
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -49,7 +49,7 @@ class MainMenu extends JComponent{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (singlePlayButton.contains(e.getX(), e.getY())) {
-                    mmListener.switchTo("single");
+                    mmListener.switchTo("game");
                 }
                 if (customGameButton.contains(e.getX(), e.getY())) {
                     mmListener.switchTo("custom");
@@ -63,6 +63,30 @@ class MainMenu extends JComponent{
                 if (exitButton.contains(e.getX(), e.getY())) {
                     System.exit(0);
                 }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (singlePlayButton.contains(e.getX(), e.getY())) {
+                    c1 = new Color(70,70,70);
+                }
+                if (customGameButton.contains(e.getX(), e.getY())) {
+                    c2 = new Color(70,70,70);
+                }
+                if (multiPlayButton.contains(e.getX(), e.getY())) {
+                    c3 = new Color(70,70,70);
+                }
+                if (settingsButton.contains(e.getX(), e.getY())) {
+                    c4 = new Color(70,70,70);
+                }
+                if (exitButton.contains(e.getX(), e.getY())) {
+                    c5 = new Color(70,70,70);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                c1 = c2 = c3 = c4 = c5 = buttonColor;
             }
         });
 
@@ -93,31 +117,31 @@ class MainMenu extends JComponent{
 
 
         //Buttons
-        g2.setColor(buttonColor);
+        g2.setColor(c1);
         singlePlayButton = new RoundRectangle2D.Double(130, 600, 160, 80, 60, 60);
         g2.fill(singlePlayButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(130, 600, 160, 80, 60, 60);
 
-        g2.setColor(buttonColor);
+        g2.setColor(c2);
         customGameButton = new RoundRectangle2D.Double(330, 600, 160, 80, 60, 60);
         g2.fill(customGameButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(330, 600, 160, 80, 60, 60);
 
-        g2.setColor(buttonColor);
+        g2.setColor(c3);
         multiPlayButton = new RoundRectangle2D.Double(530, 600, 160, 80, 60, 60);
         g2.fill(multiPlayButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(530, 600, 160, 80, 60, 60);
 
-        g2.setColor(buttonColor);
+        g2.setColor(c4);
         settingsButton = new Ellipse2D.Double(1000, 600, 80, 80);
         g2.fill(settingsButton);
         g2.setColor(fontColor);
         g2.drawOval(1000, 600, 80, 80);
 
-        g2.setColor(buttonColor);
+        g2.setColor(c5);
         exitButton = new Ellipse2D.Double(1100, 600, 80, 80);
         g2.fill(exitButton);
         g2.setColor(fontColor);
@@ -136,6 +160,6 @@ class MainMenu extends JComponent{
     }
 
     void update() {
-//        repaint();
+        repaint();
     }
 }
