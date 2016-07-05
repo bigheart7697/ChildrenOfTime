@@ -42,14 +42,14 @@ public class AttackModifier extends PassiveAbility {
             for(Enemy tmp : battlefield.getEnemies()) {
                 if (tmp.equals(target) || level == 0)
                     continue;
-                splashDmg = (((splashPattern) / (int) Math.pow(10.0,(double)(level - 1))) % 10);
-                target.setHP(target.getHP() - user.getAttDmg() * splashDmg / 100);
+                splashDmg = (((splashPattern) / (int) Math.pow(10.0,(double)(3 - level))) % 10);
+                tmp.setHP(tmp.getHP() - user.getAttDmg() * splashDmg / 10);
             }
         }
         if(chancePattern != 0) {
             Random random = new Random();
             int randomNumber = random.nextInt(100);
-            critChance = ((int) Math.pow(10.0,(double)(level - 1)) % 10) * 10;
+            critChance = ((int) Math.pow(10.0,(double)(3 - level)) % 10) * 10;
             if(randomNumber < (chancePattern) * critChance / 100) {
                 target.setHP(target.getHP() - user.getAttDmg() * critRate);
             }

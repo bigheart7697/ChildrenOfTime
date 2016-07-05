@@ -46,7 +46,7 @@ abstract public class ActiveAbility extends Ability{
             level++;
             currentXP -= XPtoNextLevel;
             XPtoNextLevel = XPGainPattern / 10;
-            CD = CDPattern / (int)Math.pow(10.0, level - 1) % 10;
+            CD = CDPattern / (int)Math.pow(10.0, 3 - level) % 10;
             remainingCD = 0;
             XPGainPattern = (XPGainPattern % 10) * 10;
             EPCost = EPCostPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;

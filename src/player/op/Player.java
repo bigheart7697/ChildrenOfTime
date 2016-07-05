@@ -266,9 +266,27 @@ public class Player {
                     if (hero.getEP() < 2) {
                         System.out.println("You don't have enough energy points");
                     } else {
-                        hero.setEP(hero.getEP() - 2);
-                        enemy.setHP(enemy.getHP() - hero.getAttDmg());
-                        System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + " power");
+                        boolean hasAttackModifier = false;
+                        for (Ability ability : hero.getAbilities()) {
+                            if (ability instanceof AttackModifier && ability.getLevel() > 0) {
+                                hasAttackModifier = true;
+                                ability.setTarget(enemy);
+                                ability.cast();
+                                hero.setEP(hero.getEP() - 2);
+                                if (ability.getName().equalsIgnoreCase("Swirling attack") && ability.getLevel() > 0)
+                                    System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() +
+                                            " and use the ability : Swirling attack");
+                                else if (ability.getName().equalsIgnoreCase("Critical strike") && ability.getLevel() > 0)
+                                    System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() +
+                                            " and use the ability : Critical strike");
+                                break;
+                            }
+                        }
+                        if (!hasAttackModifier) {
+                            hero.setEP(hero.getEP() - 2);
+                            enemy.setHP(enemy.getHP() - hero.getAttDmg());
+                            System.out.println(hero.getName() + " has successfully attacked " + enemy.getName() + " with " + hero.getAttDmg() + " power");
+                        }
                     }
                     System.out.println();
                     return false;

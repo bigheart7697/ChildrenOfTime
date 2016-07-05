@@ -31,14 +31,14 @@ public class Tank extends Enemy {
         super("Tank" + id, 0, 0);
         this.id = id;
         if (version == 0) {
-            setName("Weak tank" + id);
+            setName("Weak tank " + id);
             setMaxHP(400);
             setHP(400);
             setAttDmg(30);
             this.version = version;
         }
         if (version == 1) {
-            setName("Able tank" + id);
+            setName("Able tank " + id);
             setMaxHP(500);
             setHP(500);
             setAttDmg(90);

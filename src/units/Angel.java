@@ -8,14 +8,14 @@ public class Angel extends Enemy {
         super("Angel" + id, 0,0);
         this.id = id;
         if (version == 0) {
-            setName("Weak angel" + id);
+            setName("Weak angel " + id);
             setMaxHP(150);
             setHP(150);
             setAttDmg(100);
             this.version = version;
         }
         if (version == 1) {
-            setName("Able angel" + id);
+            setName("Able angel " + id);
             setMaxHP(250);
             setHP(250);
             setAttDmg(150);
