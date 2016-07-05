@@ -1,5 +1,7 @@
 package GraphicalUserInterface;
 
+import GraphicalUserInterface.GameEnv.GameEnv;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -10,6 +12,7 @@ public class EnvironmentMgr implements ActionListener{
     private JFrame frame;
     private Timer timer;
     private CardLayout deck;
+    private String cCard;
 
     private MainMenu MM;
     private GameEnv GE;
@@ -34,14 +37,19 @@ public class EnvironmentMgr implements ActionListener{
 
         EM.MM = new MainMenu(target -> {
             EM.deck.show(EM.frame.getContentPane(), target);
-            EM.frame.setSize(1206, 935);
-            EM.frame.setLocationRelativeTo(null);
+            EM.cCard = target;
+            if (target == "game") {
+                EM.frame.setSize(1206, 935);
+                EM.frame.setLocationRelativeTo(null);
+            }
         });
-        EM.GE = new GameEnv();
+        EM.GE = new GameEnv(EM);
         EM.SPM = new SinglePlayerMenu();
         EM.CGM = new CustomGameMenu();
         EM.PvPBM = new PvPBattleMenu();
         EM.SM = new SettingsMenu();
+
+        EM.timer.start();
 
         EM.frame.add(EM.MM, "main");
         EM.frame.add(EM.GE, "game");
@@ -49,19 +57,16 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.CGM, "custom");
         EM.frame.add(EM.PvPBM, "pvp");
         EM.frame.add(EM.SM, "settings");
-
-        EM.frame.setSize(1206, 935);
-        EM.frame.setLocationRelativeTo(null);
-        EM.deck.show(EM.frame.getContentPane(), "game");
-
-        EM.timer.start();
-
-
+        EM.cCard = "main";
 
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
         MM.update();
+        GE.update();
     }
+
+    public String getCurrentCard() { return cCard; }
+
 }
