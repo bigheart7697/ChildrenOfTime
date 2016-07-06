@@ -68,19 +68,19 @@ class MainMenu extends JComponent{
             @Override
             public void mousePressed(MouseEvent e) {
                 if (singlePlayButton.contains(e.getX(), e.getY())) {
-                    c1 = new Color(70,70,70);
+                    c1 = new Color(45,45,45);
                 }
                 if (customGameButton.contains(e.getX(), e.getY())) {
-                    c2 = new Color(70,70,70);
+                    c2 = new Color(45,45,45);
                 }
                 if (multiPlayButton.contains(e.getX(), e.getY())) {
-                    c3 = new Color(70,70,70);
+                    c3 = new Color(45,45,45);
                 }
                 if (settingsButton.contains(e.getX(), e.getY())) {
-                    c4 = new Color(70,70,70);
+                    c4 = new Color(45,45,45);
                 }
                 if (exitButton.contains(e.getX(), e.getY())) {
-                    c5 = new Color(70,70,70);
+                    c5 = new Color(45,45,45);
                 }
             }
 

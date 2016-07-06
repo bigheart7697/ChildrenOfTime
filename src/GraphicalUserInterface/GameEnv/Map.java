@@ -1,5 +1,6 @@
 package GraphicalUserInterface.GameEnv;
 
+import javax.swing.*;
 import java.awt.*;
 
 class Map {
@@ -66,7 +67,9 @@ class Tile {
             return passable;
     }
 
+    public GameEvent getGameEvent() { return gameEvent; }
     public void setGameEvent(GameEvent gameEvent) { this.gameEvent = gameEvent; }
+    public void removeGameEvent(GameEvent gameEvent) { this.gameEvent = null; }
 }
 
 class GameEvent {
@@ -107,7 +110,6 @@ class GameEvent {
         tile.setGameEvent(this);
     }
 
-
     public Image getImage() {
         return image;
     }
@@ -129,6 +131,17 @@ class GameEvent {
     }
     public void setRelatedEvent(GameEvent relatedEvent) {
         this.relatedEvent = relatedEvent;
+    }
+
+    public Tile getTile() { return tile; }
+
+    public void fireEvent() {
+        System.out.println(type);
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 }

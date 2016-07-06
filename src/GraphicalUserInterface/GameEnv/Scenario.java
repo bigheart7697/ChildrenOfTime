@@ -20,7 +20,7 @@ public class Scenario {
             Doors = new Image[2];
             for (int i = 0; i < 2; i++) Doors[i] = ImageIO.read(new File("GameEnvGraphics/Door" + i + ".png"));
 
-            BGTile = ImageIO.read(new File("GameEnvGraphics/BGTile.png"));
+            BGTile = ImageIO.read(new File("GameEnvGraphics/BGTile.jpg"));
             key = ImageIO.read(new File("GameEnvGraphics/key.png"));
             battle = ImageIO.read(new File("GameEnvGraphics/battle.png"));
             story = ImageIO.read(new File("GameEnvGraphics/story.png"));
@@ -141,7 +141,44 @@ public class Scenario {
         map.setEvent(key2, 2, 2);
         map.setEvent(key3, 6, 8);
 
-        //
+        //Shops
+        GameEvent shop1 = new GameEvent(shop, 4, 14, false, GameEvent.Type.shop, map.getTile(4, 14));
+        GameEvent shop2 = new GameEvent(shop, 4, 12, false, GameEvent.Type.shop, map.getTile(4, 12));
+        GameEvent shop3 = new GameEvent(shop, 12, 9, false, GameEvent.Type.shop, map.getTile(12, 9));
+        map.setEvent(shop1, 4, 14);
+        map.setEvent(shop2, 4, 12);
+        map.setEvent(shop3, 12, 9);
+
+        //Story spots
+        GameEvent story1 = new GameEvent(story, 2, 10, true, GameEvent.Type.story, map.getTile(2, 10));
+        GameEvent story2 = new GameEvent(story, 15, 15, true, GameEvent.Type.story, map.getTile(15, 15));
+        GameEvent story3 = new GameEvent(story, 9, 8, true, GameEvent.Type.story, map.getTile(9, 8));
+        GameEvent story4 = new GameEvent(story, 15, 4, true, GameEvent.Type.story, map.getTile(15, 4));
+        map.setEvent(story1, 2, 10);
+        map.setEvent(story2, 15, 15);
+        map.setEvent(story3, 9, 8);
+        map.setEvent(story4, 15, 4);
+
+        //Ability Upgrade points
+        GameEvent abilityPoint1 = new GameEvent(ability, 4, 15, false, GameEvent.Type.ability, map.getTile(4, 15));
+        GameEvent abilityPoint2 = new GameEvent(ability, 9, 10, false, GameEvent.Type.ability, map.getTile(9, 10));
+        GameEvent abilityPoint3 = new GameEvent(ability, 13, 2, false, GameEvent.Type.ability, map.getTile(13, 2));
+        map.setEvent(abilityPoint1, 4, 15);
+        map.setEvent(abilityPoint2, 9, 10);
+        map.setEvent(abilityPoint3, 13, 2);
+
+        //Battles
+        GameEvent battle1 = new GameEvent(battle, 2, 12, false, GameEvent.Type.battle, map.getTile(2, 12));
+        GameEvent battle2 = new GameEvent(battle, 13, 11, false, GameEvent.Type.battle, map.getTile(13, 11));
+        GameEvent battle3 = new GameEvent(battle, 7, 2, false, GameEvent.Type.battle, map.getTile(7, 2));
+        GameEvent battle4 = new GameEvent(battle, 7, 5, false, GameEvent.Type.battle, map.getTile(7, 5));
+        GameEvent battleOptional = new GameEvent(battle, 9, 14, false, GameEvent.Type.battle, map.getTile(9, 14));
+        map.setEvent(battle1, 2, 12);
+        map.setEvent(battle2, 13, 11);
+        map.setEvent(battle3, 7, 2);
+        map.setEvent(battle4, 7, 5);
+        map.setEvent(battleOptional, 9, 14);
+
 
     }
 
