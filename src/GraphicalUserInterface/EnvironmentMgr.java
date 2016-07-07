@@ -1,5 +1,6 @@
 package GraphicalUserInterface;
 
+import GraphicalUserInterface.CustomGame.CustomGameMenu;
 import GraphicalUserInterface.GameEnv.GameEnv;
 
 import javax.swing.*;
@@ -45,7 +46,14 @@ public class EnvironmentMgr implements ActionListener{
         });
         EM.GE = new GameEnv(EM);
         EM.SPM = new SinglePlayerMenu();
-        EM.CGM = new CustomGameMenu();
+        EM.CGM = new CustomGameMenu(target -> {
+            EM.deck.show(EM.frame.getContentPane(), target);
+            EM.cCard = target;
+            if (target == "game") {
+                EM.frame.setSize(1206, 935);
+                EM.frame.setLocationRelativeTo(null);
+            }
+        });
         EM.PvPBM = new PvPBattleMenu();
         EM.SM = new SettingsMenu();
 
