@@ -19,7 +19,7 @@ public class GameEnv extends JComponent{
     private EnvironmentMgr emgr;
 
     private final static int BLOCK_SIZE = 50;
-    private final static double SPEED = 2.1;
+    private final static double SPEED = 1.0;
 
     private Image movChar[];
     private int charImage;
@@ -28,10 +28,13 @@ public class GameEnv extends JComponent{
     private boolean speedFlag1, speedFlag2, speedFlag3, speedFlag4;
     private Scenario scenario;
 
+    private Font font;
+
     private DialogBox dialogBox;
-    private boolean dialogBoxFlag, dialogTypeFlag, eventOccurFlag;
-    String message;
-    
+    private boolean dialogBoxFlag, dialogTypeFlag, eventDisappearFlag;
+    private String message;
+    private GameEvent eventToBeFired;
+
     private Graphics2D g2;
 
     public GameEnv(EnvironmentMgr emgr) {
@@ -44,6 +47,8 @@ public class GameEnv extends JComponent{
 
         CharX = 100;
         CharY = 730;
+        prevX = CharX;
+        prevY = CharY;
 
         speedFlag1 = speedFlag2 = speedFlag3 = speedFlag4 = false;
 
@@ -57,10 +62,18 @@ public class GameEnv extends JComponent{
         } catch (IOException e) {
             e.printStackTrace();
         }
-        
+
+        try {
+            font = Font.createFont(Font.TRUETYPE_FONT, new File("MainMenuGraphics/mainMenuFont.ttf"));
+            GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            ge.registerFont(font);
+        } catch (FontFormatException | IOException e) {
+            e.printStackTrace();
+        }
+
         dialogBox = new DialogBox();
-        dialogBoxFlag = false;
-        
+        dialogBoxFlag = dialogTypeFlag = eventDisappearFlag = false;
+        eventToBeFired = null;
 
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
             if (emgr.getCurrentCard().equalsIgnoreCase("game")) {
@@ -141,14 +154,26 @@ public class GameEnv extends JComponent{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (dialogBoxFlag) {
-                    if (dialogBox.getButtonGotIt().contains(e.getX(), e.getY()) ||
-                            dialogBox.getButtonNo().contains(e.getX(), e.getY())) {
+
+                    if ((dialogBox.getButtonGotIt().contains(e.getX(), e.getY()) && !dialogTypeFlag) || dialogBox.getButtonNo().contains(e.getX(), e.getY())) {
+                        eventToBeFired = null;
                         dialogBoxFlag = false;
                     }
                     if (dialogBox.getButtonYes().contains(e.getX(), e.getY())) {
-                        //run some stuff
+                        eventToBeFired.fireEvent();
+
+                        if ( eventToBeFired.getType() == GameEvent.Type.battle ||
+                                eventToBeFired.getType() == GameEvent.Type.key ||
+                                eventToBeFired.getType() == GameEvent.Type.story) {
+                            eventDisappearFlag = true;
+                        }
+                        else {
+                            eventToBeFired = null;
+                        }
+
                         dialogBoxFlag = false;
                     }
+
                 }
             }
         });
@@ -178,73 +203,76 @@ public class GameEnv extends JComponent{
         g2.drawImage(movChar[charImage], (int)CharX, (int)CharY, BLOCK_SIZE, BLOCK_SIZE, null);
 
         //Dialog Box
-        if (dialogBoxFlag) dialogBox.drawDialogBox(message, dialogTypeFlag);
+        if (dialogBoxFlag) {
+            dialogBox.drawDialogBox(message, dialogTypeFlag);
+        }
 
 
         g.drawImage(buffer, 0, 0, null);
     }
 
 
+    private double prevX, prevY;
     public void update() {
 
-        if (!dialogBoxFlag) {
-            CharX += xSpeed;
-            CharY += ySpeed;
+            if (!dialogBoxFlag) {
 
+                prevX = CharX;
+                prevY = CharY;
 
-            //Intersection with blocks and events fired handled below
-            Rectangle2D.Double charRect = new Rectangle2D.Double(CharX + 10, CharY + 15, BLOCK_SIZE - 20, BLOCK_SIZE - 10);
-            for (int i = 0; i < scenario.getRows(); i++) {
-                for (int j = 0; j < scenario.getColumns(); j++) {
+                CharX += xSpeed;
+                CharY += ySpeed;
 
-                    Tile tile = scenario.getMap().getTile(i + 1, j + 1);
-                    Rectangle2D.Double tileRect = new Rectangle2D.Double(tile.getX() * 50, tile.getY() * 50, BLOCK_SIZE, BLOCK_SIZE);
+                //Intersection with blocks and events fired handled below
+                Rectangle2D.Double charRect = new Rectangle2D.Double(CharX + 10, CharY + 15, BLOCK_SIZE - 20, BLOCK_SIZE - 10);
+                for (int i = 0; i < scenario.getRows(); i++) {
+                    for (int j = 0; j < scenario.getColumns(); j++) {
 
-                    GameEvent event = scenario.getMap().getEvent(i + 1, j + 1);
+                        Tile tile = scenario.getMap().getTile(i + 1, j + 1);
+                        Rectangle2D.Double tileRect = new Rectangle2D.Double(tile.getX() * 50, tile.getY() * 50, BLOCK_SIZE, BLOCK_SIZE);
 
-                    //Unlocked Doors
-                    if (event != null && event.getType() == GameEvent.Type.doorUnlockedLeft) {
-                        if (charRect.getX() > event.getX() * 50 && tileRect.intersects(charRect)) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                        GameEvent event = scenario.getMap().getEvent(i + 1, j + 1);
+
+                        //Unlocked Doors
+                        if (event != null && event.getType() == GameEvent.Type.doorUnlockedLeft) {
+                            if (charRect.getX() > event.getX() * 50 && tileRect.intersects(charRect)) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                CharX = (event.getX() + 1) * 50;
                             }
-                            CharX = (event.getX() + 1) * 50;
-                        }
-                    }
-                    else if (event != null && event.getType() == GameEvent.Type.doorUnlockedRight) {
-                        if (charRect.getX() < event.getX() * 50 && tileRect.intersects(charRect)) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                        } else if (event != null && event.getType() == GameEvent.Type.doorUnlockedRight) {
+                            if (charRect.getX() < event.getX() * 50 && tileRect.intersects(charRect)) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                CharX = (event.getX() - 1) * 50;
                             }
-                            CharX = (event.getX() - 1) * 50;
-                        }
-                    }
-                    else if (event != null && event.getType() == GameEvent.Type.doorUnlockedUp) {
-                        if (charRect.getX() < event.getY() * 50 && tileRect.intersects(charRect)) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                        } else if (event != null && event.getType() == GameEvent.Type.doorUnlockedUp) {
+                            if (charRect.getX() < event.getY() * 50 && tileRect.intersects(charRect)) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                CharY = (event.getY() + 1) * 50;
                             }
-                            CharY = (event.getY() + 1) * 50;
-                        }
-                    }
-                    else if (event != null && event.getType() == GameEvent.Type.doorUnlockedDown) {
-                        if (charRect.getX() > event.getY() * 50 && tileRect.intersects(charRect)) {
-                            try {
-                                Thread.sleep(100);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                        } else if (event != null && event.getType() == GameEvent.Type.doorUnlockedDown) {
+                            if (charRect.getX() > event.getY() * 50 && tileRect.intersects(charRect)) {
+                                try {
+                                    Thread.sleep(100);
+                                } catch (InterruptedException e) {
+                                    e.printStackTrace();
+                                }
+                                CharY = (event.getY() - 1) * 50;
                             }
-                            CharY = (event.getY() - 1) * 50;
                         }
-                    }
 
-                    //Locked Doors
+                        //Locked Doors
 //                else if (event != null && event.getType() == GameEvent.Type.doorLockedLeft) {
 //                    if (charRect.getX() > event.getX() * 50 && tileRect.intersects(charRect)) {
 //                        CharX = (event.getX() + 1) * 50;
@@ -266,38 +294,44 @@ public class GameEnv extends JComponent{
 //                    }
 //                }
 
-                    else if (tileRect.intersects(charRect) && event != null) {
+                        //Events other than doors
+                        else if (tileRect.intersects(charRect) && event != null) {
 
-                        message = "Enter " + event.getType() + "?";
-                        dialogTypeFlag = true;
-                        dialogBoxFlag = true;
+                            if (event.getType() == GameEvent.Type.key) {
+                                message = "Pick up the Key?";
+                            } else {
+                                message = "Enter " + event.getType() + "?";
+                            }
 
-                        event.fireEvent();
+                            eventToBeFired = event;
+                            dialogTypeFlag = true;
+                            dialogBoxFlag = true;
 
-                        if (tile.getGameEvent() != null &&!scenario.getMap().getEvent(i + 1, j + 1).isPassable()) {
-                            CharX = charRect.getX() - 10; CharY = charRect.getY() - 15;
+                            CharX = prevX;
+                            CharY = prevY;
                         }
 
-                        if (event.getType() == GameEvent.Type.battle || event.getType() == GameEvent.Type.key || event.getType() == GameEvent.Type.story) {
-                            scenario.getMap().setEvent(null, i + 1, j + 1);
-                            event.getTile().setGameEvent(null);
+                        //Event removal for battles, stories, and keys
+                        if (eventDisappearFlag) {
+                            eventDisappearFlag = false;
+                            scenario.getMap().setEvent(null, eventToBeFired.getX(), eventToBeFired.getY());
+                            eventToBeFired.getTile().setGameEvent(null);
+                            CharX = eventToBeFired.getX() * 50;
+                            CharY = eventToBeFired.getY() * 50 - 15;
+                            eventToBeFired = null;
                         }
 
+                        //To stop the character from moving into obstacles
+                        while (tileRect.intersects(charRect) && !scenario.getMap().getTile(i + 1, j + 1).isPassable()) {
+                            CharX -= xSpeed;
+                            CharY -= ySpeed;
+                            charRect = new Rectangle2D.Double(CharX + 10, CharY + 15, BLOCK_SIZE - 20, BLOCK_SIZE - 10);
+                        }
+
+
                     }
-
-
-                    while (tileRect.intersects(charRect) && !scenario.getMap().getTile(i + 1, j + 1).isPassable()) {
-
-                        CharX -= xSpeed;
-                        CharY -= ySpeed;
-                        charRect = new Rectangle2D.Double(CharX + 10, CharY + 15, BLOCK_SIZE - 20, BLOCK_SIZE - 10);
-                    }
-
-
                 }
             }
-
-        }
 
         repaint();
     }
@@ -330,21 +364,21 @@ public class GameEnv extends JComponent{
             g2.setColor(BG2Color);
             g2.fill(BG2);
             g2.setColor(BG1Color);
-            g2.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 30));
+            g2.setFont(font.deriveFont(30f));
             g2.drawString(msg, 325, 385);
             g2.setColor(BG1Color);
             if (yesNo) {
                 g2.fill(buttonYes);
                 g2.fill(buttonNo);
                 g2.setColor(BG2Color);
-                g2.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 25));
-                g2.drawString("Yes", 370, 470);
-                g2.drawString("No", 495, 470);
+                g2.setFont(font.deriveFont(25f));
+                g2.drawString("Yes", 375, 470);
+                g2.drawString("No", 500, 470);
             }
             else {
                 g2.fill(buttonGotIt);
                 g2.setColor(BG2Color);
-                g2.setFont(new Font(Font.DIALOG_INPUT, Font.BOLD, 25));
+                g2.setFont(font.deriveFont(25f));
                 g2.drawString("OK", 435, 470);
             }
 
