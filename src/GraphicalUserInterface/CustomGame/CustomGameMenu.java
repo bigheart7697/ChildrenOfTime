@@ -89,10 +89,10 @@ public class CustomGameMenu extends JComponent {
                     c5 = new Color(45,45,45);
                 }
                 if (newEnemyButton.contains(e.getX(), e.getY())) {
-                    c5 = new Color(45,45,45);
+                    c6 = new Color(45,45,45);
                 }
                 if (backButton.contains(e.getX(), e.getY())) {
-                    c5 = new Color(45,45,45);
+                    c7 = new Color(45,45,45);
                 }
             }
 
@@ -149,20 +149,20 @@ public class CustomGameMenu extends JComponent {
         g2.drawRoundRect(130, 300, 300, 80, 60, 60);
 
         g2.setColor(c4);
-        newItemButton = new RoundRectangle2D.Double(130, 400, 300, 80, 60, 60);
-        g2.fill(newItemButton);
+        newHeroClassButton = new RoundRectangle2D.Double(130, 400, 300, 80, 60, 60);
+        g2.fill(newHeroClassButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(130, 400, 300, 80, 60, 60);
 
         g2.setColor(c5);
-        newItemButton = new RoundRectangle2D.Double(130, 500, 300, 80, 60, 60);
-        g2.fill(newItemButton);
+        newHeroButton = new RoundRectangle2D.Double(130, 500, 300, 80, 60, 60);
+        g2.fill(newHeroButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(130, 500, 300, 80, 60, 60);
 
         g2.setColor(c6);
-        newItemButton = new RoundRectangle2D.Double(130, 600, 300, 80, 60, 60);
-        g2.fill(newItemButton);
+        newEnemyButton = new RoundRectangle2D.Double(130, 600, 300, 80, 60, 60);
+        g2.fill(newEnemyButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(130, 600, 300, 80, 60, 60);
 
@@ -184,5 +184,9 @@ public class CustomGameMenu extends JComponent {
 
 
         g.drawImage(buffer, 0, 0, null);
+    }
+
+    public void update() {
+        repaint();
     }
 }

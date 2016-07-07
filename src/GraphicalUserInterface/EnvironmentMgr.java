@@ -1,6 +1,6 @@
 package GraphicalUserInterface;
 
-import GraphicalUserInterface.CustomGame.CustomGameMenu;
+import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.GameEnv.GameEnv;
 
 import javax.swing.*;
@@ -19,6 +19,12 @@ public class EnvironmentMgr implements ActionListener{
     private GameEnv GE;
     private SinglePlayerMenu SPM;
     private CustomGameMenu CGM;
+    private NewMap NM;
+    private NewAbility NA;
+    private NewItem NI;
+    private NewHeroClass NHC;
+    private NewHero NH;
+    private NewEnemy NE;
     private PvPBattleMenu PvPBM;
     private SettingsMenu SM;
 
@@ -49,11 +55,13 @@ public class EnvironmentMgr implements ActionListener{
         EM.CGM = new CustomGameMenu(target -> {
             EM.deck.show(EM.frame.getContentPane(), target);
             EM.cCard = target;
-            if (target == "game") {
-                EM.frame.setSize(1206, 935);
-                EM.frame.setLocationRelativeTo(null);
-            }
         });
+        EM.NA = new NewAbility();
+        EM.NE = new NewEnemy();
+        EM.NH = new NewHero();
+        EM.NHC = new NewHeroClass();
+        EM.NI = new NewItem();
+        EM.NM = new NewMap();
         EM.PvPBM = new PvPBattleMenu();
         EM.SM = new SettingsMenu();
 
@@ -65,6 +73,12 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.CGM, "custom");
         EM.frame.add(EM.PvPBM, "pvp");
         EM.frame.add(EM.SM, "settings");
+        EM.frame.add(EM.NM, "new map");
+        EM.frame.add(EM.NA, "new ability");
+        EM.frame.add(EM.NI, "new item");
+        EM.frame.add(EM.NHC, "new hero class");
+        EM.frame.add(EM.NH, "new hero");
+        EM.frame.add(EM.NE, "new enemy");
         EM.cCard = "main";
 
     }
@@ -73,6 +87,7 @@ public class EnvironmentMgr implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         MM.update();
         GE.update();
+        CGM.update();
     }
 
     public String getCurrentCard() { return cCard; }
