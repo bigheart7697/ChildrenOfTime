@@ -245,19 +245,19 @@ public class Scenario {
 
         //Stories
         stories = new String[5];
-        stories[0] = "\nYou’ve entered the castle, it takes a while for your eyes to get used to the\ndarkness" +
-                " but the horrifying halo of your enemies is vaguely visible. Angel’s\nunsettling" +
-                " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n\n";
-        stories[1] = "As you wander into the hall you realize the surrounding doors can lead your destiny to\n"
-                + "something far worse than you expected. You know what’s anticipating you behind the only\n" +
-                "open door but there’s no other choice.\n\n";
-        stories[2] = "The door behind you is shut with a thunderous sound and you progress into the next hall" +
-                "holding the first key that you’ve found, hoping to seek the second one.\n\n" +
-                "\nYou've encountered two 1 able thug, 1 mighty thug, 1 able angel, 1 weak tank\n";
-        stories[3] = "Running with the second key in your hand, you unlock the door back to the first hall and"
-                + "use the first key to burst into your most terrifying nightmares.\n\n";
-        stories[4] = "You feel hopeless and exhausted as you stalk to the final door. What’s behind that door" +
-                "makes your hearts pound and your spines shake with fear, but you came here to do one";
+        stories[0] = "You’ve entered the castle, it takes a while for your eyes to get used to the darkness" +
+                " but the horrifying halo of your enemies is vaguely visible. Angel’s unsettling" +
+                " presence and the growling of thugs tell you that your first battle has BEGUN!";
+        stories[1] = "As you wander into the hall you realize the\nsurrounding doors can lead your destiny to\n"
+                + "something far worse than you expected. You\nnow what’s anticipating you behind the only\n" +
+                " open door but there’s no other choice.";
+        stories[2] = "The door behind you is shut with a thunderous\nsound and you progress into the next hall while" +
+                "\nholding the first key that you’ve found, hoping\nto seek the second one.";
+        stories[3] = "Running with the second key in your hand, you\nunlock  the door  back to  the first hall and "
+                + "use\nthe first key  to burst into  your most terrifying\nnightmares.";
+        stories[4] = "You feel hopeless and exhausted as you stalk to\nthe final door.  What’s behind that door " +
+                "makes\nyour hearts  pound and your spines  shake with\nfear,  but you  came here  to do  one" +
+                "thing  and\nbacking down is not an option.";
 
         //BattlePhrases
         battlePhrases = new String[6];
@@ -355,8 +355,8 @@ public class Scenario {
         GameEvent door1 = new GameEvent(Doors[0], 5, 5, false, GameEvent.Type.doorLockedLeft, map.getTile(5, 5));
         GameEvent door2 = new GameEvent(Doors[0], 3, 4, false, GameEvent.Type.doorLockedUp, map.getTile(3, 4));
         GameEvent door3 = new GameEvent(Doors[0], 15, 6, false, GameEvent.Type.doorLockedDown, map.getTile(15, 6));
-        GameEvent door4 = new GameEvent(Doors[1], 10, 5, true, GameEvent.Type.doorUnlockedLeft, map.getTile(10, 5));
-        GameEvent door5 = new GameEvent(Doors[1], 10, 11, true, GameEvent.Type.doorUnlockedLeft, map.getTile(10, 11));
+        GameEvent door4 = new GameEvent(Doors[1], 10, 5, false, GameEvent.Type.doorUnlockedLeft, map.getTile(10, 5));
+        GameEvent door5 = new GameEvent(Doors[1], 10, 11, false, GameEvent.Type.doorUnlockedLeft, map.getTile(10, 11));
         map.setEvent(door1, 5, 5);
         map.setEvent(door2, 3, 4);
         map.setEvent(door3, 15, 6);
@@ -380,10 +380,10 @@ public class Scenario {
         map.setEvent(shop3, 12, 9);
 
         //Story spots
-        GameEvent story1 = new GameEvent(story, 2, 10, true, GameEvent.Type.story, map.getTile(2, 10));
-        GameEvent story2 = new GameEvent(story, 15, 15, true, GameEvent.Type.story, map.getTile(15, 15));
-        GameEvent story3 = new GameEvent(story, 9, 8, true, GameEvent.Type.story, map.getTile(9, 8));
-        GameEvent story4 = new GameEvent(story, 15, 4, true, GameEvent.Type.story, map.getTile(15, 4));
+        GameEvent story1 = new GameEvent(story, 2, 10, true, GameEvent.Type.story, map.getTile(2, 10), stories[1]);
+        GameEvent story2 = new GameEvent(story, 15, 15, true, GameEvent.Type.story, map.getTile(15, 15), stories[2]);
+        GameEvent story3 = new GameEvent(story, 9, 8, true, GameEvent.Type.story, map.getTile(9, 8), stories[3]);
+        GameEvent story4 = new GameEvent(story, 15, 4, true, GameEvent.Type.story, map.getTile(15, 4), stories[4]);
         map.setEvent(story1, 2, 10);
         map.setEvent(story2, 15, 15);
         map.setEvent(story3, 9, 8);
@@ -429,5 +429,7 @@ public class Scenario {
     }
     int getRows() { return rows; }
     int getColumns() { return columns; }
+
+    Image getUnlockedDoorImg() { return Doors[1]; }
 
 }
