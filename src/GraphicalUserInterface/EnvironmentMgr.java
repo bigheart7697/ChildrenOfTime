@@ -78,7 +78,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
         EM.NI = new NewItem();
-        EM.NM = new NewMap();
+        EM.NM = new NewMap(defaultListener);
 
         EM.PvPBM = new PvPBattleMenu();
 

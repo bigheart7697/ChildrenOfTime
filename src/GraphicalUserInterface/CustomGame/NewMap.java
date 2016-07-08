@@ -1,5 +1,7 @@
 package GraphicalUserInterface.CustomGame;
 
+import GraphicalUserInterface.SimpleMenuListener;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -19,13 +21,13 @@ public class NewMap extends JComponent {
     private BufferedImage BG;
     private Font nmFont;
     private Color fontColor;
-    private CustomGameMenuListener nmListener;
+    private SimpleMenuListener nmListener;
 
     private RoundRectangle2D.Double scenario, mapSize, defeatMessage, earlyAmountse, startingPoint;
     private Ellipse2D.Double back, next;
 
 
-    public NewMap(CustomGameMenuListener nml) {
+    public NewMap(SimpleMenuListener nml) {
         nmListener = nml;
         fontColor = Color.white;//new Color(166, 143, 78);
 
