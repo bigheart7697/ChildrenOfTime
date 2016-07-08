@@ -61,7 +61,10 @@ public class EnvironmentMgr implements ActionListener{
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
         EM.NI = new NewItem();
-        EM.NM = new NewMap();
+        EM.NM = new NewMap(target -> {
+            EM.deck.show(EM.frame.getContentPane(), target);
+            EM.cCard = target;
+        });
         EM.PvPBM = new PvPBattleMenu();
         EM.SM = new SettingsMenu();
 
@@ -88,6 +91,7 @@ public class EnvironmentMgr implements ActionListener{
         MM.update();
         GE.update();
         CGM.update();
+        NM.update();
     }
 
     public String getCurrentCard() { return cCard; }
