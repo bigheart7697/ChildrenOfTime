@@ -27,7 +27,6 @@ public class CustomGameMenu extends JComponent {
     public CustomGameMenu(SimpleMenuListener cgml) {
 
         cgmListener = cgml;
-
         fontColor = new Color(166, 143, 78);
         c1 = c2 = c3 = c4 = c5 = c6 = c7 = buttonColor = new Color(60, 60, 60);
 
