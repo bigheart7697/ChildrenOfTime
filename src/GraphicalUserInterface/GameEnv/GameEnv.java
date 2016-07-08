@@ -14,6 +14,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.Raster;
+import java.awt.image.RasterOp;
+import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -27,7 +30,7 @@ public class GameEnv extends JComponent{
 
     //Map stuff
     private final static int BLOCK_SIZE = 50;
-    private final static double SPEED = 2.0;
+    private final static double SPEED = 4.0;
 
     //Moving icon stuff
     private Image movChar[];
@@ -307,13 +310,16 @@ public class GameEnv extends JComponent{
             g2.setColor(new Color(30, 30, 30));
             g2.fillRect(0, 0, getWidth(), getHeight());
 
-//            g2.drawImage(BGImage, 50, 50, 800, 800, null);
+            g2.drawImage(BGImage, 50, 50, 800, 800, null);
 
             //Drawing the Scenario Map
             for (int i = 1; i <= 16; i++) {
                 for (int j = 1; j <= 16; j++) {
-                    if (scenario.getMap().getTile(i, j).getImage() != null)
-                        g2.drawImage(scenario.getMap().getTile(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+                    if (scenario.getMap().getTile(i, j).getImage() != null) {
+                        if (scenario.getMap().getTile(i, j).getType() == Tile.Type.tile)
+                            g2.drawImage(ApplyTransparency((BufferedImage) scenario.getMap().getTile(i, j).getImage()), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+                        else g2.drawImage(scenario.getMap().getTile(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+                    }
                     if (scenario.getMap().getEvent(i, j) != null)
                         g2.drawImage(scenario.getMap().getEvent(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
                 }
@@ -392,6 +398,20 @@ public class GameEnv extends JComponent{
         g.drawImage(buffer, 0, 0, null);
     }
 
+
+
+    private BufferedImage ApplyTransparency(BufferedImage image)
+    {
+        BufferedImage dest = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = dest.createGraphics();
+        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.DST_OVER, 0.15F);
+        g.setComposite(ac);
+        g.drawImage(image, 0, 0, null);
+
+        return dest;
+    }
+    
+    
 
     private double prevX, prevY;
     public void update() {
