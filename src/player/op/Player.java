@@ -49,10 +49,6 @@ public class Player {
         IMPotion--;
     }
 
-    public void move() {
-        //Not used in this stage. Will be implemented in graphical phase.
-    }
-
     public boolean useXP(String playerCommand, Battlefield battlefield) {
         for (Hero hero : battlefield.getHeroes()) {
             for (Ability ability : hero.getAbilities()) {
@@ -81,10 +77,6 @@ public class Player {
             }
         }
         return true;
-    }
-
-    public void fight() {
-        //Not used in this stage. Will be implemented in graphical phase.
     }
 
     public boolean heroInformation(String playerCommand, Battlefield battlefield) {
@@ -209,7 +201,7 @@ public class Player {
         return true;
     }
 
-    public boolean herosAbilityInformation(String playerCommand, Battlefield battlefield) {
+    public boolean heroesAbilityInformation(String playerCommand, Battlefield battlefield) {
         for (Hero hero : battlefield.getHeroes()) {
             for (Ability ability : hero.getAbilities()) {
                 if (playerCommand.equalsIgnoreCase((hero.getName() + " " + ability.getName() + "?"))) {

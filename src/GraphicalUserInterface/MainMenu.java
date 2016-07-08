@@ -13,7 +13,7 @@ import java.io.IOException;
 
 class MainMenu extends JComponent{
 
-    private MainMenuListener mmListener;
+    private SimpleMenuListener mmListener;
 
     private BufferedImage BG;
     private Font mmFont;
@@ -22,7 +22,7 @@ class MainMenu extends JComponent{
     private RoundRectangle2D.Double singlePlayButton, customGameButton, multiPlayButton;
     private Ellipse2D.Double settingsButton, exitButton;
 
-    MainMenu(MainMenuListener mml) {
+    MainMenu(SimpleMenuListener mml) {
 
         mmListener = mml;
 
@@ -49,7 +49,7 @@ class MainMenu extends JComponent{
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (singlePlayButton.contains(e.getX(), e.getY())) {
-                    mmListener.switchTo("game");
+                    mmListener.switchTo("single");
                 }
                 if (customGameButton.contains(e.getX(), e.getY())) {
                     mmListener.switchTo("custom");
@@ -118,31 +118,31 @@ class MainMenu extends JComponent{
 
         //Buttons
         g2.setColor(c1);
-        singlePlayButton = new RoundRectangle2D.Double(130, 600, 160, 80, 60, 60);
+        if (singlePlayButton == null) singlePlayButton = new RoundRectangle2D.Double(130, 600, 160, 80, 60, 60);
         g2.fill(singlePlayButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(130, 600, 160, 80, 60, 60);
 
         g2.setColor(c2);
-        customGameButton = new RoundRectangle2D.Double(330, 600, 160, 80, 60, 60);
+        if (customGameButton == null) customGameButton = new RoundRectangle2D.Double(330, 600, 160, 80, 60, 60);
         g2.fill(customGameButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(330, 600, 160, 80, 60, 60);
 
         g2.setColor(c3);
-        multiPlayButton = new RoundRectangle2D.Double(530, 600, 160, 80, 60, 60);
+        if (multiPlayButton == null) multiPlayButton = new RoundRectangle2D.Double(530, 600, 160, 80, 60, 60);
         g2.fill(multiPlayButton);
         g2.setColor(fontColor);
         g2.drawRoundRect(530, 600, 160, 80, 60, 60);
 
         g2.setColor(c4);
-        settingsButton = new Ellipse2D.Double(1000, 600, 80, 80);
+        if (settingsButton == null) settingsButton = new Ellipse2D.Double(1000, 600, 80, 80);
         g2.fill(settingsButton);
         g2.setColor(fontColor);
         g2.drawOval(1000, 600, 80, 80);
 
         g2.setColor(c5);
-        exitButton = new Ellipse2D.Double(1100, 600, 80, 80);
+        if (exitButton == null) exitButton = new Ellipse2D.Double(1100, 600, 80, 80);
         g2.fill(exitButton);
         g2.setColor(fontColor);
         g2.drawOval(1100, 600, 80, 80);

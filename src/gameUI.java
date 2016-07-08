@@ -227,7 +227,7 @@ public class gameUI {
 
 
             if (InvalidCommandSpecifier)
-                InvalidCommandSpecifier = player.herosAbilityInformation(playerCommand, battlefield);
+                InvalidCommandSpecifier = player.heroesAbilityInformation(playerCommand, battlefield);
 
             if (InvalidCommandSpecifier)
                 InvalidCommandSpecifier = player.useXP(playerCommand, battlefield);
