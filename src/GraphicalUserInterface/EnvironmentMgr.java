@@ -43,16 +43,20 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.setLayout(EM.deck);
         EM.frame.setResizable(false);
 
-        EM.MM = new MainMenu(target -> {
+        //Normal Switch-Listener for several menus
+        SimpleMenuListener defaultListener = target -> {
             EM.deck.show(EM.frame.getContentPane(), target);
             EM.cCard = target;
-        });
+        };
+
+        EM.MM = new MainMenu(defaultListener);
 
         EM.SPM = new SinglePlayerMenu(new SinglePlayerMenuListener() {
             @Override
             public void switchTo(int scenarioNum) {
-                if (scenarioNum == 0) EM.GE = new GameEnv(EM, new Scenario());
-                else EM.GE = new GameEnv(EM, new Scenario(scenarioNum));
+
+                if (scenarioNum == 0) EM.GE = new GameEnv(EM, new Scenario(), defaultListener);
+                else EM.GE = new GameEnv(EM, new Scenario(scenarioNum), defaultListener);
                 EM.frame.add(EM.GE, "game");
                 EM.deck.show(EM.frame.getContentPane(), "game");
                 EM.cCard = "game";
@@ -67,10 +71,7 @@ public class EnvironmentMgr implements ActionListener{
             }
         });
 
-        EM.CGM = new CustomGameMenu(target -> {
-            EM.deck.show(EM.frame.getContentPane(), target);
-            EM.cCard = target;
-        });
+        EM.CGM = new CustomGameMenu(defaultListener);
 
         EM.NA = new NewAbility();
         EM.NE = new NewEnemy();
@@ -109,5 +110,6 @@ public class EnvironmentMgr implements ActionListener{
     }
 
     public String getCurrentCard() { return cCard; }
+    public JFrame frame() { return frame; }
 
 }

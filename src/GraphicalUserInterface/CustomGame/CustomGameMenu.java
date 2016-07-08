@@ -1,5 +1,7 @@
 package GraphicalUserInterface.CustomGame;
 
+import GraphicalUserInterface.SimpleMenuListener;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +15,7 @@ import java.io.IOException;
 
 public class CustomGameMenu extends JComponent {
 
-    private CustomGameMenuListener cgmListener;
+    private SimpleMenuListener cgmListener;
 
     private BufferedImage BG;
     private Font cgmFont;
@@ -22,7 +24,7 @@ public class CustomGameMenu extends JComponent {
     private RoundRectangle2D.Double newMapButton, newAbilityButton, newItemButton, newHeroClassButton, newHeroButton, newEnemyButton;
     private Ellipse2D.Double backButton;
 
-    public CustomGameMenu(CustomGameMenuListener cgml) {
+    public CustomGameMenu(SimpleMenuListener cgml) {
 
         cgmListener = cgml;
 

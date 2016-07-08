@@ -1,6 +1,8 @@
 package GraphicalUserInterface.GameEnv;
 
 import GraphicalUserInterface.EnvironmentMgr;
+import GraphicalUserInterface.SimpleMenuListener;
+import units.Hero;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,39 +10,61 @@ import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class GameEnv extends JComponent{
 
+    //Environment Manager
     private EnvironmentMgr emgr;
+    private SimpleMenuListener geListener;
 
+    //Map stuff
     private final static int BLOCK_SIZE = 50;
     private final static double SPEED = 1.0;
 
+    //Moving icon stuff
     private Image movChar[];
     private int charImage;
     private double CharX, CharY;
     private double xSpeed, ySpeed;
     private boolean speedFlag1, speedFlag2, speedFlag3, speedFlag4;
+
+    //Scenario Stuff
     private Scenario scenario;
 
-    private Font font;
-
+    //Dialog Box stuff
     private DialogBox dialogBox;
     private boolean dialogBoxFlag, dialogTypeFlag, eventDisappearFlag;
     private String message;
     private GameEvent eventToBeFired;
 
+    //Panel stuff
+    private Ellipse2D.Double settingsButton, menuButton;
+    private Font mmFont, geFont;
+    private Color fontColor, buttonColor, c1, c2, c3, c4, c5;
+
+    //Graphics2D
     private Graphics2D g2;
+    private boolean gameStarted;
 
-    public GameEnv(EnvironmentMgr emgr, Scenario scenario) {
+    public GameEnv(EnvironmentMgr emgr, Scenario scenario, SimpleMenuListener gel) {
 
+        //Environment Manager
         this.emgr = emgr;
-        
+        geListener = gel;
+
+
+        //Start Flag
+        gameStarted = true;
+
+
+        //Moving Icon stuff
         charImage = 0;
         xSpeed = 0.0;
         ySpeed = 0.0;
@@ -52,7 +76,6 @@ public class GameEnv extends JComponent{
 
         speedFlag1 = speedFlag2 = speedFlag3 = speedFlag4 = false;
 
-        this.scenario = scenario;
         movChar = new Image[4];
         try {
             movChar[0] = ImageIO.read(new File("GameEnvGraphics/MoveCharBack.png"));
@@ -64,17 +87,32 @@ public class GameEnv extends JComponent{
         }
 
         try {
-            font = Font.createFont(Font.TRUETYPE_FONT, new File("MainMenuGraphics/mainMenuFont.ttf"));
+            mmFont = Font.createFont(Font.TRUETYPE_FONT, new File("MainMenuGraphics/mainMenuFont.ttf"));
+            geFont = Font.createFont(Font.TRUETYPE_FONT, new File("GameEnvGraphics/gameEnvFont.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-            ge.registerFont(font);
+            ge.registerFont(mmFont);
+            ge.registerFont(geFont);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
 
+
+        //Scenario Stuff
+        this.scenario = scenario;
+
+
+        //Dialog Box stuff
         dialogBox = new DialogBox();
         dialogBoxFlag = dialogTypeFlag = eventDisappearFlag = false;
         eventToBeFired = null;
 
+
+        //Panel stuff
+        fontColor = new Color(166, 143, 78);
+        c1 = c2 = c3 = c4 = c5 = buttonColor = new Color(60, 60, 60);
+
+
+        //Interaction handling
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
             if (emgr.getCurrentCard().equalsIgnoreCase("game")) {
 
@@ -175,6 +213,44 @@ public class GameEnv extends JComponent{
                     }
 
                 }
+
+                if (menuButton.contains(e.getX(), e.getY())) {
+                    emgr.frame().setSize(new Dimension(1280, 800));
+                    emgr.frame().setLocationRelativeTo(null);
+                    geListener.switchTo("main");
+                }
+                if (settingsButton.contains(e.getX(), e.getY())) {
+                    emgr.frame().setSize(new Dimension(1280, 800));
+                    emgr.frame().setLocationRelativeTo(null);
+                    geListener.switchTo("settings");
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                if (dialogBox.getButtonYes().contains(e.getX(), e.getY())) {
+                    dialogBox.setColor(1, new Color(40, 40, 40));
+                }
+                if (dialogBox.getButtonNo().contains(e.getX(), e.getY())) {
+                    dialogBox.setColor(2, new Color(40, 40, 40));
+                }
+                if (dialogBox.getButtonGotIt().contains(e.getX(), e.getY())) {
+                    dialogBox.setColor(3, new Color(40, 40, 40));
+                }
+                if (settingsButton.contains(e.getX(), e.getY())) {
+                    c1 = new Color(50, 50, 50);
+                }
+                if (menuButton.contains(e.getX(), e.getY())) {
+                    c2 = new Color(50, 50, 50);
+                }
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                dialogBox.setColor(1, new Color(50, 50, 50));
+                dialogBox.setColor(2, new Color(50, 50, 50));
+                dialogBox.setColor(3, new Color(50, 50, 50));
+                c1 = c2 = buttonColor;
             }
         });
     }
@@ -187,25 +263,84 @@ public class GameEnv extends JComponent{
         g2 = (Graphics2D) buffer.getGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        g2.setColor(new Color(30, 30, 30));
-        g2.fillRect(0,0,getWidth(), getHeight());
+//        if (!gameStarted) {
+//
+//        } else {
+            g2.setColor(new Color(30, 30, 30));
+            g2.fillRect(0, 0, getWidth(), getHeight());
 
-        //Drawing the Scenario Map
-        for (int i = 1; i <= 16; i++) {
-            for (int j = 1; j <= 16; j++) {
-                g2.drawImage(scenario.getMap().getTile(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
-                if (scenario.getMap().getEvent(i, j) != null)
-                    g2.drawImage(scenario.getMap().getEvent(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+            //Drawing the Scenario Map
+            for (int i = 1; i <= 16; i++) {
+                for (int j = 1; j <= 16; j++) {
+                    g2.drawImage(scenario.getMap().getTile(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+                    if (scenario.getMap().getEvent(i, j) != null)
+                        g2.drawImage(scenario.getMap().getEvent(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+                }
             }
-        }
 
-        //The moving Character
-        g2.drawImage(movChar[charImage], (int)CharX, (int)CharY, BLOCK_SIZE, BLOCK_SIZE, null);
+            //The moving Character
+            g2.drawImage(movChar[charImage], (int) CharX, (int) CharY, BLOCK_SIZE, BLOCK_SIZE, null);
 
-        //Dialog Box
-        if (dialogBoxFlag) {
-            dialogBox.drawDialogBox(message, dialogTypeFlag);
-        }
+            //Dialog Box
+            if (dialogBoxFlag) {
+                dialogBox.drawDialogBox(message, dialogTypeFlag);
+            }
+
+            //The Information panel
+            Color borderColor = new Color(150, 150, 150);
+            g2.setColor(buttonColor);
+            g2.fill(new RoundRectangle2D.Double(900, 50, 250, 500, 60, 60));
+            g2.setColor(borderColor);
+            g2.draw(new RoundRectangle2D.Double(900, 50, 250, 500, 60, 60));
+            g2.setColor(buttonColor);
+            g2.fill(new RoundRectangle2D.Double(900, 575, 250, 170, 60, 60));
+            g2.setColor(borderColor);
+            g2.draw(new RoundRectangle2D.Double(900, 575, 250, 170, 60, 60));
+
+            g2.setFont(geFont.deriveFont(30f).deriveFont(Font.ITALIC));
+            g2.setColor(new Color(240, 220, 98));
+            g2.drawString(scenario.getPlayer().getName(), 970, 90);
+            g2.setFont(geFont.deriveFont(25f));
+            g2.drawString("Heroes:", 920, 140);
+            ArrayList<Hero> heroes = scenario.getPlayer().getHeroes();
+            int yH = 190;
+            for (Hero h: heroes) {
+                g2.setColor(new Color(200, 200, 200));
+                g2.setFont(geFont.deriveFont(22f));
+                g2.drawString(h.getName(), 930, yH);
+                g2.setFont(geFont.deriveFont(14f).deriveFont(Font.BOLD));
+                g2.drawString("HP: ", 1040, yH - 12);
+                g2.drawString(h.getHP() + "", 1080, yH - 12);
+                g2.drawString("EP: ", 1040, yH);
+                g2.drawString(h.getEP() + "", 1080, yH);
+                g2.drawString("MP: ", 1040, yH + 12);
+                g2.drawString(h.getMP() + "", 1080, yH + 12);
+                yH += 50;
+            }
+            yH += 10;
+            g2.setColor(new Color(240, 220, 98));
+            g2.setFont(geFont.deriveFont(25f));
+            g2.drawString("Gold:", 920, yH);
+            g2.drawString(scenario.getPlayer().getGold() + "", 1050, yH);
+            yH += 25;
+            g2.drawString("XP:", 920, yH);
+            g2.drawString(scenario.getPlayer().getXP() + "", 1050, yH);
+
+            g2.setColor(c1);
+            if (settingsButton == null) settingsButton = new Ellipse2D.Double(930, 770, 80, 80);
+            g2.fill(settingsButton);
+            g2.setColor(fontColor);
+            g2.drawOval(930, 770, 80, 80);
+
+            g2.setColor(c2);
+            if (menuButton == null) menuButton = new Ellipse2D.Double(1050, 770, 80, 80);
+            g2.fill(menuButton);
+            g2.setColor(fontColor);
+            g2.drawOval(1050, 770, 80, 80);
+            g2.setFont(mmFont.deriveFont(20f));
+            g2.drawString("Settings", 942, 815);
+            g2.drawString("Menu", 1073, 815);
+//        }
 
 
         g.drawImage(buffer, 0, 0, null);
@@ -338,47 +473,51 @@ public class GameEnv extends JComponent{
 
 
     private class DialogBox {
-        private RoundRectangle2D.Double BG1;
-        private RoundRectangle2D.Double BG2;
+        private RoundRectangle2D.Double BG;
 
         private RoundRectangle2D.Double buttonYes;
         private RoundRectangle2D.Double buttonNo;
 
         private RoundRectangle2D.Double buttonGotIt;
 
-        private Color BG1Color, BG2Color;
+        private Color BGColor, borderColor, c1, c2, c3;
         
 
         DialogBox() {
-            BG1Color = new Color(150, 150, 150);
-            BG1 = new RoundRectangle2D.Double(275, 325, 350, 200, 100, 100);
-            BG2Color = new Color(60, 60, 60);
-            BG2 = new RoundRectangle2D.Double(280, 330, 340, 190, 100, 100);
+            c1 = c2 = c3 = new Color(50, 50, 50);
+            BGColor = new Color(60, 60, 60);
+            borderColor = new Color(150, 150, 150);
+            BG = new RoundRectangle2D.Double(275, 325, 350, 200, 100, 100);
             buttonYes = new RoundRectangle2D.Double(340, 440, 100, 50, 30, 30);
             buttonNo = new RoundRectangle2D.Double(460, 440, 100, 50, 30, 30);
             buttonGotIt = new RoundRectangle2D.Double(400, 440, 100, 50, 30, 30);
         }
         void drawDialogBox(String msg, boolean yesNo) {
-            g2.setColor(BG1Color);
-            g2.fill(BG1);
-            g2.setColor(BG2Color);
-            g2.fill(BG2);
-            g2.setColor(BG1Color);
-            g2.setFont(font.deriveFont(30f));
+            g2.setColor(BGColor);
+            g2.fill(BG);
+            g2.setColor(borderColor);
+            g2.draw(BG);
+            g2.setFont(mmFont.deriveFont(30f));
             g2.drawString(msg, 325, 385);
-            g2.setColor(BG1Color);
             if (yesNo) {
+                g2.setColor(c1);
                 g2.fill(buttonYes);
+                g2.setColor(borderColor);
+                g2.draw(buttonYes);
+                g2.setColor(c2);
                 g2.fill(buttonNo);
-                g2.setColor(BG2Color);
-                g2.setFont(font.deriveFont(25f));
+                g2.setColor(borderColor);
+                g2.draw(buttonNo);
+                g2.setFont(mmFont.deriveFont(25f));
                 g2.drawString("Yes", 375, 470);
                 g2.drawString("No", 500, 470);
             }
             else {
+                g2.setColor(c3);
                 g2.fill(buttonGotIt);
-                g2.setColor(BG2Color);
-                g2.setFont(font.deriveFont(25f));
+                g2.setColor(borderColor);
+                g2.draw(buttonGotIt);
+                g2.setFont(mmFont.deriveFont(25f));
                 g2.drawString("OK", 435, 470);
             }
 
@@ -388,6 +527,7 @@ public class GameEnv extends JComponent{
         RoundRectangle2D.Double getButtonYes() { return buttonYes; }
         RoundRectangle2D.Double getButtonNo() { return buttonNo; }
         RoundRectangle2D.Double getButtonGotIt() { return buttonGotIt; }
+        void setColor(int n, Color c) { switch (n) { case 1:c1 = c;break;    case 2:c2 = c;break;    case 3:c3 = c; break; } }
     }
     
 }

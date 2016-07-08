@@ -1,5 +1,5 @@
 package GraphicalUserInterface;
 
-interface MainMenuListener {
+public interface SimpleMenuListener {
     void switchTo(String target);
 }

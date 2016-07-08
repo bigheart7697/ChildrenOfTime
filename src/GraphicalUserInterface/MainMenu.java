@@ -13,7 +13,7 @@ import java.io.IOException;
 
 class MainMenu extends JComponent{
 
-    private MainMenuListener mmListener;
+    private SimpleMenuListener mmListener;
 
     private BufferedImage BG;
     private Font mmFont;
@@ -22,7 +22,7 @@ class MainMenu extends JComponent{
     private RoundRectangle2D.Double singlePlayButton, customGameButton, multiPlayButton;
     private Ellipse2D.Double settingsButton, exitButton;
 
-    MainMenu(MainMenuListener mml) {
+    MainMenu(SimpleMenuListener mml) {
 
         mmListener = mml;
 
