@@ -119,7 +119,7 @@ public class CustomGameMenu extends JComponent {
         g2.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
 
 
-        //Children Of Time
+        //Beautiful Stereo-type !
         g2.setColor(fontColor);
         g2.setFont(cgmFont.deriveFont(80f));
         g2.drawString("Make your", 570, 120);

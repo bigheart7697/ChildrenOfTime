@@ -2,6 +2,7 @@ package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.GameEnv.GameEnv;
+import GraphicalUserInterface.GameEnv.Scenario;
 
 import javax.swing.*;
 import java.awt.*;
@@ -45,30 +46,46 @@ public class EnvironmentMgr implements ActionListener{
         EM.MM = new MainMenu(target -> {
             EM.deck.show(EM.frame.getContentPane(), target);
             EM.cCard = target;
-            if (target == "game") {
+        });
+
+        EM.SPM = new SinglePlayerMenu(new SinglePlayerMenuListener() {
+            @Override
+            public void switchTo(int scenarioNum) {
+                if (scenarioNum == 0) EM.GE = new GameEnv(EM, new Scenario());
+                else EM.GE = new GameEnv(EM, new Scenario(scenarioNum));
+                EM.frame.add(EM.GE, "game");
+                EM.deck.show(EM.frame.getContentPane(), "game");
+                EM.cCard = "game";
                 EM.frame.setSize(1206, 935);
                 EM.frame.setLocationRelativeTo(null);
             }
+
+            @Override
+            public void switchTo() {
+                EM.deck.show(EM.frame.getContentPane(), "main");
+                EM.cCard = "main";
+            }
         });
-        EM.GE = new GameEnv(EM);
-        EM.SPM = new SinglePlayerMenu();
+
         EM.CGM = new CustomGameMenu(target -> {
             EM.deck.show(EM.frame.getContentPane(), target);
             EM.cCard = target;
         });
+
         EM.NA = new NewAbility();
         EM.NE = new NewEnemy();
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
         EM.NI = new NewItem();
         EM.NM = new NewMap();
+
         EM.PvPBM = new PvPBattleMenu();
+
         EM.SM = new SettingsMenu();
 
         EM.timer.start();
 
         EM.frame.add(EM.MM, "main");
-        EM.frame.add(EM.GE, "game");
         EM.frame.add(EM.SPM, "single");
         EM.frame.add(EM.CGM, "custom");
         EM.frame.add(EM.PvPBM, "pvp");
@@ -86,8 +103,9 @@ public class EnvironmentMgr implements ActionListener{
     @Override
     public void actionPerformed(ActionEvent e) {
         MM.update();
-        GE.update();
+        if (GE != null) GE.update();
         CGM.update();
+        SPM.update();
     }
 
     public String getCurrentCard() { return cCard; }

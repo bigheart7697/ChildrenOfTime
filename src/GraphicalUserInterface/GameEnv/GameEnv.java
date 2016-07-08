@@ -37,7 +37,7 @@ public class GameEnv extends JComponent{
 
     private Graphics2D g2;
 
-    public GameEnv(EnvironmentMgr emgr) {
+    public GameEnv(EnvironmentMgr emgr, Scenario scenario) {
 
         this.emgr = emgr;
         
@@ -52,7 +52,7 @@ public class GameEnv extends JComponent{
 
         speedFlag1 = speedFlag2 = speedFlag3 = speedFlag4 = false;
 
-        scenario = new Scenario();
+        this.scenario = scenario;
         movChar = new Image[4];
         try {
             movChar[0] = ImageIO.read(new File("GameEnvGraphics/MoveCharBack.png"));

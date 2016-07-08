@@ -11,6 +11,7 @@ public class Scenario {
     private int rows, columns;
     private Image BGTile, key, story, battle, shop, ability;
     private Image[] Obs, Doors;
+    private String[] stories;
 
     private void imageLoader() {
         try {
@@ -179,6 +180,12 @@ public class Scenario {
         map.setEvent(battle4, 7, 5);
         map.setEvent(battleOptional, 9, 14);
 
+
+    }
+
+    public Scenario(int num) {
+
+        imageLoader();
 
     }
 
