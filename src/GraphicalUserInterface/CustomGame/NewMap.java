@@ -22,6 +22,7 @@ public class NewMap extends JComponent {
     private Font nmFont;
     private Color fontColor;
     private SimpleMenuListener nmListener;
+    private String scenarioName = "", story = "", breakMessage;
 
     private RoundRectangle2D.Double scenario, mapSize, defeatMessage, earlyAmountse, startingPoint;
     private Ellipse2D.Double back, next;
@@ -118,15 +119,6 @@ public class NewMap extends JComponent {
         g2.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
 
 
-        //Children Of Time
-//        g2.setColor(fontColor);
-//        g2.setFont(nmFont.deriveFont(80f));
-//        g2.drawString("Make your", 570, 120);
-//        g2.setFont(nmFont.deriveFont(200f));
-//        g2.drawString("Dreams", 670, 300);
-//        g2.setFont(nmFont.deriveFont(120f));
-//        g2.drawString("come true", 900, 400);
-
 
         //Buttons
         scenario = new RoundRectangle2D.Double((getWidth() / 2) - 150, 100, 300, 80, 60, 60);
@@ -174,5 +166,29 @@ public class NewMap extends JComponent {
 
     public void update() {
         repaint();
+    }
+
+    public String getScenarioName() {
+        return scenarioName;
+    }
+
+    public void setScenarioName(String scenarioName) {
+        this.scenarioName = scenarioName;
+    }
+
+    public String getStory() {
+        return story;
+    }
+
+    public void setStory(String story) {
+        this.story = story;
+    }
+
+    public String getBreakMessage() {
+        return breakMessage;
+    }
+
+    public void setBreakMessage(String breakMessage) {
+        this.breakMessage = breakMessage;
     }
 }
