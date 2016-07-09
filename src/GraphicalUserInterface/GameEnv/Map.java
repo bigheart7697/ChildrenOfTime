@@ -1,6 +1,5 @@
 package GraphicalUserInterface.GameEnv;
 
-import javax.swing.*;
 import java.awt.*;
 
 class Map {
@@ -48,19 +47,19 @@ class Tile {
     }
 
 
-    public Image getImage() {
+    Image getImage() {
         return image;
     }
     public Type getType() {
         return type;
     }
-    public int getX() {
+    int getX() {
         return x;
     }
-    public int getY() {
+    int getY() {
         return y;
     }
-    public boolean isPassable() {
+    boolean isPassable() {
         if (gameEvent != null)
             return passable && gameEvent.isPassable();
         else
@@ -68,7 +67,7 @@ class Tile {
     }
 
     public GameEvent getGameEvent() { return gameEvent; }
-    public void setGameEvent(GameEvent gameEvent) { this.gameEvent = gameEvent; }
+    void setGameEvent(GameEvent gameEvent) { this.gameEvent = gameEvent; }
     public void removeGameEvent(GameEvent gameEvent) { this.gameEvent = null; }
 }
 
@@ -81,12 +80,16 @@ class GameEvent {
         doorLockedRight, doorUnlockedRight,
         doorLockedDown, doorUnlockedDown,
         doorLockedUp, doorUnlockedUp,
-        key, battle, story, shop, ability, boss}
+        key, battle, story, shop, ability}
 
     private GameEvent relatedEvent;
     private Type type;
     private int x, y;
     private boolean passable;
+
+    private String story;
+
+
 
     GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile) {
         this.image = img;
@@ -97,6 +100,7 @@ class GameEvent {
         relatedEvent = null;
         this.tile = tile;
         tile.setGameEvent(this);
+        story = null;
     }
     GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile, GameEvent relatedEvent) {
         this.image = img;
@@ -108,34 +112,57 @@ class GameEvent {
         relatedEvent.setRelatedEvent(this);
         this.tile = tile;
         tile.setGameEvent(this);
+        story = null;
+    }
+    GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile, String story) {
+        this.image = img;
+        this.x = row;
+        this.y = column;
+        this.passable = passable;
+        this.type = t;
+        relatedEvent = null;
+        this.tile = tile;
+        tile.setGameEvent(this);
+        this.story = story;
     }
 
-    public Image getImage() {
+
+
+
+    Image getImage() {
         return image;
     }
-    public Type getType() {
+    private void setImage(Image img) { image = img; }
+
+    Type getType() {
         return type;
     }
-    public int getX() {
+    private void setType(Type t) { type = t; }
+
+    int getX() {
         return x;
     }
-    public int getY() {
+    int getY() {
         return y;
     }
-    public boolean isPassable() {
+
+    boolean isPassable() {
         return passable;
     }
 
     public GameEvent getRelatedEvent() {
         return relatedEvent;
     }
-    public void setRelatedEvent(GameEvent relatedEvent) {
+    private void setRelatedEvent(GameEvent relatedEvent) {
         this.relatedEvent = relatedEvent;
     }
 
-    public Tile getTile() { return tile; }
+    Tile getTile() { return tile; }
 
-    public void fireEvent() {
+    String getStory() { return story; }
+
+
+    void fireEvent() {
         System.out.println(type);
         try {
             Thread.sleep(500);
@@ -143,5 +170,31 @@ class GameEvent {
             e.printStackTrace();
         }
     }
+    void unlockDoor(Image img) {
+        switch (relatedEvent.getType()) {
+            case doorLockedDown:
+                relatedEvent.setType(Type.doorUnlockedDown);
+                relatedEvent.setImage(img);
+                break;
+            case doorLockedUp:
+                relatedEvent.setType(Type.doorUnlockedUp);
+                relatedEvent.setImage(img);
+                break;
+            case doorLockedRight:
+                relatedEvent.setType(Type.doorUnlockedRight);
+                relatedEvent.setImage(img);
+                break;
+            case doorLockedLeft:
+                relatedEvent.setType(Type.doorUnlockedLeft);
+                relatedEvent.setImage(img);
+                break;
+        }
+        try {
+            Thread.sleep(500);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }
