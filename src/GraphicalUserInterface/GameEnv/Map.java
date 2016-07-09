@@ -161,15 +161,6 @@ class GameEvent {
 
     String getStory() { return story; }
 
-
-    void fireEvent() {
-        System.out.println(type);
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
     void unlockDoor(Image img) {
         switch (relatedEvent.getType()) {
             case doorLockedDown:

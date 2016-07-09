@@ -88,15 +88,17 @@ abstract public class Hero extends Unit{
 //        else System.out.println("The selected ability is passive.");
 //    }
 
-    public void buyItem(Item i) {
-        if (i.getInvSpaceNeeded() + this.inventory.size() > this.invSize)
+    public boolean buyItem(Item i) {
+        if (i.getInvSpaceNeeded() + this.inventory.size() > this.invSize) {
             System.out.println(this.getName() + "'s inventory is full.");
+            return false;
+        }
 
         else {
             if (!(i instanceof ImmediateEffect)) this.inventory.add(i);
             this.itemAcquired(i);
             System.out.print(i.getName() + " bought successfully, your current wealth is: "); //the wealth is then printed in gameUI :D
-
+            return true;
         }
     }
 

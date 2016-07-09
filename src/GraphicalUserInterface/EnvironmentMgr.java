@@ -100,6 +100,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.CGM, "custom");
         EM.frame.add(EM.PvPBM, "pvp");
         EM.frame.add(EM.SM, "settings");
+
         EM.frame.add(EM.NM, "new map");
         EM.frame.add(EM.NA, "new ability");
         EM.frame.add(EM.NI, "new item");
@@ -118,8 +119,8 @@ public class EnvironmentMgr implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         MM.update();
         if (GE != null) GE.update();
-        CGM.update();
-        SPM.update();
+        if (CGM != null)CGM.update();
+        if (SPM != null)SPM.update();
         NM.update();
     }
 

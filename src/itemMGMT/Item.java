@@ -1,5 +1,7 @@
 package itemMGMT;
 
+import java.awt.*;
+
 public class Item {
     protected String name;
     protected int cost;
@@ -8,6 +10,8 @@ public class Item {
     protected int effect;
     private String description;
 
+    //GUI Phase
+    protected Image image;
 
     //Constructor
 
@@ -44,5 +48,8 @@ public class Item {
     //Other Methods
 
     public void displayInfo() { System.out.println(this.description); }
+
+    public Image getImage() { return image; }
+    public void setImage(Image image) { this.image = image; }
 
 }

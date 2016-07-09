@@ -2,6 +2,7 @@ package GraphicalUserInterface.GameEnv;
 
 import GraphicalUserInterface.EnvironmentMgr;
 import GraphicalUserInterface.SimpleMenuListener;
+import itemMGMT.Item;
 import units.Hero;
 
 import javax.imageio.ImageIO;
@@ -27,7 +28,7 @@ public class GameEnv extends JComponent{
 
     //Map stuff
     private final static int BLOCK_SIZE = 50;
-    private final static double SPEED = 4.0;
+    private final static double SPEED = 2.0;
 
     //Moving icon stuff
     private Image movChar[];
@@ -42,17 +43,24 @@ public class GameEnv extends JComponent{
     //Dialog Box stuff
     private DialogBox dialogBox;
     private boolean dialogBoxFlag, dialogTypeFlag, eventDisappearFlag;
-    private String message;
+    private String dialogBoxMessage;
     private GameEvent eventToBeFired;
 
     //Story Box Stuff
     private StoryBox storyBox;
-    private boolean storyBoxflag;
+    private boolean storyBoxFlag;
+
+    //Shop Environment stuff
+    private ShopEnv shop;
+    private boolean shopFlag, buyFlag;
+    private Hero targetHero;
 
     //Panel stuff
     private Ellipse2D.Double settingsButton, menuButton;
     private Font mmFont, geFont;
     private Color fontColor, buttonColor, c1, c2, c3, c4, c5;
+    private Rectangle2D.Double[] heroRect;
+    private boolean heroRectFlag;
 
     //Graphics2D
     private Graphics2D g2;
@@ -114,11 +122,19 @@ public class GameEnv extends JComponent{
 
         //Story Box Stuff
         storyBox = new StoryBox();
-        storyBoxflag = false;
+        storyBoxFlag = false;
+
+        //Shop Environment stuff
+        shop = new ShopEnv(scenario.getShop());
+        shopFlag = false;
+        buyFlag = false;
+        targetHero = null;
 
         //Panel stuff
         fontColor = new Color(166, 143, 78);
         c1 = c2 = c3 = c4 = c5 = buttonColor = new Color(60, 60, 60);
+        heroRect = new Rectangle2D.Double[scenario.getPlayer().getHeroes().size()];
+        heroRectFlag = false;
 
 
         //Interaction handling
@@ -200,50 +216,134 @@ public class GameEnv extends JComponent{
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+
                 if (dialogBoxFlag) {
+                    if (buyFlag) {
 
-                    if (dialogBox.getButtonGotIt().contains(e.getX(), e.getY()) && !dialogTypeFlag) {
-                        dialogBoxFlag = false;
-                        dialogTypeFlag = true;
+                        if (dialogBox.getButtonYes().contains(e.getX(), e.getY()) && dialogTypeFlag) {
+                            if (targetHero.buyItem(shop.getSelected())) {
+                                scenario.getPlayer().setGold(scenario.getPlayer().getGold() - shop.getSelected().getCost());
+                                dialogBoxFlag = false;
+                                storyBoxFlag = true;
+                                storyBox.setStory("Successful!");
+                                buyFlag = false;
+                                targetHero = null;
+                            }
+                            else {
+                                dialogBoxFlag = false;
+                                storyBoxFlag = true;
+                                storyBox.setStory("Selected Hero's Inventory is full.");
+                                buyFlag = false;
+                                targetHero = null;
+                            }
+                        }
+                        if (dialogBox.getButtonNo().contains(e.getX(), e.getY()) && dialogTypeFlag) {
+                            buyFlag = false;
+                            dialogBoxFlag = false;
+                            targetHero = null;
+                        }
+
                     }
-
-                    else if (dialogBox.getButtonNo().contains(e.getX(), e.getY()) && dialogTypeFlag) {
-                        eventToBeFired = null;
-                        dialogBoxFlag = false;
-                    }
-
-                    else if (dialogBox.getButtonYes().contains(e.getX(), e.getY()) && dialogTypeFlag) {
-                        if (eventToBeFired.getType() == GameEvent.Type.key) {
-                            eventToBeFired.unlockDoor(scenario.getUnlockedDoorImg());
-                            dialogTypeFlag = false;
-                            message = "A door was unlocked.";
-                        }
-                        else eventToBeFired.fireEvent();
-
-                        if (eventToBeFired.getType() == GameEvent.Type.story) {
-                            storyBoxflag = true;
-                            storyBox.setStory(eventToBeFired.getStory());
-                        }
-
-                        if ( eventToBeFired.getType() == GameEvent.Type.battle ||
-                                eventToBeFired.getType() == GameEvent.Type.key ||
-                                eventToBeFired.getType() == GameEvent.Type.story) {
-                            eventDisappearFlag = true;
-                        }
-                        else {
+                    else{
+                        if (dialogBox.getButtonGotIt().contains(e.getX(), e.getY()) && !dialogTypeFlag) {
+                            dialogBoxFlag = false;
+                            dialogTypeFlag = true;
+                        } else if (dialogBox.getButtonNo().contains(e.getX(), e.getY()) && dialogTypeFlag) {
                             eventToBeFired = null;
-                        }
+                            dialogBoxFlag = false;
+                        } else if (dialogBox.getButtonYes().contains(e.getX(), e.getY()) && dialogTypeFlag) {
 
-                        if (dialogTypeFlag) dialogBoxFlag = false;
+                            switch (eventToBeFired.getType()) {
+                                case key:
+                                    eventToBeFired.unlockDoor(scenario.getUnlockedDoorImg());
+                                    dialogTypeFlag = false;
+                                    dialogBoxMessage = "A door was unlocked.";
+                                    eventDisappearFlag = true;
+                                    break;
+                                case story:
+                                    storyBoxFlag = true;
+                                    storyBox.setStory(eventToBeFired.getStory());
+                                    eventDisappearFlag = true;
+                                    break;
+                                case shop:
+                                    shopFlag = true;
+                                    eventToBeFired = null;
+                                    break;
+                                case battle:
+                                    eventDisappearFlag = true;
+                                    break;
+                            }
+                            if (dialogTypeFlag) dialogBoxFlag = false;
+
+                        }
+                    }
+                }
+
+                if (storyBoxFlag) {
+
+                    if (!buyFlag && storyBox.getButtonGotIt().contains(e.getX(), e.getY())) {
+                        storyBoxFlag = false;
+                        storyBox.setStory(null);
                     }
 
                 }
 
-                if (storyBoxflag) {
+                if (shopFlag) {
 
-                    if (storyBox.getButtonGotIt().contains(e.getX(), e.getY())) {
-                        storyBoxflag = false;
-                        storyBox.setStory(null);
+                    if (shop.getButtonInfo().contains(e.getX(), e.getY())) {
+                        storyBoxFlag = true;
+                        if (shop.getSelected() != null) storyBox.setStory(shop.getSelected().getDescription());
+                        else storyBox.setStory("Please select an item.");
+                    }
+
+                    if (shop.getButtonExit().contains(e.getX(), e.getY())) {
+                        shopFlag = false;
+                        buyFlag = false;
+                        storyBoxFlag = false;
+                        dialogBoxFlag = false;
+                        shop.setSelected(null);
+                    }
+
+                    if (shop.getButtonBuy().contains(e.getX(), e.getY())) {
+                        if (shop.getSelected() == null) {
+                            storyBoxFlag = true;
+                            storyBox.setStory("Please select an item.");
+                        }
+                        else {
+                            if (scenario.getPlayer().getGold() > shop.getSelected().getCost()) {
+                                storyBoxFlag = true;
+                                storyBox.setStory("Choose a hero from the panel on your right");
+                                buyFlag = true;
+                            }
+                            else {
+                                storyBoxFlag = true;
+                                storyBox.setStory("You don't have enough money.");
+                            }
+                        }
+                    }
+
+
+                    if (shop.getRectFlag() && !buyFlag)
+                    for (int i = 0; i < shop.getRect().length; i++) {
+                        if (shop.getRect()[i].contains(e.getX(), e.getY())) {
+                            shop.setSelected(i);
+                            break;
+                        }
+                        else shop.setSelected(null);
+                    }
+
+
+                    if (buyFlag && heroRectFlag) {
+                        for (int i = 0; i < heroRect.length; i++) {
+                            if (heroRect[i].contains(e.getX(), e.getY())) {
+                                storyBoxFlag = false;
+                                dialogBoxFlag = true;
+                                dialogTypeFlag = true;
+                                targetHero = scenario.getPlayer().getHeroes().get(i);
+                                dialogBoxMessage = "Buy for " + scenario.getPlayer().getHeroes().get(i).getName() + "?";
+                                break;
+                            }
+                        }
                     }
 
                 }
@@ -258,6 +358,7 @@ public class GameEnv extends JComponent{
                     emgr.frame().setLocationRelativeTo(null);
                     geListener.switchTo("settings");
                 }
+
             }
 
             @Override
@@ -274,6 +375,16 @@ public class GameEnv extends JComponent{
                 if (storyBox.getButtonGotIt().contains(e.getX(), e.getY())) {
                     storyBox.setColor(new Color(40, 40, 40));
                 }
+                if (shop.getButtonInfo().contains(e.getX(), e.getY())) {
+                    shop.setColor(1, new Color(120, 120, 120));
+                }
+                if (shop.getButtonExit().contains(e.getX(), e.getY())) {
+                    shop.setColor(2, new Color(120, 120, 120));
+                }
+
+                if (shop.getButtonBuy().contains(e.getX(), e.getY())) {
+                    shop.setColor(3, new Color(120, 120, 120));
+                }
                 if (settingsButton.contains(e.getX(), e.getY())) {
                     c1 = new Color(50, 50, 50);
                 }
@@ -287,6 +398,9 @@ public class GameEnv extends JComponent{
                 dialogBox.setColor(1, new Color(50, 50, 50));
                 dialogBox.setColor(2, new Color(50, 50, 50));
                 dialogBox.setColor(3, new Color(50, 50, 50));
+                shop.setColor(1, new Color(130, 130, 130));
+                shop.setColor(2, new Color(130, 130, 130));
+                shop.setColor(3, new Color(130, 130, 130));
                 storyBox.setColor(new Color(50, 50, 50));
                 c1 = c2 = buttonColor;
             }
@@ -307,15 +421,11 @@ public class GameEnv extends JComponent{
             g2.setColor(new Color(30, 30, 30));
             g2.fillRect(0, 0, getWidth(), getHeight());
 
-            g2.drawImage(BGImage, 50, 50, 800, 800, null);
-
             //Drawing the Scenario Map
             for (int i = 1; i <= 16; i++) {
                 for (int j = 1; j <= 16; j++) {
                     if (scenario.getMap().getTile(i, j).getImage() != null) {
-                        if (scenario.getMap().getTile(i, j).getType() == Tile.Type.tile)
-                            g2.drawImage(ApplyTransparency((BufferedImage) scenario.getMap().getTile(i, j).getImage()), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
-                        else g2.drawImage(scenario.getMap().getTile(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
+                         g2.drawImage(scenario.getMap().getTile(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
                     }
                     if (scenario.getMap().getEvent(i, j) != null)
                         g2.drawImage(scenario.getMap().getEvent(i, j).getImage(), 50 * i, 50 * j, BLOCK_SIZE, BLOCK_SIZE, null);
@@ -325,13 +435,18 @@ public class GameEnv extends JComponent{
             //The moving Character
             g2.drawImage(movChar[charImage], (int) CharX, (int) CharY, BLOCK_SIZE, BLOCK_SIZE, null);
 
+            //Shop Environment
+            if (shopFlag) {
+                shop.drawShop();
+            }
+
             //Dialog Box
             if (dialogBoxFlag) {
-                dialogBox.drawDialogBox(message, dialogTypeFlag);
+                dialogBox.drawDialogBox(dialogBoxMessage, dialogTypeFlag);
             }
 
             //Story Box
-            if (storyBoxflag) {
+            if (storyBoxFlag) {
                 storyBox.drawStoryBox();
             }
 
@@ -357,6 +472,7 @@ public class GameEnv extends JComponent{
                 g2.setColor(new Color(200, 200, 200));
                 g2.setFont(geFont.deriveFont(22f));
                 g2.drawString(h.getName(), 930, yH);
+                if (!heroRectFlag) heroRect[heroes.indexOf(h)] = new Rectangle2D.Double(930, yH - 15, 100, 30);
                 g2.setFont(geFont.deriveFont(14f).deriveFont(Font.BOLD));
                 g2.drawString("HP: ", 1040, yH - 12);
                 g2.drawString(h.getHP() + "", 1080, yH - 12);
@@ -366,6 +482,8 @@ public class GameEnv extends JComponent{
                 g2.drawString(h.getMP() + "", 1080, yH + 12);
                 yH += 50;
             }
+            heroRectFlag = true;
+
             yH += 10;
             g2.setColor(new Color(240, 220, 98));
             g2.setFont(geFont.deriveFont(25f));
@@ -396,24 +514,24 @@ public class GameEnv extends JComponent{
     }
 
 
-
-    private BufferedImage ApplyTransparency(BufferedImage image)
-    {
-        BufferedImage dest = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g = dest.createGraphics();
-        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.DST_OVER, 0.15F);
-        g.setComposite(ac);
-        g.drawImage(image, 0, 0, null);
-
-        return dest;
-    }
+    //For future
+//    private BufferedImage ApplyTransparency(BufferedImage image)
+//    {
+//        BufferedImage dest = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+//        Graphics2D g = dest.createGraphics();
+//        AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.DST_OVER, 0.5F);
+//        g.setComposite(ac);
+//        g.drawImage(image, 0, 0, null);
+//
+//        return dest;
+//    }
     
     
 
     private double prevX, prevY;
     public void update() {
 
-            if (!dialogBoxFlag && !storyBoxflag) {
+            if (!dialogBoxFlag && !storyBoxFlag && !shopFlag) {
 
                 prevX = CharX;
                 prevY = CharY;
@@ -470,18 +588,18 @@ public class GameEnv extends JComponent{
                             if (!doorFlag && tileRect.intersects(charRect)) {
 
                                 if (event.getType() == GameEvent.Type.key) {
-                                    message = "Pick up the Key?";
+                                    dialogBoxMessage = "Pick up the Key?";
                                     dialogTypeFlag = true;
                                 }
                                 else if(event.getType() == GameEvent.Type.doorLockedDown ||
                                         event.getType() == GameEvent.Type.doorLockedUp ||
                                         event.getType() == GameEvent.Type.doorLockedRight ||
                                         event.getType() == GameEvent.Type.doorLockedLeft) {
-                                    message = "This door is locked.";
+                                    dialogBoxMessage = "This door is locked.";
                                     dialogTypeFlag = false;
                                 }
                                 else {
-                                    message = "Enter " + event.getType() + "?";
+                                    dialogBoxMessage = "Enter " + event.getType() + "?";
                                     dialogTypeFlag = true;
                                 }
 
@@ -608,12 +726,14 @@ public class GameEnv extends JComponent{
                 yS += 30;
             }
 
-            g2.setColor(c1);
-            g2.fill(buttonGotIt);
-            g2.setColor(borderColor);
-            g2.draw(buttonGotIt);
-            g2.setFont(mmFont.deriveFont(25f));
-            g2.drawString("Continue", 415, 520);
+            if (!buyFlag) {
+                g2.setColor(c1);
+                g2.fill(buttonGotIt);
+                g2.setColor(borderColor);
+                g2.draw(buttonGotIt);
+                g2.setFont(mmFont.deriveFont(25f));
+                g2.drawString("Continue", 415, 520);
+            }
 
         }
 
@@ -634,6 +754,91 @@ public class GameEnv extends JComponent{
         }
 
         void setColor(Color c) { c1 = c; }
+    }
+
+
+    private class ShopEnv {
+
+        private RoundRectangle2D.Double BG;
+
+        private RoundRectangle2D.Double buttonBuy, buttonExit, buttonInfo;
+
+        private Color BGColor, borderColor, c1, c2;
+
+        private ArrayList<Item> items;
+        private Item selected;
+        private Rectangle.Double[] itemRects;
+        private boolean rectFlag;
+
+        ShopEnv(ArrayList<Item> items) {
+            c1 = c2 = c3 = new Color(150, 150, 150);
+            BGColor = new Color(150, 150, 150);
+            borderColor = new Color(60, 60, 60);
+            BG = new RoundRectangle2D.Double(75, 75, 750, 750, 75, 75);
+            buttonInfo = new RoundRectangle2D.Double(400, 750, 100, 50, 25, 25);
+            buttonBuy = new RoundRectangle2D.Double(550, 750, 100, 50, 25, 25);
+            buttonExit = new RoundRectangle2D.Double(700, 750, 100, 50, 25, 25);
+            this.items = items;
+            itemRects = new Rectangle2D.Double[items.size()];
+            rectFlag = false;
+            selected = null;
+        }
+
+        void drawShop() {
+            g2.setColor(BGColor);
+            g2.fill(BG);
+            g2.setColor(borderColor);
+            g2.draw(BG);
+            g2.setFont(mmFont.deriveFont(48f));
+            g2.drawString("Welcome to our shop!", 300, 150);
+
+            int xI = 100, yI = 250;
+            for (Item i: items) {
+                g2.drawImage(i.getImage(), xI, yI, 100, 100, null);
+                if (!rectFlag) itemRects[items.indexOf(i)] = new Rectangle2D.Double(xI, yI, 100, 100);
+                g2.setFont(mmFont.deriveFont(22f));
+                g2.drawString(i.getName(), xI + 10, yI + 120);
+                if (i.equals(selected)) g2.draw(new Rectangle2D.Double(xI, yI, 100, 100));
+                xI += 150;
+                if (xI >= 800) {
+                    yI += 150;
+                    xI = 100;
+                }
+            }
+            rectFlag = true;
+
+            g2.setColor(c1);
+            g2.fill(buttonBuy);
+            g2.setColor(borderColor);
+            g2.draw(buttonBuy);
+            g2.setColor(c2);
+            g2.fill(buttonExit);
+            g2.setColor(borderColor);
+            g2.draw(buttonExit);
+            g2.setColor(c3);
+            g2.fill(buttonInfo);
+            g2.setColor(borderColor);
+            g2.draw(buttonInfo);
+            g2.setFont(mmFont.deriveFont(25f));
+            g2.drawString("Info", 435, 780);
+            g2.drawString("Buy", 585, 780);
+            g2.drawString("Exit", 735, 780);
+            g2.drawString("*Items that doesn't display a cost on info are 4 dollars.", 100, 650);
+
+        }
+
+        Item getSelected() { return selected; }
+        void setSelected(Item i) { selected = i; }
+        void setSelected(int i) { selected = items.get(i);}
+        Rectangle2D.Double[] getRect() { return itemRects; } // Pun intended :D
+        boolean getRectFlag() { return rectFlag; }
+
+        RoundRectangle2D.Double getButtonBuy() { return buttonBuy; }
+        RoundRectangle2D.Double getButtonExit() { return buttonExit; }
+        RoundRectangle2D.Double getButtonInfo() { return buttonInfo; }
+        void setColor(int n, Color c) { switch (n) { case 1:c3 = c;break;    case 2:c2 = c;break;    case 3:c1 = c; break; } }
+
+
     }
 }
 

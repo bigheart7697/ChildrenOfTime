@@ -2,6 +2,10 @@ package GraphicalUserInterface.GameEnv;
 
 import abilities.*;
 import battleMechanics.Battlefield;
+import itemMGMT.Consumable;
+import itemMGMT.Equipment;
+import itemMGMT.ImmediateEffect;
+import itemMGMT.Item;
 import player.op.Player;
 import units.Fighter;
 import units.Hero;
@@ -19,10 +23,9 @@ public class Scenario {
     private Map map;
     private int rows, columns;
     private Image BGTile, key, story, battle, shop, ability, finalBoss;
-    private Image[] Obs, Doors;
+    private Image[] Obs, Doors, items;
 
-    private String[] stories;
-    private String[] battlePhrases;
+    private ArrayList<Item> Shop;
 
     private Player player;
     private Battlefield battlefield;
@@ -34,6 +37,9 @@ public class Scenario {
 
             Doors = new Image[2];
             for (int i = 0; i < 2; i++) Doors[i] = ImageIO.read(new File("GameEnvGraphics/Door" + i + ".png"));
+
+            items = new Image[9];
+            for (int i = 0; i < 9; i++) items[i] = ImageIO.read(new File("ShopGraphics/" + (i + 1) + ".png"));
 
             BGTile = ImageIO.read(new File("GameEnvGraphics/BGTile.jpg"));
             key = ImageIO.read(new File("GameEnvGraphics/key.png"));
@@ -244,7 +250,7 @@ public class Scenario {
         }
 
         //Stories
-        stories = new String[5];
+        String[] stories = new String[5];
         stories[0] = "You’ve entered the castle, it takes a while for your eyes to get used to the darkness" +
                 " but the horrifying halo of your enemies is vaguely visible. Angel’s unsettling" +
                 " presence and the growling of thugs tell you that your first battle has BEGUN!";
@@ -260,13 +266,48 @@ public class Scenario {
                 "thing  and\nbacking down is not an option.";
 
         //BattlePhrases
-        battlePhrases = new String[6];
+        String[] battlePhrases = new String[6];
         battlePhrases[0] = " ";
         battlePhrases[1] = " ";
         battlePhrases[2] = " ";
         battlePhrases[3] = " ";
         battlePhrases[4] = " ";
         battlePhrases[5] = " ";
+
+
+
+        //Shop and items added below
+        Shop = new ArrayList<>();
+
+        //List of items created and added to shop here
+
+        ImmediateEffect Toughen = new ImmediateEffect("Toughen", "HP", 20, "“Toughen”: +20 maximum health"); Toughen.setImage(items[0]);
+        ImmediateEffect Guide = new ImmediateEffect("Guide", "MP", 20, "“Guide”: +20 maximum magic"); Guide.setImage(items[1]);
+        ImmediateEffect Defy = new ImmediateEffect("Defy", "att", 8, "“Defy”: +8 attack power"); Defy.setImage(items[2]);
+
+        Equipment Sword = new Equipment("Sword", 25, 1, "att", 80, "“Sword”: +80 attack power, costs 25 dollars"); Sword.setImage(items[3]);
+        Equipment EnergyBoots = new Equipment("Energy Boots", 20, 1, "EP", 1, "“Energy Boots”: +1 energy point, costs 20\ndollars"); EnergyBoots.setImage(items[4]);
+        Equipment Armor = new Equipment("Armor", 25, 1, "HP", 200, "“Armor”: +200 maximum health, costs 25\ndollars"); Armor.setImage(items[5]);
+        Equipment MagicStick = new Equipment("Magic Stick", 28, 1, "MP", 150, "“Magic stick”: +150 maximum magic, costs 28\ndollars"); MagicStick.setImage(items[6]);
+
+        Consumable HealthPotion = new Consumable("Health Potion", "HP", 100, "“Health potion”: +100 health points for the\nuser or one of his/her allies, costs 15 dollars"); HealthPotion.setImage(items[7]);
+        Consumable MagicPotion = new Consumable("Magic Potion", "MP", 50, "“Magic potion”: +50 magic points for the\nuser or one of his/her allies, costs 15 dollars"); MagicPotion.setImage(items[8]);
+        HealthPotion.setSuccessMessage1("just healed");
+        HealthPotion.setSuccessMessage2("with 100 health points");
+        MagicPotion.setSuccessMessage1("just offered");
+        MagicPotion.setSuccessMessage2("50 magic points");
+
+        Shop.add(Toughen);
+        Shop.add(Guide);
+        Shop.add(Defy);
+        Shop.add(Sword);
+        Shop.add(EnergyBoots);
+        Shop.add(Armor);
+        Shop.add(MagicStick);
+        Shop.add(HealthPotion);
+        Shop.add(MagicPotion);
+
+
 
         map = new Map(rows = 16, columns = 16);
 
@@ -431,5 +472,7 @@ public class Scenario {
     int getColumns() { return columns; }
 
     Image getUnlockedDoorImg() { return Doors[1]; }
+
+    ArrayList<Item> getShop() { return Shop; }
 
 }
