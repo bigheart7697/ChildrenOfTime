@@ -73,7 +73,6 @@ public class MapSize extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NM.setSizeOfMap(size);
-                System.out.println(NM.getSizeOfMap());
                 sListener.switchTo("new map");
             }
         });

@@ -31,6 +31,7 @@ public class EnvironmentMgr implements ActionListener{
     private GraphicalUserInterface.CustomGame.Scenario scenario;
     private DefeatMessage DM;
     private MapSize MS;
+    private EarlyAmounts EA;
 
     public static void main(String[] args) {
 
@@ -86,6 +87,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.scenario = new GraphicalUserInterface.CustomGame.Scenario(defaultListener, EM.NM);
         EM.DM = new DefeatMessage(defaultListener, EM.NM);
         EM.MS = new MapSize(defaultListener, EM.NM);
+        EM.EA = new EarlyAmounts(defaultListener, EM.NM);
 
         EM.PvPBM = new PvPBattleMenu();
 
@@ -107,6 +109,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.scenario, "scenario");
         EM.frame.add(EM.DM, "defeat message");
         EM.frame.add(EM.MS, "map size");
+        EM.frame.add(EM.EA, "early amounts");
         EM.cCard = "main";
 
     }
