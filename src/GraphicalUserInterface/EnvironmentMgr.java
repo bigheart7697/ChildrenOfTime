@@ -28,6 +28,7 @@ public class EnvironmentMgr implements ActionListener{
     private NewEnemy NE;
     private PvPBattleMenu PvPBM;
     private SettingsMenu SM;
+    private GraphicalUserInterface.CustomGame.Scenario scenario;
 
     public static void main(String[] args) {
 
@@ -50,6 +51,8 @@ public class EnvironmentMgr implements ActionListener{
         };
 
         EM.MM = new MainMenu(defaultListener);
+
+        EM.scenario = new GraphicalUserInterface.CustomGame.Scenario(defaultListener);
 
         EM.SPM = new SinglePlayerMenu(new SinglePlayerMenuListener() {
             @Override
@@ -97,6 +100,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.NHC, "new hero class");
         EM.frame.add(EM.NH, "new hero");
         EM.frame.add(EM.NE, "new enemy");
+        EM.frame.add(EM.scenario, "scenario");
         EM.cCard = "main";
 
     }
