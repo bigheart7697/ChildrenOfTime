@@ -47,7 +47,6 @@ public class EarlyAmounts extends JPanel {
             e.printStackTrace();
         }
 
-//        setLayout(new BorderLayout());
         centerPanel.setLayout(new BorderLayout());
 
         class ImagePanel extends JPanel {
@@ -62,23 +61,26 @@ public class EarlyAmounts extends JPanel {
 
         upPanel.setBackground(new Color(60, 60, 60));
         upCenterPanel.setBackground(new Color(60, 60, 60));
-        /*upPanel.*/add(earlyExperience);
-        /*upPanel.*/add(EEText);
-        /*upCenterPanel.*/add(earlyMoney);
-        /*upCenterPanel.*/add(EMText);
-//        centerPanel.add(upCenterPanel, BorderLayout.NORTH);
-//        centerPanel.add(downCenterPanel, BorderLayout.CENTER);
-//        downPanel.setBackground(new Color(60, 60, 60));
-        /*upCenterPanel.*/add(OK);
-//        add(upPanel, BorderLayout.NORTH);
-//        add(centerPanel, BorderLayout.CENTER);
-//        add(downPanel, BorderLayout.SOUTH);
+        add(earlyExperience);
+        add(EEText);
+        add(earlyMoney);
+        add(EMText);
+
+        add(OK);
+
+
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NM.setExperience(EE);
-                NM.setMoney(EM);
-                sListener.switchTo("new map");
+                if (EEText.getText().matches("[0-9]+") && EMText.getText().matches("[0-9]+")) {
+                    NM.setExperience(Integer.parseInt(EEText.getText()));
+                    NM.setMoney(Integer.parseInt(EMText.getText()));
+                    sListener.switchTo("new map");
+                }
+                else {
+                    JOptionPane.showMessageDialog(null,
+                            "The inputs are incorrect!");
+                }
             }
         });
 
