@@ -23,7 +23,7 @@ public class EarlyAmounts extends JPanel {
     private JPanel upPanel = new JPanel(), downPanel = new JPanel(), centerPanel = new JPanel(), upCenterPanel = new JPanel();
     private JButton OK = new JButton("OK");
     private JLabel earlyExperience = new JLabel("Enter the early experience"), earlyMoney = new JLabel("Enter the early money");
-    private JTextField EEText = new JTextField(20), EMText = new JTextField(20);
+    private JTextField EEText = new JTextField(70), EMText = new JTextField(75);
 
     public EarlyAmounts(SimpleMenuListener sListener, NewMap NM) {
 
@@ -47,7 +47,7 @@ public class EarlyAmounts extends JPanel {
             e.printStackTrace();
         }
 
-        setLayout(new BorderLayout());
+//        setLayout(new BorderLayout());
         centerPanel.setLayout(new BorderLayout());
 
         class ImagePanel extends JPanel {
@@ -62,17 +62,17 @@ public class EarlyAmounts extends JPanel {
 
         upPanel.setBackground(new Color(60, 60, 60));
         upCenterPanel.setBackground(new Color(60, 60, 60));
-        upPanel.add(earlyExperience);
-        upPanel.add(EEText);
-        upCenterPanel.add(earlyMoney);
-        upCenterPanel.add(EMText);
-        centerPanel.add(upCenterPanel, BorderLayout.NORTH);
-        centerPanel.add(downCenterPanel, BorderLayout.CENTER);
-        downPanel.setBackground(new Color(60, 60, 60));
-        downPanel.add(OK);
-        add(upPanel, BorderLayout.NORTH);
-        add(centerPanel, BorderLayout.CENTER);
-        add(downPanel, BorderLayout.SOUTH);
+        /*upPanel.*/add(earlyExperience);
+        /*upPanel.*/add(EEText);
+        /*upCenterPanel.*/add(earlyMoney);
+        /*upCenterPanel.*/add(EMText);
+//        centerPanel.add(upCenterPanel, BorderLayout.NORTH);
+//        centerPanel.add(downCenterPanel, BorderLayout.CENTER);
+//        downPanel.setBackground(new Color(60, 60, 60));
+        /*upCenterPanel.*/add(OK);
+//        add(upPanel, BorderLayout.NORTH);
+//        add(centerPanel, BorderLayout.CENTER);
+//        add(downPanel, BorderLayout.SOUTH);
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
