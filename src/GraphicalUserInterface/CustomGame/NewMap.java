@@ -23,6 +23,7 @@ public class NewMap extends JComponent {
     private Color fontColor;
     private SimpleMenuListener nmListener;
     private String scenarioName = "", story = "", breakMessage;
+    private int sizeOfMap;
 
     private RoundRectangle2D.Double scenario, mapSize, defeatMessage, earlyAmountse, startingPoint;
     private Ellipse2D.Double back, next;
@@ -190,5 +191,13 @@ public class NewMap extends JComponent {
 
     public void setBreakMessage(String breakMessage) {
         this.breakMessage = breakMessage;
+    }
+
+    public int getSizeOfMap() {
+        return sizeOfMap;
+    }
+
+    public void setSizeOfMap(int size) {
+        this.sizeOfMap = size;
     }
 }
