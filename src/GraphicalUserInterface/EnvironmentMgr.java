@@ -28,6 +28,9 @@ public class EnvironmentMgr implements ActionListener{
     private NewEnemy NE;
     private PvPBattleMenu PvPBM;
     private SettingsMenu SM;
+    private GraphicalUserInterface.CustomGame.Scenario scenario;
+    private DefeatMessage DM;
+    private MapSize MS;
 
     public static void main(String[] args) {
 
@@ -50,6 +53,7 @@ public class EnvironmentMgr implements ActionListener{
         };
 
         EM.MM = new MainMenu(defaultListener);
+
 
         EM.SPM = new SinglePlayerMenu(new SinglePlayerMenuListener() {
             @Override
@@ -79,6 +83,9 @@ public class EnvironmentMgr implements ActionListener{
         EM.NHC = new NewHeroClass();
         EM.NI = new NewItem();
         EM.NM = new NewMap(defaultListener);
+        EM.scenario = new GraphicalUserInterface.CustomGame.Scenario(defaultListener, EM.NM);
+        EM.DM = new DefeatMessage(defaultListener, EM.NM);
+        EM.MS = new MapSize(defaultListener, EM.NM);
 
         EM.PvPBM = new PvPBattleMenu();
 
@@ -98,7 +105,9 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.NHC, "new hero class");
         EM.frame.add(EM.NH, "new hero");
         EM.frame.add(EM.NE, "new enemy");
-
+        EM.frame.add(EM.scenario, "scenario");
+        EM.frame.add(EM.DM, "defeat message");
+        EM.frame.add(EM.MS, "map size");
         EM.cCard = "main";
 
     }
