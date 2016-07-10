@@ -23,7 +23,7 @@ public class NewMap extends JComponent {
     private Color fontColor;
     private SimpleMenuListener nmListener;
     private String scenarioName = "", story = "", breakMessage;
-    private int sizeOfMap, experience, money;
+    private int sizeOfMap, experience, money, XOfStartingPoint, YOfStartingPoint;
 
     private RoundRectangle2D.Double scenario, mapSize, defeatMessage, earlyAmountse, startingPoint;
     private Ellipse2D.Double back, next;
@@ -138,7 +138,7 @@ public class NewMap extends JComponent {
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 400, 300, 80, 60, 60);
 
-        startingPoint = new RoundRectangle2D.Double(50, 500, 300, 80, 60, 60);
+        startingPoint = new RoundRectangle2D.Double((getWidth() / 2) - 150, 500, 300, 80, 60, 60);
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 500, 300, 80, 60, 60);
 
@@ -215,5 +215,21 @@ public class NewMap extends JComponent {
 
     public void setExperience(int experience) {
         this.experience = experience;
+    }
+
+    public int getYOfStartingPoint() {
+        return YOfStartingPoint;
+    }
+
+    public void setYOfStartingPoint(int YOfStartingPoint) {
+        this.YOfStartingPoint = YOfStartingPoint;
+    }
+
+    public int getXOfStartingPoint() {
+        return XOfStartingPoint;
+    }
+
+    public void setXOfStartingPoint(int XOfStartingPoint) {
+        this.XOfStartingPoint = XOfStartingPoint;
     }
 }

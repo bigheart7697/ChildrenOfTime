@@ -32,6 +32,7 @@ public class EnvironmentMgr implements ActionListener{
     private DefeatMessage DM;
     private MapSize MS;
     private EarlyAmounts EA;
+    private StartingPoint SP;
 
     public static void main(String[] args) {
 
@@ -83,7 +84,17 @@ public class EnvironmentMgr implements ActionListener{
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
         EM.NI = new NewItem();
-        EM.NM = new NewMap(defaultListener);
+        EM.NM = new NewMap(new SimpleMenuListener() {
+            @Override
+            public void switchTo(String target) {
+                if (target.equals("starting point")) {
+                    EM.SP = new StartingPoint(defaultListener, EM.NM);
+                    EM.frame.add(EM.SP, "starting point");
+                }
+                EM.deck.show(EM.frame.getContentPane(), target);
+                EM.cCard = target;
+            }
+        });
         EM.scenario = new GraphicalUserInterface.CustomGame.Scenario(defaultListener, EM.NM);
         EM.DM = new DefeatMessage(defaultListener, EM.NM);
         EM.MS = new MapSize(defaultListener, EM.NM);
