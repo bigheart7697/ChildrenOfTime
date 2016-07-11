@@ -1,6 +1,8 @@
 package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
+import GraphicalUserInterface.CustomGame.NewMap.*;
+import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.CreatingBattleTile;
 import GraphicalUserInterface.GameEnv.GameEnv;
 import GraphicalUserInterface.GameEnv.Scenario;
 
@@ -28,12 +30,13 @@ public class EnvironmentMgr implements ActionListener{
     private NewEnemy NE;
     private PvPBattleMenu PvPBM;
     private SettingsMenu SM;
-    private GraphicalUserInterface.CustomGame.Scenario scenario;
+    private GraphicalUserInterface.CustomGame.NewMap.Scenario scenario;
     private DefeatMessage DM;
     private MapSize MS;
     private EarlyAmounts EA;
     private StartingPoint SP;
     private CreatingMap CM;
+    private CreatingBattleTile CBT;
 
     public static void main(String[] args) {
 
@@ -98,6 +101,8 @@ public class EnvironmentMgr implements ActionListener{
                     EM.CM = new CreatingMap(new SimpleMenuListener() {
                         @Override
                         public void switchTo(String target) {
+                            EM.CBT = new CreatingBattleTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CBT, "battle tile");
                             EM.frame.setSize(new Dimension(1280, 800));
                             EM.frame.setLocationRelativeTo(null);
                             EM.deck.show(EM.frame.getContentPane(), target);
@@ -110,11 +115,10 @@ public class EnvironmentMgr implements ActionListener{
                 EM.cCard = target;
             }
         });
-        EM.scenario = new GraphicalUserInterface.CustomGame.Scenario(defaultListener, EM.NM);
+        EM.scenario = new GraphicalUserInterface.CustomGame.NewMap.Scenario(defaultListener, EM.NM);
         EM.DM = new DefeatMessage(defaultListener, EM.NM);
         EM.MS = new MapSize(defaultListener, EM.NM);
         EM.EA = new EarlyAmounts(defaultListener, EM.NM);
-
 
         EM.PvPBM = new PvPBattleMenu();
 

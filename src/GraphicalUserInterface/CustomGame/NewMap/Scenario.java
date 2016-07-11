@@ -1,4 +1,4 @@
-package GraphicalUserInterface.CustomGame;
+package GraphicalUserInterface.CustomGame.NewMap;
 
 import GraphicalUserInterface.SimpleMenuListener;
 
@@ -7,8 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -16,21 +14,22 @@ import java.io.IOException;
 /**
  * Created by rezab on 09/07/2016.
  */
-public class DefeatMessage extends JPanel {
-
+public class Scenario extends JPanel {
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
-    private JTextArea defeatMessage = new JTextArea(10, 89);
+    private JTextArea scenarioName = new JTextArea(1, 89);
+    private JTextArea scenario = new JTextArea(10, 89);
 
-    public DefeatMessage(SimpleMenuListener sListener, NewMap NM) {
-
+    public Scenario(SimpleMenuListener sListener, NewMap NM) {
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
-            defeatMessage.setFont(sFont.deriveFont(20f));
-            defeatMessage.setText("Enter the defeat message.");
+            scenario.setFont(sFont.deriveFont(20f));
+            scenarioName.setFont(sFont.deriveFont(20f));
+            scenarioName.setText("Enter the scenario name.");
+            scenario.setText("Enter the scenario.");
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -41,34 +40,48 @@ public class DefeatMessage extends JPanel {
             e.printStackTrace();
         }
         setLayout(new FlowLayout());
-        JScrollPane scroller1 = new JScrollPane(defeatMessage);
-        defeatMessage.setLineWrap(true);
-        defeatMessage.setBackground(new Color(60, 60, 60));
-        defeatMessage.setForeground(Color.white);
+        JScrollPane scroller1 = new JScrollPane(scenarioName);
+        JScrollPane scroller2 = new JScrollPane(scenario);
+        scenarioName.setLineWrap(true);
+        scenario.setLineWrap(true);
+        scenarioName.setBackground(new Color(60, 60, 60));
+        scenario.setBackground(new Color(60, 60, 60));
+        scenarioName.setForeground(Color.white);
+        scenario.setForeground(Color.white);
         scroller1.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         scroller1.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scroller1);
+        scroller2.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        scroller2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        add(scroller2);
         add(OK);
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                NM.setBreakMessage(defeatMessage.getText());
+                NM.setScenarioName(scenarioName.getText());
+                NM.setStory(scenario.getText());
                 sListener.switchTo("new map");
             }
         });
-//        defeatMessage.addMouseListener(new MouseAdapter() {
+//        scenario.addMouseListener(new MouseAdapter() {
 //            @Override
 //            public void mouseClicked(MouseEvent e) {
 //                super.mouseClicked(e);
-//                defeatMessage.setText("");
+//                scenario.setText("");
 //            }
 //        });
-
+//
+//        scenarioName.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                super.mouseClicked(e);
+//                scenarioName.setText("");
+//            }
+//        });
     }
 
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         g.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
     }
-
 }

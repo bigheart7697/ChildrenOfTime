@@ -1,4 +1,4 @@
-package GraphicalUserInterface.CustomGame;
+package GraphicalUserInterface.CustomGame.NewMap;
 
 import GraphicalUserInterface.SimpleMenuListener;
 

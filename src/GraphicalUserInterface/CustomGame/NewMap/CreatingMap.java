@@ -1,5 +1,7 @@
-package GraphicalUserInterface.CustomGame;
+package GraphicalUserInterface.CustomGame.NewMap;
 
+import GraphicalUserInterface.CustomGame.Tiles.BattleTile;
+import GraphicalUserInterface.CustomGame.Tiles.StoryTile;
 import GraphicalUserInterface.SimpleMenuListener;
 
 import javax.imageio.ImageIO;
@@ -13,7 +15,7 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -27,9 +29,10 @@ public class CreatingMap extends JComponent {
     private Boolean isFilled[][], isMapComplete = false;
 
     private Rectangle2D.Double  abilityTile, battleTile, backgroundTile, doorTile, lockedDoorTile, finalBossTile, keyTile, mapBGTile[][], Obs1Tile, Obs2Tile, Obs3Tile, Obs4Tile, Obs5Tile, Obs6Tile, Obs7Tile, Obs8Tile, Obs9Tile, Obs10Tile, Obs11Tile, Obs12Tile, Obs13Tile, Obs14Tile, shopTile, storyTile;
-    RoundRectangle2D.Double ok;
+    private RoundRectangle2D.Double ok;
     private Ellipse2D.Double back, save;
     private NewMap NM;
+    private ArrayList<BattleTile> BT = new ArrayList<>();
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
@@ -261,6 +264,7 @@ public class CreatingMap extends JComponent {
                             mapBG[cnt1][cnt2] = selectedBGTile;
                             mapFG[cnt1][cnt2] = selectedFGTile;
                             isFilled[cnt1][cnt2] = true;
+                            enteringInputs(selectedBGTile, selectedFGTile);
                         }
                     }
                 }
@@ -510,6 +514,16 @@ public class CreatingMap extends JComponent {
             }
         }
         return true;
+    }
+
+    public void enteringInputs(BufferedImage selectedBGTile, BufferedImage selectedFGTile) {
+        if (selectedBGTile.equals(BGTile) && selectedFGTile.equals(battle)) {
+            nmListener.switchTo("battle tile");
+        }
+    }
+
+    public void addBattleTile(BattleTile BT) {
+        this.BT.add(BT);
     }
 
 }
