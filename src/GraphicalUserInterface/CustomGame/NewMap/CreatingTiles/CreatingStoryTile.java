@@ -24,7 +24,7 @@ public class CreatingStoryTile extends JPanel {
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
-    private JTextArea story = new JTextArea(1, 89);
+    private JTextArea story = new JTextArea(10, 89);
     private JTextArea imageDirectory = new JTextArea(1, 89);
 
     public CreatingStoryTile(SimpleMenuListener sListener, CreatingMap CM) {

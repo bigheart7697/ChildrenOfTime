@@ -1,6 +1,7 @@
 package GraphicalUserInterface.CustomGame.NewMap;
 
 import GraphicalUserInterface.CustomGame.Tiles.BattleTile;
+import GraphicalUserInterface.CustomGame.Tiles.DoorTile;
 import GraphicalUserInterface.CustomGame.Tiles.StoryTile;
 import GraphicalUserInterface.SimpleMenuListener;
 
@@ -34,6 +35,7 @@ public class CreatingMap extends JComponent {
     private NewMap NM;
     private ArrayList<BattleTile> BT = new ArrayList<>();
     private ArrayList<StoryTile> ST = new ArrayList<>();
+    private ArrayList<DoorTile> DT = new ArrayList<>();
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
@@ -524,6 +526,10 @@ public class CreatingMap extends JComponent {
         else if (selectedBGTile.equals(BGTile) && selectedFGTile.equals(story)) {
             nmListener.switchTo("story tile");
         }
+
+        else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(door) || selectedFGTile.equals(lockedDoor))) {
+            nmListener.switchTo("door tile");
+        }
     }
 
     public void addBattleTile(BattleTile BT) {
@@ -532,6 +538,10 @@ public class CreatingMap extends JComponent {
 
     public void addStoryTile(StoryTile ST) {
         this.ST.add(ST);
+    }
+
+    public void addDoorTile(DoorTile DT) {
+        this.DT.add(DT);
     }
 
 }

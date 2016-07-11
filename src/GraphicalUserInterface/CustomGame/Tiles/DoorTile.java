@@ -5,7 +5,7 @@ package GraphicalUserInterface.CustomGame.Tiles;
  */
 public class DoorTile {
 
-    enum Direction {upward, downward, leftward, rightward}
+    public enum Direction {upward, downward, leftward, rightward}
     private Direction direction;
     private int number;
     private boolean isLocked;
@@ -35,10 +35,9 @@ public class DoorTile {
     }
 
 
-    public DoorTile(Direction direction, int number, boolean isLocked) {
+    public DoorTile(Direction direction, int number) {
         this.direction = direction;
         this.number = number;
-        this.isLocked = isLocked;
     }
 
 }
