@@ -33,6 +33,7 @@ public class CreatingMap extends JComponent {
     private Ellipse2D.Double back, save;
     private NewMap NM;
     private ArrayList<BattleTile> BT = new ArrayList<>();
+    private ArrayList<StoryTile> ST = new ArrayList<>();
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
@@ -520,10 +521,17 @@ public class CreatingMap extends JComponent {
         if (selectedBGTile.equals(BGTile) && selectedFGTile.equals(battle)) {
             nmListener.switchTo("battle tile");
         }
+        else if (selectedBGTile.equals(BGTile) && selectedFGTile.equals(story)) {
+            nmListener.switchTo("story tile");
+        }
     }
 
     public void addBattleTile(BattleTile BT) {
         this.BT.add(BT);
+    }
+
+    public void addStoryTile(StoryTile ST) {
+        this.ST.add(ST);
     }
 
 }

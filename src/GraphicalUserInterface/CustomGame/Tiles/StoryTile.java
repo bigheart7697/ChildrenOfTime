@@ -7,11 +7,9 @@ public class StoryTile {
     private String story, imageDirectory;
      private int XOfTile, YOfTile;
 
-    public StoryTile(String text, String imageDirectory, int XOfTile, int YOfTile) {
+    public StoryTile(String text, String imageDirectory) {
         this.story = text;
         this.imageDirectory = imageDirectory;
-        this.YOfTile = YOfTile;
-        this.XOfTile = XOfTile;
     }
 
     public String getStory() {
