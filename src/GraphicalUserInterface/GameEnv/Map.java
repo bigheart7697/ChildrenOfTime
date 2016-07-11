@@ -72,7 +72,7 @@ class Tile {
 }
 
 class GameEvent {
-    private Image image;
+    private Image image, storyImage;
 
     private Tile tile;
 
@@ -87,7 +87,7 @@ class GameEvent {
     private int x, y;
     private boolean passable;
 
-    private String story;
+    private String info;
 
 
 
@@ -100,7 +100,7 @@ class GameEvent {
         relatedEvent = null;
         this.tile = tile;
         tile.setGameEvent(this);
-        story = null;
+        info = null;
     }
     GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile, GameEvent relatedEvent) {
         this.image = img;
@@ -112,9 +112,9 @@ class GameEvent {
         relatedEvent.setRelatedEvent(this);
         this.tile = tile;
         tile.setGameEvent(this);
-        story = null;
+        info = null;
     }
-    GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile, String story) {
+    GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile, String info, Image storyImage) {
         this.image = img;
         this.x = row;
         this.y = column;
@@ -123,7 +123,8 @@ class GameEvent {
         relatedEvent = null;
         this.tile = tile;
         tile.setGameEvent(this);
-        this.story = story;
+        this.info = info;
+        this.storyImage = storyImage;
     }
 
 
@@ -133,6 +134,7 @@ class GameEvent {
         return image;
     }
     private void setImage(Image img) { image = img; }
+    Image getStoryImage() { return storyImage; }
 
     Type getType() {
         return type;
@@ -159,7 +161,7 @@ class GameEvent {
 
     Tile getTile() { return tile; }
 
-    String getStory() { return story; }
+    String getInfo() { return info; }
 
     void unlockDoor(Image img) {
         switch (relatedEvent.getType()) {

@@ -23,7 +23,8 @@ public class Scenario {
     private Map map;
     private int rows, columns;
     private Image BGTile, key, story, battle, shop, ability, finalBoss;
-    private Image[] Obs, Doors, items;
+    private Image[] Obs, Doors, items, heroes, storyImages;
+    private String begin, end;
 
     private ArrayList<Item> Shop;
 
@@ -40,6 +41,12 @@ public class Scenario {
 
             items = new Image[9];
             for (int i = 0; i < 9; i++) items[i] = ImageIO.read(new File("ShopGraphics/" + (i + 1) + ".png"));
+
+            heroes = new Image[4];
+            for (int i = 0; i < 4; i++) heroes[i] = ImageIO.read(new File("HeroGraphics/" + (i + 1) + ".png"));
+
+            storyImages = new Image[6];
+            for (int i = 0; i < 6; i++) storyImages[i] = ImageIO.read(new File("StoryGraphics/" + (i + 1) + ".jpg"));
 
             BGTile = ImageIO.read(new File("GameEnvGraphics/BGTile.jpg"));
             key = ImageIO.read(new File("GameEnvGraphics/key.png"));
@@ -61,102 +68,106 @@ public class Scenario {
         //Default scenario
 
         //Player
-        player = new Player("Player", 40, 15);
+        player = new Player("Endless Collection", 40, 15);
         battlefield = new Battlefield();
         {
             Hero Eley = new Fighter("Eley");
+            Eley.setHeroImage(heroes[0]);
             Hero Chrome = new Fighter("Chrome");
+            Chrome.setHeroImage(heroes[1]);
             Hero Meryl = new Supporter("Meryl");
+            Meryl.setHeroImage(heroes[2]);
             Hero Bolti = new Supporter("Bolti");
+            Bolti.setHeroImage(heroes[3]);
 
              //Add description to the heroes:
 
-            Eley.setDescription("Eley:\n" +
-                    "Class: Fighter\n" +
-                    "Ability 3: Overpowered attack\n" +
-                    "Attacks an enemy with N times power for 2 energy points and 50 magic points\n" +
-                    "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1\n" +
-                    "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2\n" +
-                    "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3\n" +
-                    "Ability 4: Swirling attack\n" +
-                    "While attacking, non-targeted enemies also take P percent of its damage\n" +
-                    "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1\n" +
-                    "Upgrade 2: P=20 for 3 xp points\n" +
-                    "Upgrade 3: P=30 for 4 xp points\n");
+            Eley.setDescription("Eley: " +
+                    "Class: Fighter " +
+                    "Ability 3: Overpowered attack " +
+                    "Attacks an enemy with N times power for 2 energy points and 50 magic points " +
+                    "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1 " +
+                    "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2 " +
+                    "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3 " +
+                    "Ability 4: Swirling attack " +
+                    "While attacking, non-targeted enemies also take P percent of its damage " +
+                    "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1 " +
+                    "Upgrade 2: P=20 for 3 xp points " +
+                    "Upgrade 3: P=30 for 4 xp points ");
 
-            Chrome.setDescription("Chrome:\n" +
-                    "Class: Fighter\n" +
-                    "Ability 3: Sacrifice\n" +
-                    "Damages all the enemies with 3H power at the cost of H of his own \n health," +
-                    " needs 3 energy points, 60 magic points and has a 1 turn cooldown\n" +
-                    "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1\n" +
-                    "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2\n" +
-                    "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3\n" +
-                    "Ability 4: Critical strike\n" +
-                    "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities)\n" +
-                    "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1\n" +
-                    "Upgrade 2: P=30 for 3 xp points\n" +
-                    "Upgrade 3: P=40 for 4 xp points\n");
+            Chrome.setDescription("Chrome: " +
+                    "Class: Fighter " +
+                    "Ability 3: Sacrifice " +
+                    "Damages all the enemies with 3H power at the cost of H of his own   health," +
+                    " needs 3 energy points, 60 magic points and has a 1 turn cooldown " +
+                    "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1 " +
+                    "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2 " +
+                    "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3 " +
+                    "Ability 4: Critical strike " +
+                    "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities) " +
+                    "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1 " +
+                    "Upgrade 2: P=30 for 3 xp points " +
+                    "Upgrade 3: P=40 for 4 xp points ");
 
-            Meryl.setDescription("Class: Supporter\n" +
-                    "Ability 3: Elixir\n" +
-                    "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points\n" +
-                    "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down\n" +
-                    "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1\n" +
-                    "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2\n" +
-                    "Ability 4: Caretaker\n" +
-                    "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of \n" +
-                    "the battle and is only usable during the current turn)\n" +
-                    "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1\n" +
-                    "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2\n" +
-                    "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3\n");
+            Meryl.setDescription("Class: Supporter " +
+                    "Ability 3: Elixir " +
+                    "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points " +
+                    "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down " +
+                    "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1 " +
+                    "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2 " +
+                    "Ability 4: Caretaker " +
+                    "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of  " +
+                    "the battle and is only usable during the current turn) " +
+                    "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1 " +
+                    "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2 " +
+                    "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3 ");
 
-            Bolti.setDescription("Bolti:\n" +
-                    "Class: Supporter\n" +
-                    "Ability 3: Boost\n" +
-                    "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for \n" +
-                    "2 energy points and 50 magic points (this bonus attack power can stack up)\n" +
-                    "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down\n" +
-                    "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down\n" +
-                    "Upgrade 3: A=30 for 5 xp points and cools down instantly\n" +
-                    "Ability 4: Mana beam\n" +
-                    "Gives M magic points to himself or an ally for 1 energy point and 50 magic points\n" +
-                    "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1\n" +
-                    "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2\n" +
-                    "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3\n");
+            Bolti.setDescription("Bolti: " +
+                    "Class: Supporter " +
+                    "Ability 3: Boost " +
+                    "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for  " +
+                    "2 energy points and 50 magic points (this bonus attack power can stack up) " +
+                    "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down " +
+                    "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down " +
+                    "Upgrade 3: A=30 for 5 xp points and cools down instantly " +
+                    "Ability 4: Mana beam " +
+                    "Gives M magic points to himself or an ally for 1 energy point and 50 magic points " +
+                    "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1 " +
+                    "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2 " +
+                    "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3 ");
 
 
             //Add specific abilities for heroes here
 
             Attacker OverpoweredAttack = new Attacker("Overpowered attack", 0, 2, 46, 50, 222, 0, 246, 0, false ,Eley);
-            OverpoweredAttack.setDescription("Overpowered attack\n" +
-                    "Attacks an enemy with N times power for 2 energy points and 50 magic points\n" +
-                    "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1\n" +
-                    "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2\n" +
-                    "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3\n" +
-                    "Success message: “Eley just did an overpowered attack on “ + (target) + “ with “ + (damage done) + “ damage”\n");
+            OverpoweredAttack.setDescription("Overpowered attack " +
+                    "Attacks an enemy with N times power for 2 energy points and 50 magic points " +
+                    "Upgrade 1: N=1.2 for 2 xp points, needs Fight training upgrade 1 " +
+                    "Upgrade 2: N=1.4 for 4 xp points, needs Fight training upgrade 2 " +
+                    "Upgrade 3: N=1.6 for 6 xp points, needs Fight training upgrade 3 " +
+                    "Success message: “Eley just did an overpowered attack on “ + (target) + “ with “ + (damage done) + “ damage” ");
             Ability[] OverpoweredAttacksRequiredAbility = new Ability[3];
             for(int cnt = 0; cnt < 3; cnt++)
                 OverpoweredAttacksRequiredAbility[cnt] = new SelfBoost("Fight training", cnt + 1, 0, 0, "", 0);
             OverpoweredAttack.setRequiredAbility(OverpoweredAttacksRequiredAbility);
 
             Attacker Sacrifice = new Attacker("Sacrifice", 0, 2, 34, 60, 333, 111, 0, 456, false, Chrome);
-            Sacrifice.setDescription("Sacrifice\n" +
-                    "Damages all the enemies with 3H power at the cost of H of his own health, needs 3 energy points, 60 magic points and has a 1 turn cooldown\n" +
-                    "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1\n" +
-                    "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2\n" +
-                    "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3\n" +
-                    "Success message: “Chrome just sacrificed himself to damage all his enemies with “ + (damage done) + “ power“\n");
+            Sacrifice.setDescription("Sacrifice " +
+                    "Damages all the enemies with 3H power at the cost of H of his own health, needs 3 energy points, 60 magic points and has a 1 turn cooldown " +
+                    "Upgrade 1: H=40 for 2 xp points, needs Work out 1 " +
+                    "Upgrade 2: H=50 for 3 xp points, needs Work out 2 " +
+                    "Upgrade 3: H=60 for 4 xp points, needs Work out 3 " +
+                    "Success message: “Chrome just sacrificed himself to damage all his enemies with “ + (damage done) + “ power“");
             Ability[] SacrificesRequiredAbility = new Ability[3];
             for(int cnt = 0; cnt < 3; cnt++)
                 SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt + 1, 0, 0, "", 0);
             Sacrifice.setRequiredAbility(SacrificesRequiredAbility);
 
             AttackModifier SwirlingAttack = new AttackModifier("Swirling attack", 0, 2, 34, 1, 123, 0, Eley, battlefield);
-            SwirlingAttack.setDescription("Swirling attack\n" +
-                    "While attacking, non-targeted enemies also take P percent of its damage\n" +
-                    "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1\n" +
-                    "Upgrade 2: P=20 for 3 xp points\n" +
+            SwirlingAttack.setDescription("Swirling attack " +
+                    "While attacking, non-targeted enemies also take P percent of its damage " +
+                    "Upgrade 1: P=10 for 2 xp points, needs Work out upgrade 1 " +
+                    "Upgrade 2: P=20 for 3 xp points " +
                     "Upgrade 3: P=30 for 4 xp points");
             Ability[] SwirlingAttacksRequiredAbility = new Ability[3];
             SwirlingAttacksRequiredAbility[0] = new SelfBoost("Work out", 1, 0, 0, "", 0);
@@ -165,11 +176,11 @@ public class Scenario {
             SwirlingAttack.setRequiredAbility(SwirlingAttacksRequiredAbility);
 
             AttackModifier CriticalStrike = new AttackModifier("Critical strike", 0, 2, 34, 2, 0, 234, Chrome, battlefield);
-            CriticalStrike.setDescription("Critical strike\n" +
-                    "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities)\n" +
-                    "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1\n" +
-                    "Upgrade 2: P=30 for 3 xp points\n" +
-                    "Upgrade 3: P=40 for 4 xp points\n");
+            CriticalStrike.setDescription("Critical strike " +
+                    "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities) " +
+                    "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1 " +
+                    "Upgrade 2: P=30 for 3 xp points " +
+                    "Upgrade 3: P=40 for 4 xp points ");
             Ability[] CriticalStrikesRequiredAbility = new Ability[3];
             CriticalStrikesRequiredAbility[0] = new SelfBoost("Fight training", 1, 0, 0, "", 0);
             CriticalStrikesRequiredAbility[1] = new SelfBoost("", 0, 0, 0, "", 0);
@@ -177,12 +188,12 @@ public class Scenario {
             CriticalStrike.setRequiredAbility(CriticalStrikesRequiredAbility);
 
             Restorer Elixir = new Restorer("Elixir", 0, 2, 35, 60, 222, 110, "health point", 101515, Meryl);
-            Eley.setDescription("Elixir\n" +
-                    "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points\n" +
-                    "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down\n" +
-                    "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1\n" +
-                    "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2\n" +
-                    "Success message: “Meryl just healed “ + (target) + “ with “ + (healing amount) + “ health points”\n");
+            Elixir.setDescription("Elixir " +
+                    "Refills H points of her own health or an ally’s, for 2 energy points and 60 magic points " +
+                    "Upgrade 1: H=100 for 2 xp points and takes 1 turn to cool down " +
+                    "Upgrade 2: H=150 for 3 xp points, takes 1 turn to cool down and needs Magic lessons upgrade 1 " +
+                    "Upgrade 3: H=150 for 5 xp points, cools down instantly and needs Magic lessons upgrade 2 " +
+                    "Success message: “Meryl just healed “ + (target) + “ with “ + (healing amount) + “ health points” ");
             Ability[] ElixirsRequiredAbility = new Ability[3];
             ElixirsRequiredAbility[0] = new SelfBoost("", 0, 0, 0, "", 0);
             ElixirsRequiredAbility[1] = new SelfBoost("Magic lessons", 1, 0, 0, "", 0);
@@ -190,36 +201,36 @@ public class Scenario {
             Elixir.setRequiredAbility(ElixirsRequiredAbility);
 
             Restorer Caretaker = new Restorer("Caretaker", 0, 2, 35, 30, 221, 100, "energy point", 111, Meryl);
-            Caretaker.setDescription("Caretaker\n" +
-                    "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of the battle and is only usable during the current turn)\n" +
-                    "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1\n" +
-                    "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2\n" +
-                    "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3\n" +
-                    "Success message: “Meryl just gave “ + (target) + “ 1 energy point”\n");
+            Caretaker.setDescription("Caretaker " +
+                    "Gives 1 energy point to an ally for 30 magic points (this ep does not last until the end of the battle and is only usable during the current turn) " +
+                    "Upgrade 1: takes 2 energy points and has a 1 turn cooldown for 2 xp points, needs Quick as a bunny upgrade 1 " +
+                    "Upgrade 2: takes 2 energy points and cools down instantly for 3 xp points, needs Quick as a bunny upgrade 2 " +
+                    "Upgrade 3 takes 1 energy point and cools down instantly for 5 xp points, needs Quick as a bunny upgrade 3 " +
+                    "Success message: “Meryl just gave “ + (target) + “ 1 energy point” ");
             Ability[] CaretakersRequiredAbility = new Ability[3];
             for(int cnt = 0; cnt < 3; cnt++)
                 CaretakersRequiredAbility[cnt] = new SelfBoost("Quick as a bunny", cnt + 1, 0, 0, "", 0);
             Caretaker.setRequiredAbility(CaretakersRequiredAbility);
 
             Restorer Boost = new Restorer("Boost", 0, 2, 35, 50, 222, 110, "attack power", 233, Bolti);
-            Boost.setDescription("Boost\n" +
-                    "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for 2 energy points and 50 magic points (this bonus attack power can stack up)\n" +
-                    "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down\n" +
-                    "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down\n" +
-                    "Upgrade 3: A=30 for 5 xp points and cools down instantly\n" +
-                    "Success message: “Bolti just boosted “ + (target) + “ with “ + (A) + “ power”\n");
+            Boost.setDescription("Boost " +
+                    "Gives X bonus attack power to himself or an ally, which lasts till the end of the battle, for 2 energy points and 50 magic points (this bonus attack power can stack up) " +
+                    "Upgrade 1: A=20 for 2 xp points and takes 1 turn to cool down " +
+                    "Upgrade 2: A=30 for 3 xp points and takes 1 turn to cool down " +
+                    "Upgrade 3: A=30 for 5 xp points and cools down instantly " +
+                    "Success message: “Bolti just boosted “ + (target) + “ with “ + (A) + “ power” ");
             Ability[] BoostsRequiredAbility = new Ability[3];
             for(int cnt = 0; cnt < 3; cnt++)
                 BoostsRequiredAbility[cnt] = new SelfBoost("", 0, 0, 0, "", 0);
             Boost.setRequiredAbility(BoostsRequiredAbility);
 
             Restorer ManaBeam = new Restorer("Mana beam", 0, 2, 34, 50, 111, 110, "magic point", 588, Bolti);
-            ManaBeam.setDescription("Mana beam\n" +
-                    "Gives M magic points to himself or an ally for 1 energy point and 50 magic points\n" +
-                    "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1\n" +
-                    "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2\n" +
-                    "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3\n" +
-                    "Success message: “Bolti just helped “ + (target) + “ with “ + (M) + “ magic points”\n");
+            ManaBeam.setDescription("Mana beam " +
+                    "Gives M magic points to himself or an ally for 1 energy point and 50 magic points " +
+                    "Upgrade 1: M=50 for 2 xp points and takes 1 turn to cool down, needs magic lessons upgrade 1 " +
+                    "Upgrade 2: M=80 for 3 xp points and takes 1 turn to cool down, needs magic lessons upgrade 2 " +
+                    "Upgrade 3: M=80 for 4 xp points and cools down instantly, needs magic lessons upgrade 3 " +
+                    "Success message: “Bolti just helped “ + (target) + “ with “ + (M) + “ magic points” ");
             Ability[] ManaBeamsRequiredAbility = new Ability[3];
             for(int cnt = 0; cnt < 3; cnt++)
                 ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt + 1, 0, 0, "", 0);
@@ -250,20 +261,24 @@ public class Scenario {
         }
 
         //Stories
-        String[] stories = new String[5];
-        stories[0] = "You’ve entered the castle, it takes a while for your eyes to get used to the darkness" +
+        String[] stories = new String[6];
+        begin = stories[0] = "You’ve entered the castle, it takes a while for your eyes to get used to the darkness" +
                 " but the horrifying halo of your enemies is vaguely visible. Angel’s unsettling" +
-                " presence and the growling of thugs tell you that your first battle has BEGUN!";
-        stories[1] = "As you wander into the hall you realize the\nsurrounding doors can lead your destiny to\n"
-                + "something far worse than you expected. You\nnow what’s anticipating you behind the only\n" +
+                " presence and the growling of thugs tell you that your first battle is about to begin!";
+        stories[1] = "As you wander into the hall you realize the surrounding doors can lead your destiny to "
+                + "something far worse than you expected. You now what’s anticipating you behind the only " +
                 " open door but there’s no other choice.";
-        stories[2] = "The door behind you is shut with a thunderous\nsound and you progress into the next hall while" +
-                "\nholding the first key that you’ve found, hoping\nto seek the second one.";
-        stories[3] = "Running with the second key in your hand, you\nunlock  the door  back to  the first hall and "
-                + "use\nthe first key  to burst into  your most terrifying\nnightmares.";
-        stories[4] = "You feel hopeless and exhausted as you stalk to\nthe final door.  What’s behind that door " +
-                "makes\nyour hearts  pound and your spines  shake with\nfear,  but you  came here  to do  one" +
-                "thing  and\nbacking down is not an option.";
+        stories[2] = "The door behind you is shut with a thunderous sound and you progress into the next hall while" +
+                " holding the first key that you’ve found, hoping to seek the second one.";
+        stories[3] = "Running with the second key in your hand, you unlock  the door  back to  the first hall and "
+                + "use the first key  to burst into  your most terrifying nightmares.";
+        stories[4] = "You feel hopeless and exhausted as you stalk to the final door.  What’s behind that door " +
+                "makes your hearts  pound and your spines  shake with fear,  but you  came here  to do  one" +
+                "thing  and backing down is not an option.";
+        end  = stories[5] = "The collector falls down on his knees, he’s strained and desperate but still tries to" +
+                "drag himself toward Epoch. He knows his era has come to an end. The ancient time machine" +
+                "calls you to end the disorder and bring unity under its glorious wings, now it’s your" +
+                "turn to be the MASTERS OF TIME!";
 
         //BattlePhrases
         String[] battlePhrases = new String[6];
@@ -286,12 +301,12 @@ public class Scenario {
         ImmediateEffect Defy = new ImmediateEffect("Defy", "att", 8, "“Defy”: +8 attack power"); Defy.setImage(items[2]);
 
         Equipment Sword = new Equipment("Sword", 25, 1, "att", 80, "“Sword”: +80 attack power, costs 25 dollars"); Sword.setImage(items[3]);
-        Equipment EnergyBoots = new Equipment("Energy Boots", 20, 1, "EP", 1, "“Energy Boots”: +1 energy point, costs 20\ndollars"); EnergyBoots.setImage(items[4]);
-        Equipment Armor = new Equipment("Armor", 25, 1, "HP", 200, "“Armor”: +200 maximum health, costs 25\ndollars"); Armor.setImage(items[5]);
-        Equipment MagicStick = new Equipment("Magic Stick", 28, 1, "MP", 150, "“Magic stick”: +150 maximum magic, costs 28\ndollars"); MagicStick.setImage(items[6]);
+        Equipment EnergyBoots = new Equipment("Energy Boots", 20, 1, "EP", 1, "“Energy Boots”: +1 energy point, costs 20 dollars"); EnergyBoots.setImage(items[4]);
+        Equipment Armor = new Equipment("Armor", 25, 1, "HP", 200, "“Armor”: +200 maximum health, costs 25 dollars"); Armor.setImage(items[5]);
+        Equipment MagicStick = new Equipment("Magic Stick", 28, 1, "MP", 150, "“Magic stick”: +150 maximum magic, costs 28 dollars"); MagicStick.setImage(items[6]);
 
-        Consumable HealthPotion = new Consumable("Health Potion", "HP", 100, "“Health potion”: +100 health points for the\nuser or one of his/her allies, costs 15 dollars"); HealthPotion.setImage(items[7]);
-        Consumable MagicPotion = new Consumable("Magic Potion", "MP", 50, "“Magic potion”: +50 magic points for the\nuser or one of his/her allies, costs 15 dollars"); MagicPotion.setImage(items[8]);
+        Consumable HealthPotion = new Consumable("Health Potion", "HP", 100, "“Health potion”: +100 health points for the user or one of his/her allies, costs 15 dollars"); HealthPotion.setImage(items[7]);
+        Consumable MagicPotion = new Consumable("Magic Potion", "MP", 50, "“Magic potion”: +50 magic points for the user or one of his/her allies, costs 15 dollars"); MagicPotion.setImage(items[8]);
         HealthPotion.setSuccessMessage1("just healed");
         HealthPotion.setSuccessMessage2("with 100 health points");
         MagicPotion.setSuccessMessage1("just offered");
@@ -421,10 +436,10 @@ public class Scenario {
         map.setEvent(shop3, 12, 9);
 
         //Story spots
-        GameEvent story1 = new GameEvent(story, 2, 10, true, GameEvent.Type.story, map.getTile(2, 10), stories[1]);
-        GameEvent story2 = new GameEvent(story, 15, 15, true, GameEvent.Type.story, map.getTile(15, 15), stories[2]);
-        GameEvent story3 = new GameEvent(story, 9, 8, true, GameEvent.Type.story, map.getTile(9, 8), stories[3]);
-        GameEvent story4 = new GameEvent(story, 15, 4, true, GameEvent.Type.story, map.getTile(15, 4), stories[4]);
+        GameEvent story1 = new GameEvent(story, 2, 10, true, GameEvent.Type.story, map.getTile(2, 10), stories[1], storyImages[1]);
+        GameEvent story2 = new GameEvent(story, 15, 15, true, GameEvent.Type.story, map.getTile(15, 15), stories[2], storyImages[2]);
+        GameEvent story3 = new GameEvent(story, 9, 8, true, GameEvent.Type.story, map.getTile(9, 8), stories[3], storyImages[3]);
+        GameEvent story4 = new GameEvent(story, 15, 4, true, GameEvent.Type.story, map.getTile(15, 4), stories[4], storyImages[4]);
         map.setEvent(story1, 2, 10);
         map.setEvent(story2, 15, 15);
         map.setEvent(story3, 9, 8);
@@ -475,4 +490,10 @@ public class Scenario {
 
     ArrayList<Item> getShop() { return Shop; }
 
+    String getBeginStory() { return begin; }
+    Image getBeginImage() { return storyImages[0]; }
+    String geEndStory() { return end; }
+    Image getEndImage() { return storyImages[5]; }
+
 }
+
