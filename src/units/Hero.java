@@ -3,13 +3,15 @@ package units;
 import abilities.*;
 import itemMGMT.*;
 
+import java.awt.*;
 import java.util.ArrayList;
 
 abstract public class Hero extends Unit{
     protected int HPRefill;
     protected int maxMP;
     protected int MP, MPRefill;
-    protected int EPmax, EP;
+    protected int EPMax, EP;
+    protected Image heroImage;
 
     protected ArrayList<Item> inventory;
     protected int invSize;
@@ -26,14 +28,13 @@ abstract public class Hero extends Unit{
         this.MP = mmp;
         this.HPRefill = hpr;
         this.MPRefill = mpr;
-        this.EPmax = epm;
+        this.EPMax = epm;
         this.EP = epm;
         this.invSize = invs;
         this.XPGained = 0;
         this.initializeAbilities();
         this.initializeInventory();
     }
-
     //Setting up ArrayLists
 
     private void initializeInventory() { this.inventory = new ArrayList<>(); }
@@ -47,14 +48,17 @@ abstract public class Hero extends Unit{
     public int getMP() { return this.MP; }
     public void setMP(int m) { this.MP = m; }
 
-    public int getMaxEP() { return this.EPmax; }
-    public void setMaxEP(int e) { this.EPmax = e; }
+    public int getMaxEP() { return this.EPMax; }
+    public void setMaxEP(int e) { this.EPMax = e; }
 
     public int getMaxMP() { return maxMP; }
     public void setMaxMP(int maxMP) { this.maxMP = maxMP; }
 
     public int getEP() { return this.EP;}
     public void setEP(int e) { this.EP = e; }
+
+    public Image getHeroImage() { return heroImage; }
+    public void setHeroImage(Image i) { heroImage = i; }
 
     public ArrayList<ActiveAbility> getActAbs() {
         ArrayList<ActiveAbility> aa = new ArrayList<>();
@@ -97,7 +101,7 @@ abstract public class Hero extends Unit{
         else {
             if (!(i instanceof ImmediateEffect)) this.inventory.add(i);
             this.itemAcquired(i);
-            System.out.print(i.getName() + " bought successfully, your current wealth is: "); //the wealth is then printed in gameUI :D
+            System.out.println(i.getName() + " bought successfully");
             return true;
         }
     }
@@ -206,7 +210,7 @@ abstract public class Hero extends Unit{
     public void update() {
         this.HP += this.HPRefill * this.maxHP / 100;
         this.MP += this.MPRefill * this.maxMP / 100;
-        this.EP = this.EPmax;
+        this.EP = this.EPMax;
         refreshStatus();
     }
 
