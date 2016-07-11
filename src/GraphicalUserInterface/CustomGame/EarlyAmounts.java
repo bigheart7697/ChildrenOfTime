@@ -18,9 +18,7 @@ public class EarlyAmounts extends JPanel {
 
     private BufferedImage BG;
     private Font sFont;
-    private int EE, EM;
 
-    private JPanel upPanel = new JPanel(), downPanel = new JPanel(), centerPanel = new JPanel(), upCenterPanel = new JPanel();
     private JButton OK = new JButton("OK");
     private JLabel earlyExperience = new JLabel("Enter the early experience"), earlyMoney = new JLabel("Enter the early money");
     private JTextField EEText = new JTextField(70), EMText = new JTextField(75);
@@ -36,7 +34,11 @@ public class EarlyAmounts extends JPanel {
             earlyMoney.setForeground(Color.white);
             earlyMoney.setFont(sFont.deriveFont(20f));
             EEText.setFont(sFont.deriveFont(20f));
+            EEText.setBackground(new Color(60, 60, 60));
+            EEText.setForeground(Color.white);
             EMText.setFont(sFont.deriveFont(20f));
+            EMText.setBackground(new Color(60, 60, 60));
+            EMText.setForeground(Color.white);
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -47,20 +49,6 @@ public class EarlyAmounts extends JPanel {
             e.printStackTrace();
         }
 
-        centerPanel.setLayout(new BorderLayout());
-
-        class ImagePanel extends JPanel {
-            @Override
-            public void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
-            }
-        }
-
-        ImagePanel downCenterPanel =  new ImagePanel();
-
-        upPanel.setBackground(new Color(60, 60, 60));
-        upCenterPanel.setBackground(new Color(60, 60, 60));
         add(earlyExperience);
         add(EEText);
         add(earlyMoney);

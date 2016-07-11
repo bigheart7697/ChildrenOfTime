@@ -22,10 +22,11 @@ public class NewMap extends JComponent {
     private Font nmFont;
     private Color fontColor;
     private SimpleMenuListener nmListener;
-    private String scenarioName = "", story = "", breakMessage;
-    private int sizeOfMap, experience, money;
+    private String scenarioName = "", story = "", breakMessage = "";
+    private int sizeOfMap, experience, money, XOfStartingPoint, YOfStartingPoint;
+    private boolean isInformationComplete = false;
 
-    private RoundRectangle2D.Double scenario, mapSize, defeatMessage, earlyAmountse, startingPoint;
+    private RoundRectangle2D.Double scenario, mapSize, defeatMessage, earlyAmountse, startingPoint, ok;
     private Ellipse2D.Double back, next;
 
 
@@ -69,7 +70,16 @@ public class NewMap extends JComponent {
                     nmListener.switchTo("custom");
                 }
                 if (next.contains(e.getX(), e.getY())) {
-                    nmListener.switchTo("creating map");
+                    if (scenarioName.equals("") || story.equals("") || defeatMessage.equals("") || sizeOfMap == 0 || experience == 0 || money == 0 || XOfStartingPoint == 0 || YOfStartingPoint == 0) {
+                        isInformationComplete = true;
+                        repaint();
+                    }
+                    else
+                        nmListener.switchTo("creating map");
+                }
+                if (ok.contains(e.getX(), e.getY())) {
+                    isInformationComplete = false;
+                    repaint();
                 }
             }
 
@@ -138,13 +148,23 @@ public class NewMap extends JComponent {
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 400, 300, 80, 60, 60);
 
-        startingPoint = new RoundRectangle2D.Double(50, 500, 300, 80, 60, 60);
+        startingPoint = new RoundRectangle2D.Double((getWidth() / 2) - 150, 500, 300, 80, 60, 60);
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 500, 300, 80, 60, 60);
 
         back = new Ellipse2D.Double(50, 600, 80, 80);
         g2.setColor(fontColor);
         g2.drawOval(50, 600, 80, 80);
+
+        ok = new RoundRectangle2D.Double(1000, 620, 60, 40, 20, 20);
+        if (isInformationComplete) {
+            g2.setFont(nmFont.deriveFont(15f));
+            g2.drawRoundRect(1000, 620, 60, 40, 20, 20);
+            g2.drawRoundRect(800, 600, 265, 80, 20, 20);
+            g2.drawString("Your information isn't complete!", 800, 640);
+            g2.setFont(nmFont.deriveFont(25f));
+            g2.drawString("OK", 1015, 650);
+        }
 
         next = new Ellipse2D.Double(1100, 600, 80, 80);
         g2.setColor(fontColor);
@@ -156,7 +176,6 @@ public class NewMap extends JComponent {
         g2.drawString("Map size", (getWidth() / 2) - 60, 345);
         g2.drawString("Early amounts", (getWidth() / 2) - 70, 445);
         g2.drawString("Starting point", (getWidth() / 2) - 70, 545);
-        g2.setFont(nmFont.deriveFont(20f));
         g2.drawString("next", 1126, 645);
         g2.drawString("back", 76, 645);
 
@@ -215,5 +234,21 @@ public class NewMap extends JComponent {
 
     public void setExperience(int experience) {
         this.experience = experience;
+    }
+
+    public int getYOfStartingPoint() {
+        return YOfStartingPoint;
+    }
+
+    public void setYOfStartingPoint(int YOfStartingPoint) {
+        this.YOfStartingPoint = YOfStartingPoint;
+    }
+
+    public int getXOfStartingPoint() {
+        return XOfStartingPoint;
+    }
+
+    public void setXOfStartingPoint(int XOfStartingPoint) {
+        this.XOfStartingPoint = XOfStartingPoint;
     }
 }

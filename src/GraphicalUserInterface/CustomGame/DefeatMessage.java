@@ -56,13 +56,13 @@ public class DefeatMessage extends JPanel {
                 sListener.switchTo("new map");
             }
         });
-        defeatMessage.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                defeatMessage.setText("");
-            }
-        });
+//        defeatMessage.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                super.mouseClicked(e);
+//                defeatMessage.setText("");
+//            }
+//        });
 
     }
 
