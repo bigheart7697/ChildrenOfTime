@@ -66,21 +66,21 @@ public class Scenario extends JPanel {
                 sListener.switchTo("new map");
             }
         });
-        scenario.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                scenario.setText("");
-            }
-        });
-
-        scenarioName.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                scenarioName.setText("");
-            }
-        });
+//        scenario.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                super.mouseClicked(e);
+//                scenario.setText("");
+//            }
+//        });
+//
+//        scenarioName.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                super.mouseClicked(e);
+//                scenarioName.setText("");
+//            }
+//        });
     }
 
     public void paintComponent(Graphics g) {

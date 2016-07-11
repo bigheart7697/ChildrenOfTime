@@ -33,6 +33,7 @@ public class EnvironmentMgr implements ActionListener{
     private MapSize MS;
     private EarlyAmounts EA;
     private StartingPoint SP;
+    private CreatingMap CM;
 
     public static void main(String[] args) {
 
@@ -91,6 +92,20 @@ public class EnvironmentMgr implements ActionListener{
                     EM.SP = new StartingPoint(defaultListener, EM.NM);
                     EM.frame.add(EM.SP, "starting point");
                 }
+                if (target.equals("creating map")) {
+                    EM.frame.setSize(1206, 935);
+                    EM.frame.setLocationRelativeTo(null);
+                    EM.CM = new CreatingMap(new SimpleMenuListener() {
+                        @Override
+                        public void switchTo(String target) {
+                            EM.frame.setSize(new Dimension(1280, 800));
+                            EM.frame.setLocationRelativeTo(null);
+                            EM.deck.show(EM.frame.getContentPane(), target);
+                            EM.cCard = target;
+                        }
+                    }, EM.NM);
+                    EM.frame.add(EM.CM, "creating map");
+                }
                 EM.deck.show(EM.frame.getContentPane(), target);
                 EM.cCard = target;
             }
@@ -99,6 +114,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.DM = new DefeatMessage(defaultListener, EM.NM);
         EM.MS = new MapSize(defaultListener, EM.NM);
         EM.EA = new EarlyAmounts(defaultListener, EM.NM);
+
 
         EM.PvPBM = new PvPBattleMenu();
 
@@ -132,7 +148,8 @@ public class EnvironmentMgr implements ActionListener{
         if (GE != null) GE.update();
         if (CGM != null)CGM.update();
         if (SPM != null)SPM.update();
-        NM.update();
+        if (NM != null)NM.update();
+        if (CM != null) CM.update();
     }
 
     public String getCurrentCard() { return cCard; }
