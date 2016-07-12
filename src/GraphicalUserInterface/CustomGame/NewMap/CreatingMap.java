@@ -1,8 +1,6 @@
 package GraphicalUserInterface.CustomGame.NewMap;
 
-import GraphicalUserInterface.CustomGame.Tiles.BattleTile;
-import GraphicalUserInterface.CustomGame.Tiles.DoorTile;
-import GraphicalUserInterface.CustomGame.Tiles.StoryTile;
+import GraphicalUserInterface.CustomGame.Tiles.*;
 import GraphicalUserInterface.SimpleMenuListener;
 
 import javax.imageio.ImageIO;
@@ -36,6 +34,8 @@ public class CreatingMap extends JComponent {
     private ArrayList<BattleTile> BT = new ArrayList<>();
     private ArrayList<StoryTile> ST = new ArrayList<>();
     private ArrayList<DoorTile> DT = new ArrayList<>();
+    private ArrayList<KeyTile> KT = new ArrayList<>();
+    private ArrayList<ShopTile> SHT = new ArrayList<>();
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
@@ -530,6 +530,14 @@ public class CreatingMap extends JComponent {
         else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(door) || selectedFGTile.equals(lockedDoor))) {
             nmListener.switchTo("door tile");
         }
+
+        else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(key))) {
+            nmListener.switchTo("key tile");
+        }
+
+        else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(shop))) {
+            nmListener.switchTo("shop tile");
+        }
     }
 
     public void addBattleTile(BattleTile BT) {
@@ -543,5 +551,9 @@ public class CreatingMap extends JComponent {
     public void addDoorTile(DoorTile DT) {
         this.DT.add(DT);
     }
+
+    public void addKeyTile(KeyTile KT) { this.KT.add(KT); }
+
+    public void addShopTile(ShopTile SHT) { this.SHT.add(SHT); }
 
 }

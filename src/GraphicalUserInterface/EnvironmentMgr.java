@@ -2,9 +2,7 @@ package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewMap.*;
-import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.CreatingBattleTile;
-import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.CreatingDoorTile;
-import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.CreatingStoryTile;
+import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
 import GraphicalUserInterface.GameEnv.GameEnv;
 import GraphicalUserInterface.GameEnv.Scenario;
 
@@ -41,6 +39,8 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingBattleTile CBT;
     private CreatingStoryTile CST;
     private CreatingDoorTile CDT;
+    private CreatingKeyTile CKT;
+    private CreatingShopTile CSHT;
 
     public static void main(String[] args) {
 
@@ -111,6 +111,10 @@ public class EnvironmentMgr implements ActionListener{
                             EM.frame.add(EM.CST, "story tile");
                             EM.CDT = new CreatingDoorTile(defaultListener, EM.CM);
                             EM.frame.add(EM.CDT, "door tile");
+                            EM.CKT = new CreatingKeyTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CKT, "key tile");
+                            EM.CSHT = new CreatingShopTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CSHT, "shop tile");
                             EM.frame.setSize(new Dimension(1280, 800));
                             EM.frame.setLocationRelativeTo(null);
                             EM.deck.show(EM.frame.getContentPane(), target);
