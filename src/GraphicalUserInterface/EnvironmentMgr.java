@@ -1,6 +1,8 @@
 package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
+import GraphicalUserInterface.CustomGame.NewAbility.CreatingAttackModifier;
+import GraphicalUserInterface.CustomGame.NewAbility.CreatingSelfBoost;
 import GraphicalUserInterface.CustomGame.NewAbility.NewAbility;
 import GraphicalUserInterface.CustomGame.NewMap.*;
 import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
@@ -43,6 +45,8 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingKeyTile CKT;
     private CreatingShopTile CSHT;
     private CreatingFinalBossTile CFBT;
+    private CreatingSelfBoost CSB;
+    private CreatingAttackModifier CAM;
 
 
     public static void main(String[] args) {
@@ -137,6 +141,8 @@ public class EnvironmentMgr implements ActionListener{
         EM.DM = new GraphicalUserInterface.CustomGame.NewMap.DefeatMessage(defaultListener, EM.NM);
         EM.MS = new GraphicalUserInterface.CustomGame.NewMap.MapSize(defaultListener, EM.NM);
         EM.EA = new GraphicalUserInterface.CustomGame.NewMap.EarlyAmounts(defaultListener, EM.NM);
+        EM.CSB = new CreatingSelfBoost(defaultListener);
+        EM.CAM = new CreatingAttackModifier(defaultListener);
 
         EM.NA = new NewAbility(defaultListener);
 
@@ -162,6 +168,8 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.DM, "defeat message");
         EM.frame.add(EM.MS, "map size");
         EM.frame.add(EM.EA, "early amounts");
+        EM.frame.add(EM.CSB, "self boost");
+        EM.frame.add(EM.CAM, "attack modifier");
         EM.cCard = "main";
 
     }

@@ -117,11 +117,11 @@ public class NewAbility extends JComponent {
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 100, 300, 80, 60, 60);
 
-        restorer = new RoundRectangle2D.Double((getWidth() / 2) - 150, 200, 300, 80, 60, 60);
+        attackModifier = new RoundRectangle2D.Double((getWidth() / 2) - 150, 200, 300, 80, 60, 60);
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 200, 300, 80, 60, 60);
 
-        attackModifier = new RoundRectangle2D.Double((getWidth() / 2) - 150, 300, 300, 80, 60, 60);
+        restorer = new RoundRectangle2D.Double((getWidth() / 2) - 150, 300, 300, 80, 60, 60);
         g2.setColor(fontColor);
         g2.drawRoundRect((getWidth() / 2) - 150, 300, 300, 80, 60, 60);
 
