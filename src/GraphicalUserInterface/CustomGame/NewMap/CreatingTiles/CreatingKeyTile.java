@@ -21,7 +21,7 @@ public class CreatingKeyTile extends JPanel {
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
-    private JTextArea keyNumber = new JTextArea(1, 89);
+    private JTextArea keyNumber = new JTextArea(1, 82);
 
     public CreatingKeyTile(SimpleMenuListener sListener, CreatingMap CM) {
         try {

@@ -36,6 +36,7 @@ public class CreatingMap extends JComponent {
     private ArrayList<DoorTile> DT = new ArrayList<>();
     private ArrayList<KeyTile> KT = new ArrayList<>();
     private ArrayList<ShopTile> SHT = new ArrayList<>();
+    private FinalBossTile FBT = null;
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
@@ -509,13 +510,20 @@ public class CreatingMap extends JComponent {
     }
 
     public boolean isMapComplete() {
+        int cnt = 0;
         for (int cnt1 = 0; cnt1 < NM.getSizeOfMap(); cnt1++) {
             for (int cnt2 = 0; cnt2 < NM.getSizeOfMap(); cnt2++) {
+                if (mapFG[cnt1][cnt2].equals(finalBoss)) {
+                    cnt++;
+                }
                 if (!isFilled[cnt1][cnt2]) {
                     return false;
                 }
             }
         }
+        if (cnt != 1)
+            return false;
+
         return true;
     }
 
@@ -538,6 +546,11 @@ public class CreatingMap extends JComponent {
         else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(shop))) {
             nmListener.switchTo("shop tile");
         }
+
+        else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(finalBoss))) {
+            nmListener.switchTo("finalBoss tile");
+        }
+
     }
 
     public void addBattleTile(BattleTile BT) {
@@ -556,4 +569,7 @@ public class CreatingMap extends JComponent {
 
     public void addShopTile(ShopTile SHT) { this.SHT.add(SHT); }
 
+    public void setFBT(FinalBossTile FBT) {
+        this.FBT = FBT;
+    }
 }

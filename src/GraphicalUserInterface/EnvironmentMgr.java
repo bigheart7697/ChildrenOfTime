@@ -41,6 +41,7 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingDoorTile CDT;
     private CreatingKeyTile CKT;
     private CreatingShopTile CSHT;
+    private CreatingFinalBossTile CFBT;
 
     public static void main(String[] args) {
 
@@ -115,8 +116,12 @@ public class EnvironmentMgr implements ActionListener{
                             EM.frame.add(EM.CKT, "key tile");
                             EM.CSHT = new CreatingShopTile(defaultListener, EM.CM);
                             EM.frame.add(EM.CSHT, "shop tile");
-                            EM.frame.setSize(new Dimension(1280, 800));
-                            EM.frame.setLocationRelativeTo(null);
+                            EM.CFBT = new CreatingFinalBossTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CFBT, "finalBoss tile");
+                            if (target.equals("new map") || target.equals("custom")) {
+                                EM.frame.setSize(new Dimension(1280, 800));
+                                EM.frame.setLocationRelativeTo(null);
+                            }
                             EM.deck.show(EM.frame.getContentPane(), target);
                             EM.cCard = target;
                         }

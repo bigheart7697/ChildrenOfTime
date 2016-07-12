@@ -25,7 +25,7 @@ public class CreatingDoorTile extends JPanel {
     private JButton OK = new JButton("OK");
     private JLabel dirLabel = new JLabel("Enter the door direction:");
     private HashMap<DoorTile.Direction, JRadioButton> direction = new HashMap<>() ;
-    private JTextArea doorNumber = new JTextArea(1, 89);
+    private JTextArea doorNumber = new JTextArea(1, 82);
     private ButtonGroup dirGroup = new ButtonGroup();
     private DoorTile.Direction dir = null;
 
