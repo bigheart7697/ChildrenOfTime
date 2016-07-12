@@ -3,6 +3,8 @@ package abilities;
 import units.Hero;
 import units.Unit;
 
+import java.awt.*;
+
 abstract public class Ability {
     protected String name;
     protected int currentXP;
@@ -12,6 +14,7 @@ abstract public class Ability {
     protected Ability[] requiredAbility = new Ability[3];
     private String description;
     private Hero user;
+    protected Image i;
 
 
 //    constructors:
@@ -71,6 +74,10 @@ abstract public class Ability {
     public void setUser(Hero user) {
         this.user = user;
     }
+
+    public Image getImage() { return i;}
+
+    public void setImage(Image i) { this.i = i; }
 
 
 //    other methods:

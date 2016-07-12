@@ -23,7 +23,7 @@ public class Scenario {
     private Map map;
     private int rows, columns;
     private Image BGTile, key, story, battle, shop, ability, finalBoss;
-    private Image[] Obs, Doors, items, heroes, storyImages;
+    private Image[] Obs, Doors, items, heroes, storyImages, abilityImages;
     private String begin, end;
 
     private ArrayList<Item> Shop;
@@ -48,6 +48,20 @@ public class Scenario {
             storyImages = new Image[6];
             for (int i = 0; i < 6; i++) storyImages[i] = ImageIO.read(new File("StoryGraphics/" + (i + 1) + ".jpg"));
 
+            abilityImages = new Image[12];
+            abilityImages[0] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/fightTraining.png"));
+            abilityImages[1] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/workOut.png"));
+            abilityImages[2] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/quickAsABunny.png"));
+            abilityImages[3] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/magicLessons.png"));
+            abilityImages[4] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/overPoweredAttack.png"));
+            abilityImages[5] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/sacrifice.png"));
+            abilityImages[6] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/swirlingAttack.png"));
+            abilityImages[7] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/criticalStrike.png"));
+            abilityImages[8] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/elixir.png"));
+            abilityImages[9] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/careTaker.png"));
+            abilityImages[10] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/boost.png"));
+            abilityImages[11] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/manaBeam.png"));
+
             BGTile = ImageIO.read(new File("GameEnvGraphics/BGTile.jpg"));
             key = ImageIO.read(new File("GameEnvGraphics/key.png"));
             battle = ImageIO.read(new File("GameEnvGraphics/battle.png"));
@@ -71,13 +85,13 @@ public class Scenario {
         player = new Player("Endless Collection", 40, 15);
         battlefield = new Battlefield();
         {
-            Hero Eley = new Fighter("Eley");
+            Hero Eley = new Fighter("Eley", abilityImages[0], abilityImages[1]);
             Eley.setHeroImage(heroes[0]);
-            Hero Chrome = new Fighter("Chrome");
+            Hero Chrome = new Fighter("Chrome", abilityImages[0], abilityImages[1]);
             Chrome.setHeroImage(heroes[1]);
-            Hero Meryl = new Supporter("Meryl");
+            Hero Meryl = new Supporter("Meryl", abilityImages[2], abilityImages[3]);
             Meryl.setHeroImage(heroes[2]);
-            Hero Bolti = new Supporter("Bolti");
+            Hero Bolti = new Supporter("Bolti", abilityImages[2], abilityImages[3]);
             Bolti.setHeroImage(heroes[3]);
 
              //Add description to the heroes:
@@ -100,14 +114,10 @@ public class Scenario {
                     "Ability 3: Sacrifice " +
                     "Damages all the enemies with 3H power at the cost of H of his own   health," +
                     " needs 3 energy points, 60 magic points and has a 1 turn cooldown " +
-                    "Upgrade 1: H=40 for 2 xp points, needs Work out upgrade 1 " +
-                    "Upgrade 2: H=50 for 3 xp points, needs Work out upgrade 2 " +
-                    "Upgrade 3: H=60 for 4 xp points, needs Work out upgrade 3 " +
+                    "Upgrade n: H=30+10n for 1+n xp points, needs Work out upgrade n " +
                     "Ability 4: Critical strike " +
                     "Has a permanent P percent chance of doing an attack with double power (does not affect other abilities) " +
-                    "Upgrade 1: P=20 for 2 xp points, needs Fight training upgrade 1 " +
-                    "Upgrade 2: P=30 for 3 xp points " +
-                    "Upgrade 3: P=40 for 4 xp points ");
+                    "Upgrade n: P=10+n for n+1 xp points, needs Fight training upgrade n ");
 
             Meryl.setDescription("Class: Supporter " +
                     "Ability 3: Elixir " +
@@ -150,6 +160,7 @@ public class Scenario {
             for(int cnt = 0; cnt < 3; cnt++)
                 OverpoweredAttacksRequiredAbility[cnt] = new SelfBoost("Fight training", cnt + 1, 0, 0, "", 0);
             OverpoweredAttack.setRequiredAbility(OverpoweredAttacksRequiredAbility);
+            OverpoweredAttack.setImage(abilityImages[4]);
 
             Attacker Sacrifice = new Attacker("Sacrifice", 0, 2, 34, 60, 333, 111, 0, 456, false, Chrome);
             Sacrifice.setDescription("Sacrifice " +
@@ -162,6 +173,7 @@ public class Scenario {
             for(int cnt = 0; cnt < 3; cnt++)
                 SacrificesRequiredAbility[cnt] = new SelfBoost("Work out", cnt + 1, 0, 0, "", 0);
             Sacrifice.setRequiredAbility(SacrificesRequiredAbility);
+            Sacrifice.setImage(abilityImages[5]);
 
             AttackModifier SwirlingAttack = new AttackModifier("Swirling attack", 0, 2, 34, 1, 123, 0, Eley, battlefield);
             SwirlingAttack.setDescription("Swirling attack " +
@@ -174,6 +186,7 @@ public class Scenario {
             SwirlingAttacksRequiredAbility[1] = new SelfBoost("", 0, 0, 0, "", 0);
             SwirlingAttacksRequiredAbility[2] = new SelfBoost("", 0, 0, 0, "", 0);
             SwirlingAttack.setRequiredAbility(SwirlingAttacksRequiredAbility);
+            SwirlingAttack.setImage(abilityImages[6]);
 
             AttackModifier CriticalStrike = new AttackModifier("Critical strike", 0, 2, 34, 2, 0, 234, Chrome, battlefield);
             CriticalStrike.setDescription("Critical strike " +
@@ -186,6 +199,7 @@ public class Scenario {
             CriticalStrikesRequiredAbility[1] = new SelfBoost("", 0, 0, 0, "", 0);
             CriticalStrikesRequiredAbility[2] = new SelfBoost("", 0, 0, 0, "", 0);
             CriticalStrike.setRequiredAbility(CriticalStrikesRequiredAbility);
+            CriticalStrike.setImage(abilityImages[7]);
 
             Restorer Elixir = new Restorer("Elixir", 0, 2, 35, 60, 222, 110, "health point", 101515, Meryl);
             Elixir.setDescription("Elixir " +
@@ -199,6 +213,7 @@ public class Scenario {
             ElixirsRequiredAbility[1] = new SelfBoost("Magic lessons", 1, 0, 0, "", 0);
             ElixirsRequiredAbility[2] = new SelfBoost("Magic lessons", 1, 0, 0, "", 0);
             Elixir.setRequiredAbility(ElixirsRequiredAbility);
+            Elixir.setImage(abilityImages[8]);
 
             Restorer Caretaker = new Restorer("Caretaker", 0, 2, 35, 30, 221, 100, "energy point", 111, Meryl);
             Caretaker.setDescription("Caretaker " +
@@ -211,6 +226,7 @@ public class Scenario {
             for(int cnt = 0; cnt < 3; cnt++)
                 CaretakersRequiredAbility[cnt] = new SelfBoost("Quick as a bunny", cnt + 1, 0, 0, "", 0);
             Caretaker.setRequiredAbility(CaretakersRequiredAbility);
+            Caretaker.setImage(abilityImages[9]);
 
             Restorer Boost = new Restorer("Boost", 0, 2, 35, 50, 222, 110, "attack power", 233, Bolti);
             Boost.setDescription("Boost " +
@@ -223,6 +239,7 @@ public class Scenario {
             for(int cnt = 0; cnt < 3; cnt++)
                 BoostsRequiredAbility[cnt] = new SelfBoost("", 0, 0, 0, "", 0);
             Boost.setRequiredAbility(BoostsRequiredAbility);
+            Boost.setImage(abilityImages[10]);
 
             Restorer ManaBeam = new Restorer("Mana beam", 0, 2, 34, 50, 111, 110, "magic point", 588, Bolti);
             ManaBeam.setDescription("Mana beam " +
@@ -235,6 +252,7 @@ public class Scenario {
             for(int cnt = 0; cnt < 3; cnt++)
                 ManaBeamsRequiredAbility[cnt] = new SelfBoost("Magic lessons", cnt + 1, 0, 0, "", 0);
             ManaBeam.setRequiredAbility(ManaBeamsRequiredAbility);
+            ManaBeam.setImage(abilityImages[11]);
 
             //Adding abilities to the heroes:
             Eley.addAbility(OverpoweredAttack);
