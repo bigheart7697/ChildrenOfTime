@@ -58,4 +58,5 @@ public class AttackModifier extends PassiveAbility {
             }
         }
     }
+
 }

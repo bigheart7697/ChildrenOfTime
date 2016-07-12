@@ -1,6 +1,7 @@
 package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
+import GraphicalUserInterface.CustomGame.NewAbility.NewAbility;
 import GraphicalUserInterface.CustomGame.NewMap.*;
 import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
 import GraphicalUserInterface.GameEnv.GameEnv;
@@ -42,6 +43,7 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingKeyTile CKT;
     private CreatingShopTile CSHT;
     private CreatingFinalBossTile CFBT;
+
 
     public static void main(String[] args) {
 
@@ -88,7 +90,6 @@ public class EnvironmentMgr implements ActionListener{
 
         EM.CGM = new CustomGameMenu(defaultListener);
 
-        EM.NA = new NewAbility();
         EM.NE = new NewEnemy();
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
@@ -136,6 +137,8 @@ public class EnvironmentMgr implements ActionListener{
         EM.DM = new GraphicalUserInterface.CustomGame.NewMap.DefeatMessage(defaultListener, EM.NM);
         EM.MS = new GraphicalUserInterface.CustomGame.NewMap.MapSize(defaultListener, EM.NM);
         EM.EA = new GraphicalUserInterface.CustomGame.NewMap.EarlyAmounts(defaultListener, EM.NM);
+
+        EM.NA = new NewAbility(defaultListener);
 
         EM.PvPBM = new PvPBattleMenu();
 
