@@ -3,6 +3,7 @@ package GraphicalUserInterface.GameEnv;
 import GraphicalUserInterface.EnvironmentMgr;
 import GraphicalUserInterface.SimpleMenuListener;
 import abilities.Ability;
+import itemMGMT.Consumable;
 import itemMGMT.ImmediateEffect;
 import itemMGMT.Item;
 import units.Hero;
@@ -48,19 +49,24 @@ public class GameEnv extends JComponent{
     private String dialogBoxMessage;
     private GameEvent eventToBeFired;
 
-    //Story Box Stuff
-    private StoryBox storyBox;
-    private boolean storyBoxFlag;
+    //Message Box Stuff
+    private MessageBox messageBox;
+    private boolean messageBoxFlag;
 
     //Shop Environment stuff
     private ShopEnv shop;
-    private boolean shopFlag, buyFlag;
+    private boolean shopFlag, buyFlag, sellFlag;
     private Hero targetHero;
 
     //Ability Upgrade Point stuff
     private AbilityUpEnv abilityUpEnv;
     private boolean chooseHeroFlag, abilityUpEnvFlag, upgradeFlag;
     //target hero used from shop section
+
+    //Hero info panel stuff
+    private HeroInfoEnv heroInfoEnv;
+    private boolean heroInfoDisplayFlag;
+
 
     //Panel stuff
     private Ellipse2D.Double settingsButton, menuButton;
@@ -130,15 +136,16 @@ public class GameEnv extends JComponent{
         eventToBeFired = null;
 
         //Story Box Stuff
-        storyBox = new StoryBox();
-        storyBox.setStory(scenario.getBeginStory());
-        storyBox.setImage(scenario.getBeginImage());
-        storyBoxFlag = true;
+        messageBox = new MessageBox();
+        messageBox.setMessage(scenario.getBeginStory());
+        messageBox.setImage(scenario.getBeginImage());
+        messageBoxFlag = true;
 
         //Shop Environment stuff
-        shop = new ShopEnv(scenario.getShop());
+        shop = new ShopEnv(scenario.getShop(), scenario.getPlayer().getHeroes());
         shopFlag = false;
         buyFlag = false;
+        sellFlag = false;
         targetHero = null;
 
         //Ability Upgrade Point stuff
@@ -153,6 +160,9 @@ public class GameEnv extends JComponent{
         heroRect = new Rectangle2D.Double[scenario.getPlayer().getHeroes().size()];
         heroRectFlag = false;
 
+        //Hero Info Panel Stuff
+        heroInfoEnv = new HeroInfoEnv(targetHero);
+        heroInfoDisplayFlag = false;
 
         //Movement handling
         KeyboardFocusManager.getCurrentKeyboardFocusManager().addKeyEventDispatcher(e -> {
@@ -160,28 +170,28 @@ public class GameEnv extends JComponent{
 
                 if (e.getID() == KeyEvent.KEY_PRESSED) {
                     switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W:
                         if (!speedFlag3) {
                             charImage = 0;
                             speedFlag1 = true;
                             ySpeed = -SPEED;
                         }
                         break;
-                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_A:
                         if (!speedFlag4) {
                             charImage = 1;
                             speedFlag2 = true;
                             xSpeed = -SPEED;
                         }
                         break;
-                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S:
                         if (!speedFlag1) {
                             charImage = 2;
                             speedFlag3 = true;
                             ySpeed = SPEED;
                         }
                         break;
-                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_D:
                         if (!speedFlag2) {
                             charImage = 3;
                             speedFlag4 = true;
@@ -192,7 +202,7 @@ public class GameEnv extends JComponent{
                 }
                 if (e.getID() == KeyEvent.KEY_RELEASED) {
                     switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
+                    case KeyEvent.VK_W:
                         if (speedFlag1) {
                             if (speedFlag2) charImage = 1;
                             if (speedFlag4) charImage = 3;
@@ -200,7 +210,7 @@ public class GameEnv extends JComponent{
                             ySpeed = 0.0;
                         }
                         break;
-                    case KeyEvent.VK_LEFT:
+                    case KeyEvent.VK_A:
                         if (speedFlag2) {
                             if (speedFlag1) charImage = 0;
                             if (speedFlag3) charImage = 2;
@@ -208,7 +218,7 @@ public class GameEnv extends JComponent{
                             xSpeed = 0.0;
                         }
                         break;
-                    case KeyEvent.VK_DOWN:
+                    case KeyEvent.VK_S:
                         if (speedFlag3) {
                             if (speedFlag2) charImage = 1;
                             if (speedFlag4) charImage = 3;
@@ -216,7 +226,7 @@ public class GameEnv extends JComponent{
                             ySpeed = 0.0;
                         }
                         break;
-                    case KeyEvent.VK_RIGHT:
+                    case KeyEvent.VK_D:
                         if (speedFlag4) {
                             if (speedFlag1) charImage = 0;
                             if (speedFlag3) charImage = 2;
@@ -241,10 +251,11 @@ public class GameEnv extends JComponent{
                     if (buyFlag) {
 
                             if (dialogBox.getButtonYes().contains(e.getX(), e.getY()) && dialogTypeFlag) {
-                                if (targetHero.buyItem(shop.getSelected())) {
+                                if (targetHero.buyItem(shop.getSelectedBuy())) {
 
+                                    shop.setRectFlagSell(false);
                                     //Decreasing the Gold number gradually
-                                    int targetGold = scenario.getPlayer().getGold() - shop.getSelected().getCost();
+                                    int targetGold = scenario.getPlayer().getGold() - shop.getSelectedBuy().getCost();
                                     while (scenario.getPlayer().getGold() > targetGold) {
                                         scenario.getPlayer().setGold(scenario.getPlayer().getGold() - 1);
                                         try {
@@ -255,16 +266,16 @@ public class GameEnv extends JComponent{
                                         paintComponent(getGraphics());
                                     }
 
-                                    if (shop.getSelected() instanceof ImmediateEffect)
-                                        ((ImmediateEffect) shop.getSelected()).increaseCost();
+                                    if (shop.getSelectedBuy() instanceof ImmediateEffect)
+                                        ((ImmediateEffect) shop.getSelectedBuy()).increaseCost();
                                     dialogTypeFlag = false;
                                     dialogBoxMessage = "Successful!";
                                     buyFlag = false;
                                     targetHero = null;
                                 } else {
                                     dialogBoxFlag = false;
-                                    storyBoxFlag = true;
-                                    storyBox.setStory("Selected Hero's Inventory is full.");
+                                    messageBoxFlag = true;
+                                    messageBox.setMessage("Selected Hero's Inventory is full.");
                                     buyFlag = false;
                                     targetHero = null;
                                     clickFlag = true;
@@ -279,6 +290,40 @@ public class GameEnv extends JComponent{
 
                     }
 
+                    else if (sellFlag) {
+
+                        if (dialogBox.getButtonYes().contains(e.getX(), e.getY()) && dialogTypeFlag) {
+
+
+                            shop.getOwnerHero().sellItem(shop.getSelectedSell());
+                            //Increasing the Gold number gradually
+                            int targetGold = scenario.getPlayer().getGold() + shop.getSelectedSell().getCost() / 2;
+                            while (scenario.getPlayer().getGold() < targetGold) {
+                                scenario.getPlayer().setGold(scenario.getPlayer().getGold() + 1);
+                                try {
+                                    Thread.sleep(20);
+                                } catch (InterruptedException e1) {
+                                    e1.printStackTrace();
+                                }
+                                paintComponent(getGraphics());
+                            }
+                            dialogTypeFlag = false;
+                            dialogBoxMessage = "Successful!";
+                            shop.setRectFlagSell(false);
+                            shop.setSelectedSell(null);
+                            sellFlag = false;
+                            targetHero = null;
+                            clickFlag = true;
+                        }
+                        if (!clickFlag && dialogBox.getButtonNo().contains(e.getX(), e.getY()) && dialogTypeFlag) {
+                            sellFlag = false;
+                            dialogBoxFlag = false;
+                            targetHero = null;
+                            clickFlag = true;
+                        }
+
+                    }
+
                     else if (chooseHeroFlag) {
                             if (dialogBox.getButtonYes().contains(e.getX(), e.getY())) {
                                 abilityUpEnv = new AbilityUpEnv(targetHero.getName(), targetHero.getAbilities());
@@ -289,8 +334,8 @@ public class GameEnv extends JComponent{
                                 clickFlag = true;
                             }
                             if (!clickFlag && dialogBox.getButtonNo().contains(e.getX(), e.getY())) {
-                                storyBoxFlag = true;
-                                storyBox.setStory("Choose a hero from the panel on your right");
+                                messageBoxFlag = true;
+                                messageBox.setMessage("Choose a hero from the panel on your right");
                                 dialogBoxFlag = false;
                                 dialogBoxMessage = null;
                                 targetHero = null;
@@ -346,9 +391,9 @@ public class GameEnv extends JComponent{
                                         eventDisappearFlag = true;
                                         break;
                                     case story:
-                                        storyBoxFlag = true;
-                                        storyBox.setStory(eventToBeFired.getInfo());
-                                        storyBox.setImage(eventToBeFired.getStoryImage());
+                                        messageBoxFlag = true;
+                                        messageBox.setMessage(eventToBeFired.getInfo());
+                                        messageBox.setImage(eventToBeFired.getStoryImage());
                                         eventDisappearFlag = true;
                                         break;
                                     case shop:
@@ -356,8 +401,8 @@ public class GameEnv extends JComponent{
                                         eventToBeFired = null;
                                         break;
                                     case ability:
-                                        storyBoxFlag = true;
-                                        storyBox.setStory("Choose a hero from the panel on your right");
+                                        messageBoxFlag = true;
+                                        messageBox.setMessage("Choose a hero from the panel on your right");
                                         chooseHeroFlag = true;
                                         eventToBeFired = null;
                                         break;
@@ -371,15 +416,17 @@ public class GameEnv extends JComponent{
                     }
                 }
 
-                if (storyBoxFlag) {
+                if (messageBoxFlag) {
 
-                    if (!clickFlag && storyBox.getButtonGotIt().contains(e.getX(), e.getY())) {
-                        storyBoxFlag = false;
+                    if (!clickFlag && messageBox.getButtonGotIt().contains(e.getX(), e.getY())) {
+                        messageBoxFlag = false;
                         if (buyFlag) buyFlag = false;
+                        if (sellFlag) sellFlag = false;
                         if (chooseHeroFlag) chooseHeroFlag = false;
                         if (!gameStarted) gameStarted = true;
-                        storyBox.setStory(null);
-                        storyBox.setImage(null);
+                        messageBox.setMessage(null);
+                        messageBox.setImage(null);
+                        if (!abilityUpEnvFlag && !heroInfoDisplayFlag) targetHero = null;
                         clickFlag = true;
                     }
 
@@ -388,10 +435,14 @@ public class GameEnv extends JComponent{
                 if (shopFlag) {
 
                         if (!clickFlag && shop.getButtonInfo().contains(e.getX(), e.getY())) {
-                            if (shop.getSelected() != null) {
-                                storyBoxFlag = true;
-                                storyBox.setStory(shop.getSelected().getDescription());
-                            } else {
+                            if (shop.getSelectedBuy() != null) {
+                                messageBoxFlag = true;
+                                messageBox.setMessage(shop.getSelectedBuy().getDescription());
+                            } else if (shop.getSelectedSell() != null) {
+                                messageBoxFlag = true;
+                                messageBox.setMessage(shop.getSelectedSell().getDescription());
+                            }
+                            else {
                                 dialogBoxFlag = true;
                                 dialogTypeFlag = false;
                                 dialogBoxMessage = "Please select an item.";
@@ -402,21 +453,25 @@ public class GameEnv extends JComponent{
                         if (!clickFlag && shop.getButtonExit().contains(e.getX(), e.getY())) {
                             shopFlag = false;
                             buyFlag = false;
-                            storyBoxFlag = false;
+                            sellFlag = false;
+                            messageBoxFlag = false;
+                            messageBox.setMessage(null);
                             dialogBoxFlag = false;
-                            shop.setSelected(null);
+                            dialogBoxMessage = null;
+                            shop.setSelectedBuy(null);
+                            shop.setSelectedSell(null);
                             clickFlag = true;
                         }
 
                         if (!clickFlag && shop.getButtonBuy().contains(e.getX(), e.getY())) {
-                            if (shop.getSelected() == null) {
+                            if (shop.getSelectedBuy() == null) {
                                 dialogBoxFlag = true;
                                 dialogTypeFlag = false;
                                 dialogBoxMessage = "Please select an item.";
                             } else {
-                                if (scenario.getPlayer().getGold() > shop.getSelected().getCost()) {
-                                    storyBoxFlag = true;
-                                    storyBox.setStory("Choose a hero from the panel on your right");
+                                if (scenario.getPlayer().getGold() >= shop.getSelectedBuy().getCost()) {
+                                    messageBoxFlag = true;
+                                    messageBox.setMessage("Choose a hero from the panel on your right");
                                     buyFlag = true;
                                 } else {
                                     dialogBoxFlag = true;
@@ -427,20 +482,50 @@ public class GameEnv extends JComponent{
                             clickFlag = true;
                         }
 
-
-                        if (shop.getRectFlag() && !buyFlag)
-                            for (int i = 0; i < shop.getRect().length; i++) {
-                                if (shop.getRect()[i].contains(e.getX(), e.getY())) {
-                                    shop.setSelected(i);
-                                    break;
-                                } else shop.setSelected(null);
+                        if (!clickFlag && shop.getButtonSell().contains(e.getX(), e.getY())) {
+                            if (shop.getRectSell().length == 0) {
+                                dialogBoxFlag = true;
+                                dialogTypeFlag = false;
+                                dialogBoxMessage = "You have no items.";
                             }
+                            else if (shop.getSelectedSell() == null) {
+                                dialogBoxFlag = true;
+                                dialogTypeFlag = false;
+                                dialogBoxMessage = "Please select an item.";
+                            } else {
+                                sellFlag = true;
+                                dialogBoxFlag = true;
+                                dialogTypeFlag = true;
+                                dialogBoxMessage = "Sell " + shop.getSelectedSell().getName() + "?";
+                            }
+                        }
 
+                        if (shop.getRectFlagBuy() && !buyFlag) {
+                            for (int i = 0; i < shop.getRectBuy().length; i++) {
+                                if (shop.getRectBuy()[i].contains(e.getX(), e.getY())) {
+                                    shop.setSelectedBuy(i);
+                                    break;
+                                } else shop.setSelectedBuy(null);
+                            }
+                        }
+
+                        if (shop.getRectFlagSell() && !sellFlag) {
+                            for (int i = 0; i < shop.getRectSell().length; i++) {
+                                if (shop.getRectSell()[i].contains(e.getX(), e.getY())) {
+                                    shop.setSelectedSell(i);
+                                    shop.setOwnerHero(shop.getOwnerOfIndex(i));
+                                    break;
+                                } else {
+                                    shop.setSelectedSell(null);
+                                    shop.setOwnerHero(null);
+                                }
+                            }
+                        }
 
                         if (buyFlag && heroRectFlag) {
                             for (int i = 0; i < heroRect.length; i++) {
                                 if (heroRect[i].contains(e.getX(), e.getY())) {
-                                    storyBoxFlag = false;
+                                    messageBoxFlag = false;
                                     dialogBoxFlag = true;
                                     dialogTypeFlag = true;
                                     targetHero = scenario.getPlayer().getHeroes().get(i);
@@ -448,13 +533,15 @@ public class GameEnv extends JComponent{
                                     break;
                                 }
                             }
-                        }}
+                        }
+
+                }
 
                 //Ability Upgrade
                 if (chooseHeroFlag && heroRectFlag && !abilityUpEnvFlag) {
                     for (int i = 0; i < heroRect.length; i++) {
                         if (heroRect[i].contains(e.getX(), e.getY())) {
-                            storyBoxFlag = false;
+                            messageBoxFlag = false;
                             dialogBoxFlag = true;
                             dialogTypeFlag = true;
                             dialogBoxMessage = "Proceed with " + scenario.getPlayer().getHeroes().get(i).getName() + "?";
@@ -465,8 +552,8 @@ public class GameEnv extends JComponent{
                 }
                 outer: if (abilityUpEnv != null && abilityUpEnvFlag) {if (!clickFlag && abilityUpEnv.getButtonInfo().contains(e.getX(), e.getY())) {
                         if (abilityUpEnv.getSelected() != null) {
-                            storyBoxFlag = true;
-                            storyBox.setStory(abilityUpEnv.getSelected().getDescription());
+                            messageBoxFlag = true;
+                            messageBox.setMessage(abilityUpEnv.getSelected().getDescription());
                         } else {
                             dialogBoxFlag = true;
                             dialogTypeFlag = false;
@@ -477,7 +564,7 @@ public class GameEnv extends JComponent{
 
                     if (!clickFlag && abilityUpEnv.getButtonExit().contains(e.getX(), e.getY())) {
                         abilityUpEnvFlag = false;
-                        storyBoxFlag = false;
+                        messageBoxFlag = false;
                         dialogBoxFlag = false;
                         upgradeFlag = false;
                         targetHero = null;
@@ -488,8 +575,8 @@ public class GameEnv extends JComponent{
                     }
 
                     if (!clickFlag && abilityUpEnv.getButtonChange().contains(e.getX(), e.getY())) {
-                        storyBoxFlag = true;
-                        storyBox.setStory("Choose a hero from the panel on your right");
+                        messageBoxFlag = true;
+                        messageBox.setMessage("Choose a hero from the panel on your right");
                         chooseHeroFlag = true;
                         dialogBoxFlag = false;
                         abilityUpEnvFlag = false;
@@ -541,6 +628,28 @@ public class GameEnv extends JComponent{
                         }
                 }
 
+                //Hero Info Display
+                if (!chooseHeroFlag && !abilityUpEnvFlag && !shopFlag && !dialogBoxFlag && !messageBoxFlag && !clickFlag && heroRectFlag) {
+                    for (int i = 0; i < heroRect.length; i++) {
+                        if (heroRect[i].contains(e.getX(), e.getY())) {
+                            targetHero = scenario.getPlayer().getHeroes().get(i);
+                            heroInfoEnv.setHero(targetHero);
+                            heroInfoDisplayFlag = true;
+                            break;
+                        }
+                    }
+                }
+                if (heroInfoDisplayFlag) {
+                    if (!clickFlag && heroInfoEnv.getButtonBack().contains(e.getX(), e.getY())) {
+                        heroInfoDisplayFlag = false;
+                        targetHero = null;
+                    }
+                    if (!clickFlag && heroInfoEnv.getButtonDescription().contains(e.getX(), e.getY())) {
+                        messageBoxFlag = true;
+                        messageBox.setMessage(targetHero.getDescription());
+                    }
+                }
+
                 if (!clickFlag && menuButton != null && menuButton.contains(e.getX(), e.getY())) {
                     emgr.frame().setSize(new Dimension(1280, 800));
                         emgr.frame().setLocationRelativeTo(null);
@@ -561,11 +670,12 @@ public class GameEnv extends JComponent{
                 if (dialogBox.getButtonNo().contains(e.getX(), e.getY())) { dialogBox.setColor(2, new Color(40, 40, 40)); }
                 if (dialogBox.getButtonGotIt().contains(e.getX(), e.getY())) { dialogBox.setColor(3, new Color(40, 40, 40)); }
 
-                if (storyBox.getButtonGotIt().contains(e.getX(), e.getY())) { storyBox.setColor(new Color(40, 40, 40)); }
+                if (messageBox.getButtonGotIt().contains(e.getX(), e.getY())) { messageBox.setColor(new Color(40, 40, 40)); }
 
                 if (shop.getButtonInfo().contains(e.getX(), e.getY())) { shop.setColor(1, new Color(120, 120, 120)); }
                 if (shop.getButtonExit().contains(e.getX(), e.getY())) { shop.setColor(2, new Color(120, 120, 120)); }
                 if (shop.getButtonBuy().contains(e.getX(), e.getY())) { shop.setColor(3, new Color(120, 120, 120)); }
+                if (shop.getButtonSell().contains(e.getX(), e.getY())) { shop.setColor(4, new Color(120, 120, 120)); }
 
                 if (abilityUpEnv != null) {
                     if (abilityUpEnv.getButtonUpgrade().contains(e.getX(), e.getY())) { abilityUpEnv.setColor(1, new Color(120, 120, 120)); }
@@ -573,6 +683,9 @@ public class GameEnv extends JComponent{
                     if (abilityUpEnv.getButtonInfo().contains(e.getX(), e.getY())) { abilityUpEnv.setColor(3, new Color(120, 120, 120)); }                    if (abilityUpEnv.getButtonInfo().contains(e.getX(), e.getY())) { abilityUpEnv.setColor(3, new Color(120, 120, 120)); }
                     if (abilityUpEnv.getButtonChange().contains(e.getX(), e.getY())) { abilityUpEnv.setColor(4, new Color(120, 120, 120)); }
                 }
+
+                if (heroInfoEnv.getButtonBack().contains(e.getX(), e.getY())) { heroInfoEnv.setColor(2, new Color(120, 120, 120)); }
+                if (heroInfoEnv.getButtonDescription().contains(e.getX(), e.getY())) { heroInfoEnv.setColor(1, new Color(120, 120, 120)); }
 
                 if (settingsButton != null && settingsButton.contains(e.getX(), e.getY())) {c1 = new Color(50, 50, 50); }
                 if (menuButton != null && menuButton.contains(e.getX(), e.getY())) { c2 = new Color(50, 50, 50); }
@@ -586,13 +699,16 @@ public class GameEnv extends JComponent{
                 shop.setColor(1, new Color(130, 130, 130));
                 shop.setColor(2, new Color(130, 130, 130));
                 shop.setColor(3, new Color(130, 130, 130));
+                shop.setColor(4, new Color(130, 130, 130));
                 if (abilityUpEnv != null) {
                     abilityUpEnv.setColor(1, new Color(130, 130, 130));
                     abilityUpEnv.setColor(2, new Color(130, 130, 130));
                     abilityUpEnv.setColor(3, new Color(130, 130, 130));
                     abilityUpEnv.setColor(4, new Color(130, 130, 130));
                 }
-                storyBox.setColor(new Color(50, 50, 50));
+                heroInfoEnv.setColor(1, new Color(130, 130, 130));
+                heroInfoEnv.setColor(2, new Color(130, 130, 130));
+                messageBox.setColor(new Color(50, 50, 50));
                 c1 = c2 = buttonColor;
             }
         });
@@ -609,8 +725,8 @@ public class GameEnv extends JComponent{
         if (!gameStarted) {
 
             //Story Box
-            if (storyBoxFlag) {
-                storyBox.draw();
+            if (messageBoxFlag) {
+                messageBox.draw();
             }
 
         } else {
@@ -639,11 +755,6 @@ public class GameEnv extends JComponent{
             //Ability Upgrade Environment
             if (abilityUpEnvFlag) {
                 if (abilityUpEnv != null) abilityUpEnv.draw();
-            }
-
-            //Dialog Box
-            if (dialogBoxFlag) {
-                dialogBox.draw(dialogBoxMessage, dialogTypeFlag);
             }
 
             //The Information panel
@@ -711,9 +822,19 @@ public class GameEnv extends JComponent{
             g2.drawString("Settings", 942, 815);
             g2.drawString("Menu", 1073, 815);
 
+            //Hero Info Panel
+            if (targetHero != null && heroInfoDisplayFlag) {
+                heroInfoEnv.draw();
+            }
+
+            //Dialog Box
+            if (dialogBoxFlag) {
+                dialogBox.draw(dialogBoxMessage, dialogTypeFlag);
+            }
+
             //Story Box
-            if (storyBoxFlag) {
-                storyBox.draw();
+            if (messageBoxFlag) {
+                messageBox.draw();
             }
         }
 
@@ -739,7 +860,7 @@ public class GameEnv extends JComponent{
     private double prevX, prevY;
     public void update() {
 
-            if (!dialogBoxFlag && !storyBoxFlag && !shopFlag && !chooseHeroFlag && !abilityUpEnvFlag) {
+            if (!dialogBoxFlag && !messageBoxFlag && !shopFlag && !chooseHeroFlag && !abilityUpEnvFlag && !heroInfoDisplayFlag) {
 
                 prevX = CharX;
                 prevY = CharY;
@@ -903,7 +1024,7 @@ public class GameEnv extends JComponent{
     }
 
 
-    private class StoryBox {
+    private class MessageBox {
         private RoundRectangle2D.Double BG;
 
         private Image image;
@@ -914,12 +1035,12 @@ public class GameEnv extends JComponent{
 
         private ArrayList<String> Tokens;
 
-        StoryBox() {
+        MessageBox() {
             c1 = new Color(50, 50, 50);
             BGColor = new Color(60, 60, 60);
             borderColor = new Color(150, 150, 150);
-            BG = new RoundRectangle2D.Double(125, 175, 650, 450, 100, 100);
-            buttonGotIt = new RoundRectangle2D.Double(400, 540, 100, 50, 30, 30);
+            BG = new RoundRectangle2D.Double(75, 75, 750, 600, 75, 75);
+            buttonGotIt = new RoundRectangle2D.Double(400, 600, 100, 50, 30, 30);
             Tokens = new ArrayList<>();
             image = null;
         }
@@ -932,9 +1053,9 @@ public class GameEnv extends JComponent{
             g2.draw(BG);
             g2.setFont(mmFont.deriveFont(30f));
 
-            int yS = 250;
+            int yS = 150;
             for (String s: Tokens) {
-                g2.drawString(s, 175, yS);
+                g2.drawString(s, 125, yS);
                 yS += 30;
             }
 
@@ -944,14 +1065,14 @@ public class GameEnv extends JComponent{
             g2.setColor(borderColor);
             g2.draw(buttonGotIt);
             g2.setFont(mmFont.deriveFont(25f));
-            if (!buyFlag && !chooseHeroFlag) g2.drawString("Continue", 415, 570);
-            else g2.drawString("Cancel", 422, 570);
+            if (!buyFlag && !sellFlag && !chooseHeroFlag) g2.drawString("Continue", 415, 630);
+            else g2.drawString("Cancel", 422, 630);
 
         }
 
         RoundRectangle2D.Double getButtonGotIt() { return buttonGotIt; }
 
-        void setStory(String st) {
+        void setMessage(String st) {
             Tokens.clear();
             int charMax = 0;
             if (st != null) {
@@ -959,7 +1080,7 @@ public class GameEnv extends JComponent{
                 for (int i = 0; i < st.length(); i++) {
                     temp += st.charAt(i);
                     charMax ++;
-                    if ((charMax > 45 && st.charAt(i) == ' ') || i == st.length() - 1) {
+                    if ((charMax > 56 && st.charAt(i) == ' ') || i == st.length() - 1) {
                         Tokens.add(temp);
                         temp = "";
                         charMax = 0;
@@ -978,27 +1099,42 @@ public class GameEnv extends JComponent{
 
         private RoundRectangle2D.Double BG;
 
-        private RoundRectangle2D.Double buttonBuy, buttonExit, buttonInfo;
+        private RoundRectangle2D.Double buttonBuy, buttonSell, buttonExit, buttonInfo;
 
-        private Color BGColor, borderColor, c1, c2, c3;
+        private Color BGColor, borderColor, c1, c2, c3, c4;
 
-        private ArrayList<Item> items;
-        private Item selected;
-        private Rectangle.Double[] itemRects;
-        private boolean rectFlag;
+        private ArrayList<Item> shopItems, heroItems;
+        private ArrayList<Hero> heroes, ownerShips;
+        private Hero ownerHero;
+        private Item selectedBuy, selectedSell;
+        private Rectangle.Double[] shopItemRects, playerItemRects;
+        private boolean rectFlagBuy, rectFlagSell;
 
-        ShopEnv(ArrayList<Item> items) {
-            c1 = c2 = c3 = new Color(150, 150, 150);
-            BGColor = new Color(150, 150, 150);
+        ShopEnv(ArrayList<Item> items, ArrayList<Hero> heroes) {
+            c1 = c2 = c3 = c4 = new Color(130, 130, 130);
+            BGColor = new Color(160, 160, 150);
             borderColor = new Color(60, 60, 60);
             BG = new RoundRectangle2D.Double(75, 75, 750, 750, 75, 75);
-            buttonInfo = new RoundRectangle2D.Double(400, 750, 100, 50, 25, 25);
+            buttonInfo = new RoundRectangle2D.Double(250, 750, 100, 50, 25, 25);
+            buttonSell = new RoundRectangle2D.Double(400, 750, 100, 50, 25, 25);
             buttonBuy = new RoundRectangle2D.Double(550, 750, 100, 50, 25, 25);
             buttonExit = new RoundRectangle2D.Double(700, 750, 100, 50, 25, 25);
-            this.items = items;
-            itemRects = new Rectangle2D.Double[items.size()];
-            rectFlag = false;
-            selected = null;
+            this.shopItems = items;
+            heroItems = new ArrayList<>();
+            this.heroes = heroes;
+            ownerShips = new ArrayList<>();
+            ownerHero = null;
+            shopItemRects = new Rectangle2D.Double[items.size()];
+            int size = 0;
+            for (Hero h : heroes) {
+                size += h.getItems().size();
+                heroItems.addAll(h.getItems());
+            }
+            playerItemRects = new Rectangle2D.Double[size];
+            rectFlagBuy = false;
+            rectFlagSell = false;
+            selectedBuy = null;
+            selectedSell = null;
         }
 
         void draw() {
@@ -1006,23 +1142,68 @@ public class GameEnv extends JComponent{
             g2.fill(BG);
             g2.setColor(borderColor);
             g2.draw(BG);
-            g2.setFont(mmFont.deriveFont(48f));
-            g2.drawString("Welcome to the shop!", 300, 150);
+            g2.setFont(mmFont.deriveFont(45f));
+            g2.drawString("Shop", 700, 150);
 
-            int xI = 100, yI = 250;
-            for (Item i: items) {
-                g2.drawImage(i.getImage(), xI, yI, 100, 100, null);
-                if (!rectFlag) itemRects[items.indexOf(i)] = new Rectangle2D.Double(xI, yI, 100, 100);
-                g2.setFont(mmFont.deriveFont(22f));
-                g2.drawString(i.getName(), xI + 10, yI + 120);
-                if (i.equals(selected)) g2.draw(new Rectangle2D.Double(xI, yI, 100, 100));
-                xI += 150;
-                if (xI >= 800) {
-                    yI += 150;
-                    xI = 100;
+            int xI = 300, yI = 120;
+            boolean classFlag = false;
+            for (Item i: shopItems) {
+                if (!classFlag) {
+                    g2.setFont(mmFont.deriveFont(25f));
+                    g2.drawString(i.getClass().toString().substring(15, i.getClass().toString().length()) + "s:", xI - 170, yI + 35);
+                    classFlag = true;
+                }
+                g2.drawImage(i.getImage(), xI, yI, 50, 50, null);
+                if (!rectFlagBuy) shopItemRects[shopItems.indexOf(i)] = new Rectangle2D.Double(xI, yI, 100, 100);
+                g2.setFont(mmFont.deriveFont(20f));
+                if (i.getName().contains(" ")) {
+                    String[] tokens = i.getName().split(" ");
+                    g2.drawString(tokens[0], xI, yI + 70);
+                    g2.drawString(tokens[1], xI, yI + 90);
+                }
+                else g2.drawString(i.getName(), xI, yI + 70);
+                if (i.equals(selectedBuy)) g2.draw(new Rectangle2D.Double(xI, yI, 50, 50));
+                xI += 100;
+                if (xI >= 800 || (shopItems.indexOf(i) < shopItems.size() - 1 && !shopItems.get(shopItems.indexOf(i) + 1).getClass().equals(i.getClass()))) {
+                    classFlag = false;
+                    yI += 100;
+                    xI = 300;
                 }
             }
-            rectFlag = true;
+            rectFlagBuy = true;
+
+            g2.setFont(mmFont.deriveFont(35f));
+            g2.drawString("Your Items:", 130, yI + 150);
+            xI = 130; yI = yI + 180;
+
+            int k = 0;
+            for (Hero h: heroes) {
+                for (Item i : h.getItems()) {
+                    g2.setFont(mmFont.deriveFont(20f));
+                    g2.drawImage(i.getImage(), xI, yI, 50, 50, null);
+                    if (!rectFlagSell) {
+                        playerItemRects[k] = new Rectangle2D.Double(xI, yI, 50, 50);
+                        ownerShips.add(h);
+                    }
+                    if (i.equals(selectedSell) && ownerShips.get(k).equals(ownerHero)) {
+                        g2.draw(new Rectangle2D.Double(xI, yI, 50, 50));
+                    }
+                    g2.drawString(i.getCost() / 2 + " g", xI, yI + 70);
+                    g2.drawString("Owner:", xI, yI + 90);
+                    g2.drawString(h.getName(), xI, yI + 110);
+                    if (i instanceof Consumable) {
+                        g2.drawString("Remain. " + h.getRemainingUsages((Consumable) i), xI, yI + 130);
+                    }
+                    xI += 75;
+                    if (xI >= 800) {
+                        xI = 130;
+                        yI += 150;
+
+                    }
+                    k ++;
+                }
+            }
+            rectFlagSell = true;
 
             g2.setColor(c1);
             g2.fill(buttonBuy);
@@ -1036,24 +1217,51 @@ public class GameEnv extends JComponent{
             g2.fill(buttonInfo);
             g2.setColor(borderColor);
             g2.draw(buttonInfo);
+            g2.setColor(c4);
+            g2.fill(buttonSell);
+            g2.setColor(borderColor);
+            g2.draw(buttonSell);
+            g2.setColor(borderColor);
             g2.setFont(mmFont.deriveFont(25f));
-            g2.drawString("Info", 435, 780);
+            g2.drawString("Info", 285, 780);
+            g2.drawString("Sell", 435, 780);
             g2.drawString("Buy", 585, 780);
             g2.drawString("Exit", 735, 780);
-            g2.drawString("*Items that doesn't display a cost on info are 4 dollars initially.", 100, 650);
+            g2.drawString("*Immediate Effect items are 4 dollars initially.", 100, 720);
 
         }
 
-        Item getSelected() { return selected; }
-        void setSelected(Item i) { selected = i; }
-        void setSelected(int i) { selected = items.get(i);}
-        Rectangle2D.Double[] getRect() { return itemRects; } // Pun intended :D
-        boolean getRectFlag() { return rectFlag; }
+        Item getSelectedBuy() { return selectedBuy; }
+        void setSelectedBuy(Item i) { selectedBuy = i; }
+        void setSelectedBuy(int i) { selectedBuy = shopItems.get(i);}
+        Rectangle2D.Double[] getRectBuy() { return shopItemRects; }
+        boolean getRectFlagBuy() { return rectFlagBuy; }
+
+        Item getSelectedSell() { return selectedSell; }
+        void setSelectedSell(Item i) { selectedSell = i; }
+        void setSelectedSell(int i) { selectedSell = heroItems.get(i);}
+        Rectangle2D.Double[] getRectSell() { return playerItemRects; }
+        boolean getRectFlagSell() { return rectFlagSell; }
+        void setRectFlagSell(boolean b) {
+            rectFlagSell = b;
+            int size = 0;
+            heroItems.clear();
+            for (Hero h : heroes) {
+                size += h.getItems().size();
+                heroItems.addAll(h.getItems());
+            }
+            ownerShips.clear();
+            playerItemRects = new Rectangle2D.Double[size];
+        }
+        Hero getOwnerHero() { return ownerHero; }
+        void setOwnerHero(Hero h) { ownerHero = h; }
+        Hero getOwnerOfIndex(int i) { return ownerShips.get(i); }
 
         RoundRectangle2D.Double getButtonBuy() { return buttonBuy; }
+        RoundRectangle2D.Double getButtonSell() { return buttonSell; }
         RoundRectangle2D.Double getButtonExit() { return buttonExit; }
         RoundRectangle2D.Double getButtonInfo() { return buttonInfo; }
-        void setColor(int n, Color c) { switch (n) { case 1:c3 = c;break;    case 2:c2 = c;break;    case 3:c1 = c; break; } }
+        void setColor(int n, Color c) { switch (n) { case 1:c3 = c;break;    case 2:c2 = c;break;    case 3:c1 = c; break;     case 4:c4 = c;break;} }
 
 
     }
@@ -1075,7 +1283,7 @@ public class GameEnv extends JComponent{
 
         AbilityUpEnv(String name, ArrayList<Ability> abilities) {
             c1 = c2 = c3 = c4 = new Color(130, 130, 130);
-            BGColor = new Color(150, 150, 150);
+            BGColor = new Color(170, 165, 170);
             borderColor = new Color(60, 60, 60);
             BG = new RoundRectangle2D.Double(75, 75, 750, 750, 75, 75);
             buttonInfo = new RoundRectangle2D.Double(400, 750, 100, 50, 25, 25);
@@ -1110,12 +1318,13 @@ public class GameEnv extends JComponent{
             int xI = 200, yI = 380;
             for (Ability a: abilities) {
                 g2.setFont(mmFont.deriveFont(30f));
-                g2.drawString(a.getName(), xI + 10, yI + 10);
+                g2.drawString(a.getName(), xI - 20, yI + 10);
+                g2.drawImage(a.getImage(), xI + 180, yI - 25, 50, 50, null);
                 g2.drawString("Level " + a.getLevel(), xI + 260, yI + 10);
                 g2.drawString("XP to next lvl: " + a.getXPtoNextLevel(), xI + 370, yI + 10);
-                g2.draw(new Rectangle2D.Double(xI - 30, yI - 5, 20, 20));
-                if (!rectFlag) abilityRects[abilities.indexOf(a)] = new Rectangle2D.Double(xI - 30, yI - 5, 20, 20);
-                if (a.equals(selected)) g2.fill(new Rectangle2D.Double(xI - 30, yI - 5, 20, 20));
+                g2.draw(new Rectangle2D.Double(xI - 60, yI - 5, 20, 20));
+                if (!rectFlag) abilityRects[abilities.indexOf(a)] = new Rectangle2D.Double(xI - 60, yI - 5, 20, 20);
+                if (a.equals(selected)) g2.fill(new Rectangle2D.Double(xI - 60, yI - 5, 20, 20));
                 yI += 70;
             }
             rectFlag = true;
@@ -1136,6 +1345,7 @@ public class GameEnv extends JComponent{
             g2.fill(changeButton);
             g2.setColor(borderColor);
             g2.draw(changeButton);
+            g2.setColor(borderColor);
             g2.setFont(mmFont.deriveFont(25f));
             g2.drawString("Info", 435, 780);
             g2.drawString("Upgrade", 567, 780);
@@ -1157,5 +1367,101 @@ public class GameEnv extends JComponent{
 
 
     }
+
+
+    private class HeroInfoEnv {
+        private RoundRectangle2D.Double BG;
+
+        private RoundRectangle2D.Double buttonDescription, buttonBack;
+
+        private Color BGColor, borderColor, c1, c2;
+
+        private Hero hero;
+        private ArrayList<Item> items;
+
+        HeroInfoEnv(Hero hero) {
+            c1 = c2 = new Color(130, 130, 130);
+            BGColor = new Color(140, 148, 170);
+            borderColor = new Color(60, 60, 60);
+            BG = new RoundRectangle2D.Double(75, 75, 750, 750, 75, 75);
+            buttonDescription = new RoundRectangle2D.Double(550, 750, 100, 50, 25, 25);
+            buttonBack = new RoundRectangle2D.Double(700, 750, 100, 50, 25, 25);
+            this.hero = hero;
+            if (hero != null) items = hero.getItems();
+        }
+
+        void draw() {
+            g2.setColor(BGColor);
+            g2.fill(BG);
+            g2.setColor(borderColor);
+            g2.draw(BG);
+            g2.setFont(mmFont.deriveFont(68f));
+            g2.drawString(hero.getName(), 150, 215);
+            g2.setFont(mmFont.deriveFont(25f));
+            g2.drawImage(hero.getHeroImage(), 575, 130, null);
+            g2.drawString("HP: " + hero.getHP(), 400, 200);
+            g2.drawString("MP: " + hero.getMP(), 400, 230);
+            g2.drawString("EP: " + hero.getEP(), 397, 260);
+            g2.drawString("Attack Dmg: " + hero.getAttDmg(), 397, 290);
+
+            g2.setFont(mmFont.deriveFont(35f));
+            g2.drawString("Abilities:", 150, 340);
+            int xI = 180, yI = 370;
+            for (Ability a: hero.getAbilities()) {
+                g2.drawImage(a.getImage(), xI, yI, 50, 50, null);
+                g2.setFont(mmFont.deriveFont(20f));
+                g2.drawString(a.getName(), xI, yI + 80);
+                g2.drawString("Lvl " + a.getLevel(), xI + 60, yI + 35);
+                xI += 150;
+                if (xI >= 800) {
+                    yI += 180;
+                    xI = 200;
+                }
+            }
+
+            xI = 180; yI = 540;
+            g2.setFont(mmFont.deriveFont(35f));
+            g2.drawString("Items:", 150, 525);
+            for (Item i: items) {
+                g2.drawImage(i.getImage(), xI, yI, 75, 75, null);
+                g2.setFont(mmFont.deriveFont(22f).deriveFont(Font.BOLD));
+                g2.drawString(i.getName(), xI, yI + 100);
+                g2.setFont(mmFont.deriveFont(20f));
+                g2.drawString("SellPrice: " + i.getCost() / 2, xI, yI + 130);
+                if (i instanceof Consumable) {
+                    g2.drawString("Remain. " + hero.getRemainingUsages((Consumable) i), xI, yI + 160);
+                }
+                xI += 150;
+                if (xI >= 800) {
+                    yI += 180;
+                    xI = 200;
+                }
+            }
+
+            g2.setColor(c1);
+            g2.fill(buttonDescription);
+            g2.setColor(borderColor);
+            g2.draw(buttonDescription);
+            g2.setColor(c2);
+            g2.fill(buttonBack);
+            g2.setColor(borderColor);
+            g2.draw(buttonBack);
+            g2.setFont(mmFont.deriveFont(25f));
+            g2.drawString("Info", 585, 780);
+            g2.drawString("back", 735, 780);
+        }
+
+        Hero getHero() { return hero; }
+        void setHero(Hero h) {
+            hero = h;
+            items = hero.getItems();
+        }
+
+        RoundRectangle2D.Double getButtonBack() { return buttonBack; }
+        RoundRectangle2D.Double getButtonDescription() { return buttonDescription; }
+        void setColor(int n, Color c) { switch (n) { case 1:c1 = c;break;    case 2:c2 = c;break;} }
+
+    }
+
 }
 

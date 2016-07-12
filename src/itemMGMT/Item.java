@@ -1,6 +1,9 @@
 package itemMGMT;
 
+import units.Hero;
+
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Item {
     protected String name;
@@ -9,6 +12,7 @@ public class Item {
     protected String targetStat;
     protected int effect;
     private String description;
+    private ArrayList<Hero> owners;
 
     //GUI Phase
     protected Image image;
@@ -17,11 +21,16 @@ public class Item {
 
     Item(String n, int c, int isn, String ts, int e, String description) {
         this.name = n; this.cost = c; this.invSpaceNeeded = isn; this.targetStat = ts; this.effect = e;
-        this.description = description;
+        this.description = description; this.owners = null;
+        owners = new ArrayList<>();
     }
 
 
     //Getters and Setters
+
+    public ArrayList<Hero> getOwners() { return owners; }
+    public void addOwner(Hero h) { owners.add(h); }
+    public void removeOwner(Hero h) { owners.remove(h);}
 
     public String getTargetStat() { return this.targetStat; }
 //    public void setTargetStat(String ts) { this.targetStat = ts; }

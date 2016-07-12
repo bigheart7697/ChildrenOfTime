@@ -360,10 +360,10 @@ public class gameUI {
 
         Battlefield battlefield = new Battlefield();
 
-        Hero Eley = new Fighter("Eley");
-        Hero Chrome = new Fighter("Chrome");
-        Hero Meryl = new Supporter("Meryl");
-        Hero Bolti = new Supporter("Bolti");
+        Hero Eley = new Fighter("Eley", null, null);
+        Hero Chrome = new Fighter("Chrome", null, null);
+        Hero Meryl = new Supporter("Meryl", null, null);
+        Hero Bolti = new Supporter("Bolti", null, null);
 
 //        Add description to the heroes:
 

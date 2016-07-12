@@ -4,11 +4,13 @@ import abilities.Ability;
 import abilities.PassiveAbility;
 import abilities.SelfBoost;
 
+import java.awt.*;
+
 public class Fighter extends Hero{
 
     //Constructor
 
-    public Fighter(String n) {
+    public Fighter(String n, Image ai1, Image ai2) {
         super(n, 200, 120, 120, 10, 5, 6, 2);
         PassiveAbility FightTraining = new SelfBoost("Fight training", 0, 2, 34, "attack power", 30);
         FightTraining.setDescription("Fight training " +
@@ -20,6 +22,7 @@ public class Fighter extends Hero{
         for(int cnt = 0; cnt < 3; cnt++)
             FightTrainingsRequiredAbility[cnt] = new SelfBoost("", 0, 0, 0, "", 0);
         FightTraining.setRequiredAbility(FightTrainingsRequiredAbility);
+        FightTraining.setImage(ai1);
 
         PassiveAbility WorkOut = new SelfBoost("Work out", 0, 2, 34, "health point", 50);
         WorkOut.setDescription("Work out " +
@@ -31,6 +34,7 @@ public class Fighter extends Hero{
         for(int cnt = 0; cnt < 3; cnt++)
             WorkOutsRequiredAbility[cnt] = new SelfBoost("", 0, 0, 0, "", 0);
         WorkOut.setRequiredAbility(WorkOutsRequiredAbility);
+        WorkOut.setImage(ai2);
 
         this.abilities.add(FightTraining);
         this.abilities.add(WorkOut);

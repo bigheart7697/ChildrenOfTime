@@ -5,6 +5,8 @@ import itemMGMT.*;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 abstract public class Hero extends Unit{
     protected int HPRefill;
@@ -14,6 +16,7 @@ abstract public class Hero extends Unit{
     protected Image heroImage;
 
     protected ArrayList<Item> inventory;
+    protected HashMap<Consumable, Integer> usages;
     protected int invSize;
 
     protected int XPGained;
@@ -34,6 +37,7 @@ abstract public class Hero extends Unit{
         this.XPGained = 0;
         this.initializeAbilities();
         this.initializeInventory();
+        this.usages = new HashMap<>();
     }
     //Setting up ArrayLists
 
@@ -99,7 +103,13 @@ abstract public class Hero extends Unit{
         }
 
         else {
-            if (!(i instanceof ImmediateEffect)) this.inventory.add(i);
+            if (!(i instanceof ImmediateEffect)) {
+                this.inventory.add(i);
+                i.addOwner(this);
+                if (i instanceof Consumable) {
+                    usages.put((Consumable) i, ((Consumable) i).getUsageMax());
+                }
+            }
             this.itemAcquired(i);
             System.out.println(i.getName() + " bought successfully");
             return true;
@@ -108,8 +118,12 @@ abstract public class Hero extends Unit{
 
     public void sellItem(Item i) {
         this.inventory.remove(i);
+        i.removeOwner(this);
+        if (i instanceof Consumable) {
+            usages.remove(i);
+        }
         this.itemRemoved(i);
-        System.out.println(i.getName() + " successfully sold, your current wealth is: "); // the wealth is printed in gameUI
+        System.out.println(i.getName() + " successfully sold");
     }
 
     private void itemAcquired(Item i) {
@@ -153,10 +167,14 @@ abstract public class Hero extends Unit{
         }
     }
 
+    public int getRemainingUsages(Consumable i) {
+        return usages.get(i);
+    }
+
     public void useItem(Item i) {
         if (!inventory.contains(i)) System.out.println("This hero doesn't have the desired item.");
         else if (i instanceof Consumable) {
-            ((Consumable) i).isUsed();
+            usages.put((Consumable) i, usages.get(i) - 1);
             switch (i.getTargetStat()) {
                 case "HP":
                     ((Consumable) i).getTarget().setHP(((Consumable) i).getTarget().getHP() + i.getEffect());
@@ -177,7 +195,12 @@ abstract public class Hero extends Unit{
                     refreshStatus();
                     break;
             }
-            if (((Consumable) i).isFinished()) this.inventory.remove(i);
+            if (usages.get(i) == 0) {
+                this.inventory.remove(i);
+                usages.remove(i);
+                i.removeOwner(this);
+                System.out.println(i.getName() + " is finished.");
+            }
         }
         else System.out.println("Selected Item is not Consumable");
     }
