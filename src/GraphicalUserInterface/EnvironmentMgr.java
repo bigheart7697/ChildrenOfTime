@@ -1,6 +1,9 @@
 package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
+import GraphicalUserInterface.CustomGame.NewAbility.NewAbility;
+import GraphicalUserInterface.CustomGame.NewMap.*;
+import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
 import GraphicalUserInterface.GameEnv.GameEnv;
 import GraphicalUserInterface.GameEnv.Scenario;
 
@@ -28,12 +31,19 @@ public class EnvironmentMgr implements ActionListener{
     private NewEnemy NE;
     private PvPBattleMenu PvPBM;
     private SettingsMenu SM;
-    private GraphicalUserInterface.CustomGame.Scenario scenario;
-    private DefeatMessage DM;
-    private MapSize MS;
-    private EarlyAmounts EA;
+    private GraphicalUserInterface.CustomGame.NewMap.Scenario scenario;
+    private GraphicalUserInterface.CustomGame.NewMap.DefeatMessage DM;
+    private GraphicalUserInterface.CustomGame.NewMap.MapSize MS;
+    private GraphicalUserInterface.CustomGame.NewMap.EarlyAmounts EA;
     private StartingPoint SP;
     private CreatingMap CM;
+    private CreatingBattleTile CBT;
+    private CreatingStoryTile CST;
+    private CreatingDoorTile CDT;
+    private CreatingKeyTile CKT;
+    private CreatingShopTile CSHT;
+    private CreatingFinalBossTile CFBT;
+
 
     public static void main(String[] args) {
 
@@ -80,7 +90,6 @@ public class EnvironmentMgr implements ActionListener{
 
         EM.CGM = new CustomGameMenu(defaultListener);
 
-        EM.NA = new NewAbility();
         EM.NE = new NewEnemy();
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
@@ -98,8 +107,22 @@ public class EnvironmentMgr implements ActionListener{
                     EM.CM = new CreatingMap(new SimpleMenuListener() {
                         @Override
                         public void switchTo(String target) {
-                            EM.frame.setSize(new Dimension(1280, 800));
-                            EM.frame.setLocationRelativeTo(null);
+                            EM.CBT = new CreatingBattleTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CBT, "battle tile");
+                            EM.CST = new CreatingStoryTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CST, "story tile");
+                            EM.CDT = new CreatingDoorTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CDT, "door tile");
+                            EM.CKT = new CreatingKeyTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CKT, "key tile");
+                            EM.CSHT = new CreatingShopTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CSHT, "shop tile");
+                            EM.CFBT = new CreatingFinalBossTile(defaultListener, EM.CM);
+                            EM.frame.add(EM.CFBT, "finalBoss tile");
+                            if (target.equals("new map") || target.equals("custom")) {
+                                EM.frame.setSize(new Dimension(1280, 800));
+                                EM.frame.setLocationRelativeTo(null);
+                            }
                             EM.deck.show(EM.frame.getContentPane(), target);
                             EM.cCard = target;
                         }
@@ -110,11 +133,12 @@ public class EnvironmentMgr implements ActionListener{
                 EM.cCard = target;
             }
         });
-        EM.scenario = new GraphicalUserInterface.CustomGame.Scenario(defaultListener, EM.NM);
-        EM.DM = new DefeatMessage(defaultListener, EM.NM);
-        EM.MS = new MapSize(defaultListener, EM.NM);
-        EM.EA = new EarlyAmounts(defaultListener, EM.NM);
+        EM.scenario = new GraphicalUserInterface.CustomGame.NewMap.Scenario(defaultListener, EM.NM);
+        EM.DM = new GraphicalUserInterface.CustomGame.NewMap.DefeatMessage(defaultListener, EM.NM);
+        EM.MS = new GraphicalUserInterface.CustomGame.NewMap.MapSize(defaultListener, EM.NM);
+        EM.EA = new GraphicalUserInterface.CustomGame.NewMap.EarlyAmounts(defaultListener, EM.NM);
 
+        EM.NA = new NewAbility(defaultListener);
 
         EM.PvPBM = new PvPBattleMenu();
 
