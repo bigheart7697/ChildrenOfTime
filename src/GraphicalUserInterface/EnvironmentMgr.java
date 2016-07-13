@@ -1,7 +1,12 @@
 package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
-import GraphicalUserInterface.CustomGame.NewAbility.NewAbility;
+import GraphicalUserInterface.CustomGame.NewAbility.*;
+import GraphicalUserInterface.CustomGame.NewClass.NewHeroClass;
+import GraphicalUserInterface.CustomGame.NewItem.CreatingConsumable;
+import GraphicalUserInterface.CustomGame.NewItem.CreatingEquipment;
+import GraphicalUserInterface.CustomGame.NewItem.CreatingImmediateEffect;
+import GraphicalUserInterface.CustomGame.NewItem.NewItem;
 import GraphicalUserInterface.CustomGame.NewMap.*;
 import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
 import GraphicalUserInterface.GameEnv.BattleEnv;
@@ -52,6 +57,13 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingKeyTile CKT;
     private CreatingShopTile CSHT;
     private CreatingFinalBossTile CFBT;
+    private CreatingSelfBoost CSB;
+    private CreatingAttackModifier CAM;
+    private CreatingRestorer CR;
+    private CreatingAttacker CA;
+    private CreatingImmediateEffect CIE;
+    private CreatingEquipment CE;
+    private CreatingConsumable CC;
 
 
     public static void main(String[] args) {
@@ -109,8 +121,8 @@ public class EnvironmentMgr implements ActionListener{
 
         EM.NE = new NewEnemy();
         EM.NH = new NewHero();
-        EM.NHC = new NewHeroClass();
-        EM.NI = new NewItem();
+        EM.NHC = new NewHeroClass(defaultListener);
+        EM.NI = new NewItem(defaultListener);
         EM.NM = new NewMap(new SimpleMenuListener() {
             @Override
             public void switchTo(String target) {
@@ -154,6 +166,14 @@ public class EnvironmentMgr implements ActionListener{
         EM.DM = new GraphicalUserInterface.CustomGame.NewMap.DefeatMessage(defaultListener, EM.NM);
         EM.MS = new GraphicalUserInterface.CustomGame.NewMap.MapSize(defaultListener, EM.NM);
         EM.EA = new GraphicalUserInterface.CustomGame.NewMap.EarlyAmounts(defaultListener, EM.NM);
+        EM.CSB = new CreatingSelfBoost(defaultListener);
+        EM.CAM = new CreatingAttackModifier(defaultListener);
+        EM.CR = new CreatingRestorer(defaultListener);
+        EM.CA = new CreatingAttacker(defaultListener);
+        EM.CIE = new CreatingImmediateEffect(defaultListener);
+        EM.CE = new CreatingEquipment(defaultListener);
+        EM.CC = new CreatingConsumable(defaultListener);
+
 
         EM.NA = new NewAbility(defaultListener);
 
@@ -179,6 +199,13 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.DM, "defeat message");
         EM.frame.add(EM.MS, "map size");
         EM.frame.add(EM.EA, "early amounts");
+        EM.frame.add(EM.CSB, "self boost");
+        EM.frame.add(EM.CAM, "attack modifier");
+        EM.frame.add(EM.CR, "restorer");
+        EM.frame.add(EM.CA, "attacker");
+        EM.frame.add(EM.CIE, "immediate effect");
+        EM.frame.add(EM.CE, "equipment");
+        EM.frame.add(EM.CC, "consumable");
         EM.cCard = "main";
 
     }

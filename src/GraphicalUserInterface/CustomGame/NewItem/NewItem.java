@@ -1,4 +1,4 @@
-package GraphicalUserInterface.CustomGame.NewAbility;
+package GraphicalUserInterface.CustomGame.NewItem;
 
 import GraphicalUserInterface.SimpleMenuListener;
 
@@ -7,7 +7,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Ellipse2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -16,16 +15,16 @@ import java.io.IOException;
 /**
  * Created by rezab on 07/07/2016.
  */
-public class NewAbility extends JComponent {
+public class NewItem extends JComponent {
     private BufferedImage BG;
     private Font nmFont;
     private Color fontColor;
     private SimpleMenuListener naListener;
 
-    private RoundRectangle2D.Double selfBoost, attackModifier, restorer, attacker, back;
+    private RoundRectangle2D.Double immediateEffect, equipment, consumable, back;
 
 
-    public NewAbility(SimpleMenuListener nml) {
+    public NewItem(SimpleMenuListener nml) {
         naListener = nml;
         fontColor = Color.white;//new Color(166, 143, 78);
 
@@ -38,7 +37,7 @@ public class NewAbility extends JComponent {
         }
 
         try {
-            BG = ImageIO.read(new File("CustomGameMenuGraphics/NA.jpg"));
+            BG = ImageIO.read(new File("CustomGameMenuGraphics/NI.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -46,17 +45,14 @@ public class NewAbility extends JComponent {
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (selfBoost.contains(e.getX(), e.getY())) {
-                    naListener.switchTo("self boost");
+                if (immediateEffect.contains(e.getX(), e.getY())) {
+                    naListener.switchTo("immediate effect");
                 }
-                if (restorer.contains(e.getX(), e.getY())) {
-                    naListener.switchTo("restorer");
+                if (consumable.contains(e.getX(), e.getY())) {
+                    naListener.switchTo("consumable");
                 }
-                if (attackModifier.contains(e.getX(), e.getY())) {
-                    naListener.switchTo("attack modifier");
-                }
-                if (attacker.contains(e.getX(), e.getY())) {
-                    naListener.switchTo("attacker");
+                if (equipment.contains(e.getX(), e.getY())) {
+                    naListener.switchTo("equipment");
                 }
                 if (back.contains(e.getX(), e.getY())) {
                     naListener.switchTo("custom");
@@ -113,35 +109,32 @@ public class NewAbility extends JComponent {
 
 
         //Buttons
-        selfBoost = new RoundRectangle2D.Double((getWidth() / 2) - 150, 100, 300, 80, 60, 60);
+        immediateEffect = new RoundRectangle2D.Double(50, 100, 300, 80, 60, 60);
         g2.setColor(fontColor);
-        g2.drawRoundRect((getWidth() / 2) - 150, 100, 300, 80, 60, 60);
+        g2.drawRoundRect(50, 100, 300, 80, 60, 60);
 
-        attackModifier = new RoundRectangle2D.Double((getWidth() / 2) - 150, 200, 300, 80, 60, 60);
+        equipment = new RoundRectangle2D.Double(900, 100, 300, 80, 60, 60);
         g2.setColor(fontColor);
-        g2.drawRoundRect((getWidth() / 2) - 150, 200, 300, 80, 60, 60);
+        g2.drawRoundRect(900, 100, 300, 80, 60, 60);
 
-        restorer = new RoundRectangle2D.Double((getWidth() / 2) - 150, 300, 300, 80, 60, 60);
+        consumable = new RoundRectangle2D.Double(50, 300, 300, 80, 60, 60);
         g2.setColor(fontColor);
-        g2.drawRoundRect((getWidth() / 2) - 150, 300, 300, 80, 60, 60);
+        g2.drawRoundRect(50, 300, 300, 80, 60, 60);
 
-        attacker = new RoundRectangle2D.Double((getWidth() / 2) - 150, 400, 300, 80, 60, 60);
+        back = new RoundRectangle2D.Double(900, 300, 300, 80, 60, 60);
         g2.setColor(fontColor);
-        g2.drawRoundRect((getWidth() / 2) - 150, 400, 300, 80, 60, 60);
+        g2.drawRoundRect(900, 300, 300, 80, 60, 60);
 
-        back = new RoundRectangle2D.Double((getWidth() / 2) - 150, 500, 300, 80, 60, 60);
-        g2.setColor(fontColor);
-        g2.drawRoundRect((getWidth() / 2) - 150, 500, 300, 80, 60, 60);
 
 
         g2.setColor(fontColor);
 
         g2.setFont(nmFont.deriveFont(25f));
-        g2.drawString("self boost", (getWidth() / 2) - 50, 150);
-        g2.drawString("attack modifier", (getWidth() / 2) - 70, 245);
-        g2.drawString("restorer", (getWidth() / 2) - 40, 345);
-        g2.drawString("attacker", (getWidth() / 2) - 40, 445);
-        g2.drawString("back", (getWidth() / 2) - 20, 545);
+        g2.drawString("immediate effect", 130, 150);
+        g2.drawString("equipment", 990, 150);
+        g2.drawString("consumable", 150, 345);
+        g2.drawString("back", 1060 - 40, 345);
+
 
 
         g.drawImage(buffer, 0, 0, null);
@@ -151,5 +144,4 @@ public class NewAbility extends JComponent {
     public void update() {
         repaint();
     }
-
 }
