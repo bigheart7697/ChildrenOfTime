@@ -20,11 +20,11 @@ public class CreatingSelfBoost extends JPanel {
 
     private JComboBox whichState;
     private JLabel message = new JLabel("Choose the self Boost type:");
-    private JTextArea neededExperience[] = new JTextArea[3], increaseAmountGetter = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89);
+    private JTextArea neededExperience[] = new JTextArea[3], increaseAmountGetter = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     private int increaseAmount, XPToNextLevel, XPPattern;
-    private String selfBoostType, name;
+    private String selfBoostType, name, description;
 
     public CreatingSelfBoost(SimpleMenuListener sListener) {
         String[] selfBoostTypes = {"magic point", "health point", "attack power", "energy point"};
@@ -45,6 +45,10 @@ public class CreatingSelfBoost extends JPanel {
             increaseAmountGetter.setForeground(Color.white);
             increaseAmountGetter.setBackground(new Color(60, 60, 60));
             increaseAmountGetter.setText("Enter the increase amount");
+            descriptionGetter.setFont(sFont.deriveFont(20f));
+            descriptionGetter.setForeground(Color.white);
+            descriptionGetter.setBackground(new Color(60, 60, 60));
+            descriptionGetter.setText("Enter the description of the ability");
             nameGetter.setFont(sFont.deriveFont(20f));
             nameGetter.setForeground(Color.white);
             nameGetter.setBackground(new Color(60, 60, 60));
@@ -84,6 +88,7 @@ public class CreatingSelfBoost extends JPanel {
         add(message);
         add(whichState);
         add(nameGetter);
+        add(descriptionGetter);
         add(increaseAmountGetter);
         add(neededExperience[0]);
         add(neededExperience[1]);
@@ -101,6 +106,7 @@ public class CreatingSelfBoost extends JPanel {
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
                         && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
                         && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10) {
+                    description = descriptionGetter.getText();
                     increaseAmount = Integer.parseInt(increaseAmountGetter.getText());
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());
@@ -113,6 +119,7 @@ public class CreatingSelfBoost extends JPanel {
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
                         && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
                         && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10) {
+                    description = descriptionGetter.getText();
                     increaseAmount = Integer.parseInt(increaseAmountGetter.getText());
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());

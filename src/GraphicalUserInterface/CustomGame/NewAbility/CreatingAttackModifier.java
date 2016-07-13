@@ -20,11 +20,11 @@ public class CreatingAttackModifier extends JPanel {
 
     private JComboBox whichState;
     private JLabel message = new JLabel("Choose the attack modifier type:");
-    private JTextArea neededExperience[] = new JTextArea[3], percentage[] = new JTextArea[3], n = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89);
+    private JTextArea neededExperience[] = new JTextArea[3], percentage[] = new JTextArea[3], n = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     private int N, XPToNextLevel, XPPattern, pPatteern;
-    private String attackModifierType, name;
+    private String attackModifierType, name, description;
 
     public CreatingAttackModifier(SimpleMenuListener sListener) {
         String[] selfBoostTypes = {"swirling attack", "critical strike"};
@@ -52,6 +52,10 @@ public class CreatingAttackModifier extends JPanel {
             nameGetter.setForeground(Color.white);
             nameGetter.setBackground(new Color(60, 60, 60));
             nameGetter.setText("Enter the ability name");
+            descriptionGetter.setFont(sFont.deriveFont(20f));
+            descriptionGetter.setForeground(Color.white);
+            descriptionGetter.setBackground(new Color(60, 60, 60));
+            descriptionGetter.setText("Enter the description of the ability");
             neededExperience[0].setFont(sFont.deriveFont(20f));
             neededExperience[0].setForeground(Color.white);
             neededExperience[0].setBackground(new Color(60, 60, 60));
@@ -100,6 +104,7 @@ public class CreatingAttackModifier extends JPanel {
         add(message);
         add(whichState);
         add(nameGetter);
+        add(descriptionGetter);
         add(n);
         add(neededExperience[0]);
         add(neededExperience[1]);
@@ -129,11 +134,14 @@ public class CreatingAttackModifier extends JPanel {
                         &&  Integer.parseInt(n.getText()) > 0 && Integer.parseInt(n.getText()) < 10 && percentage[0].getText().matches("[0-9]+")
                         && percentage[1].getText().matches("[0-9]+") && percentage[2].getText().matches("[0-9]+")
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
+                        && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
+                        && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
                         && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
                         && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10
                         && Integer.parseInt(percentage[0].getText()) > 0 && Integer.parseInt(percentage[0].getText()) < 10
                         && Integer.parseInt(percentage[1].getText()) > 0 && Integer.parseInt(percentage[1].getText()) < 10
                         && Integer.parseInt(percentage[2].getText()) > 0 && Integer.parseInt(percentage[2].getText()) < 10) {
+                    description = descriptionGetter.getText();
                     name = nameGetter.getText();
                     N = Integer.parseInt(n.getText());
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
@@ -142,7 +150,7 @@ public class CreatingAttackModifier extends JPanel {
                     sListener.switchTo("new ability");
                 }
 
-                else if (!attackModifierType.equals("swirling attack") && neededExperience[0].getText().matches("[0-9]+")
+                else if (attackModifierType.equals("swirling attack") && neededExperience[0].getText().matches("[0-9]+")
                         && neededExperience[1].getText().matches("[0-9]+") && neededExperience[2].getText().matches("[0-9]+") && percentage[0].getText().matches("[0-9]+")
                         && percentage[1].getText().matches("[0-9]+") && percentage[2].getText().matches("[0-9]+")
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
@@ -151,6 +159,7 @@ public class CreatingAttackModifier extends JPanel {
                         && Integer.parseInt(percentage[0].getText()) > 0 && Integer.parseInt(percentage[0].getText()) < 10
                         && Integer.parseInt(percentage[1].getText()) > 0 && Integer.parseInt(percentage[1].getText()) < 10
                         && Integer.parseInt(percentage[2].getText()) > 0 && Integer.parseInt(percentage[2].getText()) < 10) {
+                    description = descriptionGetter.getText();
                     name = nameGetter.getText();
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());

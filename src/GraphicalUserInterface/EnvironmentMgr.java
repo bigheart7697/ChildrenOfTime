@@ -2,6 +2,7 @@ package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewAbility.CreatingAttackModifier;
+import GraphicalUserInterface.CustomGame.NewAbility.CreatingRestorer;
 import GraphicalUserInterface.CustomGame.NewAbility.CreatingSelfBoost;
 import GraphicalUserInterface.CustomGame.NewAbility.NewAbility;
 import GraphicalUserInterface.CustomGame.NewMap.*;
@@ -47,6 +48,7 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingFinalBossTile CFBT;
     private CreatingSelfBoost CSB;
     private CreatingAttackModifier CAM;
+    private CreatingRestorer CR;
 
 
     public static void main(String[] args) {
@@ -143,6 +145,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.EA = new GraphicalUserInterface.CustomGame.NewMap.EarlyAmounts(defaultListener, EM.NM);
         EM.CSB = new CreatingSelfBoost(defaultListener);
         EM.CAM = new CreatingAttackModifier(defaultListener);
+        EM.CR = new CreatingRestorer(defaultListener);
 
         EM.NA = new NewAbility(defaultListener);
 
@@ -170,6 +173,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.EA, "early amounts");
         EM.frame.add(EM.CSB, "self boost");
         EM.frame.add(EM.CAM, "attack modifier");
+        EM.frame.add(EM.CR, "restorer");
         EM.cCard = "main";
 
     }
