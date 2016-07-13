@@ -1,6 +1,10 @@
 package GraphicalUserInterface.GameEnv;
 
+import units.Enemy;
+import units.Unit;
+
 import java.awt.*;
+import java.util.ArrayList;
 
 class Map {
 
@@ -89,6 +93,8 @@ class GameEvent {
 
     private String info;
 
+    private ArrayList<Unit> enemies;
+    private int[] rewards;
 
 
     GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile) {
@@ -126,7 +132,20 @@ class GameEvent {
         this.info = info;
         this.storyImage = storyImage;
     }
-
+    GameEvent(Image img, int row, int column, boolean passable, Type t, Tile tile, String info, ArrayList<Unit> enemies, int gold, int xp) {
+        this.image = img;
+        this.x = row;
+        this.y = column;
+        this.passable = passable;
+        this.type = t;
+        relatedEvent = null;
+        this.tile = tile;
+        tile.setGameEvent(this);
+        this.info = info;
+        this.enemies = enemies;
+        rewards = new int[2];
+        rewards[0] = gold; rewards[1] = xp;
+    }
 
 
 
@@ -162,6 +181,9 @@ class GameEvent {
     Tile getTile() { return tile; }
 
     String getInfo() { return info; }
+
+    ArrayList<Unit> getEnemies() { return enemies; }
+    int[] getRewards() { return rewards; }
 
     void unlockDoor(Image img) {
         switch (relatedEvent.getType()) {

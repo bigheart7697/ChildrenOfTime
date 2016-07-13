@@ -4,15 +4,23 @@ import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewAbility.NewAbility;
 import GraphicalUserInterface.CustomGame.NewMap.*;
 import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
+import GraphicalUserInterface.GameEnv.BattleEnv;
 import GraphicalUserInterface.GameEnv.GameEnv;
 import GraphicalUserInterface.GameEnv.Scenario;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class EnvironmentMgr implements ActionListener{
+
+    private AudioStream BGM;
 
     private JFrame frame;
     private Timer timer;
@@ -21,6 +29,7 @@ public class EnvironmentMgr implements ActionListener{
 
     private MainMenu MM;
     private GameEnv GE;
+    private BattleEnv BE;
     private SinglePlayerMenu SPM;
     private CustomGameMenu CGM;
     private NewMap NM;
@@ -48,6 +57,7 @@ public class EnvironmentMgr implements ActionListener{
     public static void main(String[] args) {
 
         EnvironmentMgr EM = new EnvironmentMgr();
+//        EM.playMusic();
         EM.frame = new JFrame("Children Of Time");
         EM.timer = new Timer(1, EM);
         EM.deck = new CardLayout();
@@ -61,6 +71,11 @@ public class EnvironmentMgr implements ActionListener{
 
         //Normal Switch-Listener for several menus
         SimpleMenuListener defaultListener = target -> {
+            if (target.equalsIgnoreCase("main")) {
+//                EM.stopMusic();
+//                EM.playMusic();
+            }
+            if (!target.equalsIgnoreCase("battle")) EM.BE = null;
             EM.deck.show(EM.frame.getContentPane(), target);
             EM.cCard = target;
         };
@@ -71,7 +86,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.SPM = new SinglePlayerMenu(new SinglePlayerMenuListener() {
             @Override
             public void switchTo(int scenarioNum) {
-
+//                EM.stopMusic();
                 if (scenarioNum == 0) EM.GE = new GameEnv(EM, new Scenario(), defaultListener);
                 else EM.GE = new GameEnv(EM, new Scenario(scenarioNum), defaultListener);
                 EM.frame.add(EM.GE, "game");
@@ -83,6 +98,8 @@ public class EnvironmentMgr implements ActionListener{
 
             @Override
             public void switchTo() {
+//                EM.stopMusic();
+//                EM.playMusic();
                 EM.deck.show(EM.frame.getContentPane(), "main");
                 EM.cCard = "main";
             }
@@ -168,15 +185,47 @@ public class EnvironmentMgr implements ActionListener{
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        MM.update();
-        if (GE != null) GE.update();
-        if (CGM != null)CGM.update();
-        if (SPM != null)SPM.update();
-        if (NM != null)NM.update();
-        if (CM != null) CM.update();
+        switch (cCard) {
+            case "main":
+                MM.update();
+                break;
+            case "game":
+                if (GE != null) GE.updateEnv();
+                break;
+            case "custom":
+                if (CGM != null)CGM.updateEnv();
+                break;
+            case "single":
+                if (SPM != null)SPM.updateEnv();
+                break;
+            case "new map":
+                if (NM != null)NM.updateEnv();
+                break;
+            case "creating map":
+                if (CM != null) CM.updateEnv();
+                break;
+            case "battle":
+                if (BE != null) BE.updateEnv();
+                break;
+        }
     }
 
     public String getCurrentCard() { return cCard; }
     public JFrame frame() { return frame; }
+    public void setBE(BattleEnv be) { BE = be; }
 
+//    private void playMusic() {
+//        try {
+//            InputStream test = new FileInputStream("audios/mainLoop.wav");
+//            BGM = new AudioStream(test);
+//            AudioPlayer.player.start(BGM);
+//        } catch(IOException error) {
+//            System.out.print(error.toString());
+//        }
+//    }
+//    private void stopMusic() {
+//        if (BGM != null) {
+//            AudioPlayer.player.stop(BGM);
+//        }
+//    }
 }

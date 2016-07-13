@@ -14,6 +14,8 @@ abstract public class Hero extends Unit{
     protected int MP, MPRefill;
     protected int EPMax, EP;
     protected Image heroImage;
+    protected Image heroSideImage;
+    protected Image heroHeadImage;
 
     protected ArrayList<Item> inventory;
     protected HashMap<Consumable, Integer> usages;
@@ -22,6 +24,7 @@ abstract public class Hero extends Unit{
     protected int XPGained;
 
     protected ArrayList<Ability> abilities;
+
 
     //Constructor
 
@@ -62,7 +65,11 @@ abstract public class Hero extends Unit{
     public void setEP(int e) { this.EP = e; }
 
     public Image getHeroImage() { return heroImage; }
+    public Image getSecondHeroImage() { return heroSideImage; }
     public void setHeroImage(Image i) { heroImage = i; }
+    public void setSecondHeroImage(Image i) { heroSideImage = i; }
+    public Image getHeroHeadImage() { return heroHeadImage; }
+    public void setHeroHeadImage(Image heroHeadImage) { this.heroHeadImage = heroHeadImage; }
 
     public ArrayList<ActiveAbility> getActAbs() {
         ArrayList<ActiveAbility> aa = new ArrayList<>();

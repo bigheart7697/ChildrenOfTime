@@ -7,10 +7,7 @@ import itemMGMT.Equipment;
 import itemMGMT.ImmediateEffect;
 import itemMGMT.Item;
 import player.op.Player;
-import units.Fighter;
-import units.Hero;
-import units.Supporter;
-import units.Unit;
+import units.*;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -23,7 +20,7 @@ public class Scenario {
     private Map map;
     private int rows, columns;
     private Image BGTile, key, story, battle, shop, ability, finalBoss;
-    private Image[] Obs, Doors, items, heroes, storyImages, abilityImages;
+    private Image[] Obs, Doors, items, heroes, storyImages, abilityImages, enemyImages;
     private String begin, end;
 
     private ArrayList<Item> Shop;
@@ -42,8 +39,9 @@ public class Scenario {
             items = new Image[9];
             for (int i = 0; i < 9; i++) items[i] = ImageIO.read(new File("ShopGraphics/" + (i + 1) + ".png"));
 
-            heroes = new Image[4];
-            for (int i = 0; i < 4; i++) heroes[i] = ImageIO.read(new File("HeroGraphics/" + (i + 1) + ".png"));
+            heroes = new Image[12];
+            for (int i = 0; i < 8; i++) heroes[i] = ImageIO.read(new File("HeroGraphics/" + (i + 1) + ".png"));
+            for (int i = 0; i < 4; i++) heroes[i + 8] = ImageIO.read(new File("HeroGraphics/" + (i + 1) + "head.png"));
 
             storyImages = new Image[6];
             for (int i = 0; i < 6; i++) storyImages[i] = ImageIO.read(new File("StoryGraphics/" + (i + 1) + ".jpg"));
@@ -61,6 +59,16 @@ public class Scenario {
             abilityImages[9] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/careTaker.png"));
             abilityImages[10] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/boost.png"));
             abilityImages[11] = ImageIO.read(new File("HeroGraphics/AbilityGraphics/manaBeam.png"));
+
+            enemyImages = new Image[8];
+            enemyImages[0] = ImageIO.read(new File("BattleGraphics/thug0.png"));
+            enemyImages[1] = ImageIO.read(new File("BattleGraphics/thug1.png"));
+            enemyImages[2] = ImageIO.read(new File("BattleGraphics/thug2.png"));
+            enemyImages[3] = ImageIO.read(new File("BattleGraphics/tank0.png"));
+            enemyImages[4] = ImageIO.read(new File("BattleGraphics/tank1.png"));
+            enemyImages[5] = ImageIO.read(new File("BattleGraphics/angel0.png"));
+            enemyImages[6] = ImageIO.read(new File("BattleGraphics/angel1.png"));
+            enemyImages[7] = ImageIO.read(new File("BattleGraphics/collector.png"));
 
             BGTile = ImageIO.read(new File("GameEnvGraphics/BGTile.jpg"));
             key = ImageIO.read(new File("GameEnvGraphics/key.png"));
@@ -87,12 +95,20 @@ public class Scenario {
         {
             Hero Eley = new Fighter("Eley", abilityImages[0], abilityImages[1]);
             Eley.setHeroImage(heroes[0]);
+            Eley.setSecondHeroImage(heroes[4]);
+            Eley.setHeroHeadImage(heroes[8]);
             Hero Chrome = new Fighter("Chrome", abilityImages[0], abilityImages[1]);
             Chrome.setHeroImage(heroes[1]);
+            Chrome.setSecondHeroImage(heroes[5]);
+            Chrome.setHeroHeadImage(heroes[9]);
             Hero Meryl = new Supporter("Meryl", abilityImages[2], abilityImages[3]);
             Meryl.setHeroImage(heroes[2]);
+            Meryl.setSecondHeroImage(heroes[6]);
+            Meryl.setHeroHeadImage(heroes[10]);
             Hero Bolti = new Supporter("Bolti", abilityImages[2], abilityImages[3]);
             Bolti.setHeroImage(heroes[3]);
+            Bolti.setSecondHeroImage(heroes[7]);
+            Bolti.setHeroHeadImage(heroes[11]);
 
              //Add description to the heroes:
 
@@ -298,16 +314,6 @@ public class Scenario {
                 "calls you to end the disorder and bring unity under its glorious wings, now it’s your" +
                 "turn to be the MASTERS OF TIME!";
 
-        //BattlePhrases
-        String[] battlePhrases = new String[6];
-        battlePhrases[0] = " ";
-        battlePhrases[1] = " ";
-        battlePhrases[2] = " ";
-        battlePhrases[3] = " ";
-        battlePhrases[4] = " ";
-        battlePhrases[5] = " ";
-
-
 
         //Shop and items added below
         Shop = new ArrayList<>();
@@ -472,11 +478,45 @@ public class Scenario {
         map.setEvent(abilityPoint3, 13, 2);
 
         //Battles
-        GameEvent battle1 = new GameEvent(battle, 2, 12, false, GameEvent.Type.battle, map.getTile(2, 12));
-        GameEvent battle2 = new GameEvent(battle, 13, 11, false, GameEvent.Type.battle, map.getTile(13, 11));
-        GameEvent battle3 = new GameEvent(battle, 7, 2, false, GameEvent.Type.battle, map.getTile(7, 2));
-        GameEvent battle4 = new GameEvent(battle, 7, 5, false, GameEvent.Type.battle, map.getTile(7, 5));
-        GameEvent battleOptional = new GameEvent(battle, 9, 14, false, GameEvent.Type.battle, map.getTile(9, 14));
+        String[] battleInfo = new String[6];
+        battleInfo[0] = "You've encountered 3 weak thugs, 1 weak angel";
+        battleInfo[1] = "You've encountered 2 able thugs, 1 weak angel, 1 weak tank";
+        battleInfo[2] = "You've encountered 1 able thug, 1 mighty thug, 1 able angel, 1 weak tank";
+        battleInfo[3] = "You've encountered 2 mighty thugs, 1 able angel, 2 able tanks";
+        battleInfo[4] = "You've encountered 3 able thugs, 2 able tanks";
+        battleInfo[5] = "You've encountered The collector";
+        ArrayList<Unit> enemies = new ArrayList<>();
+        enemies.add(new Thug(0, 1, enemyImages[0]));
+        enemies.add(new Thug(0, 2, enemyImages[0]));
+        enemies.add(new Thug(0,3, enemyImages[0]));
+        enemies.add(new Angel(0 , enemyImages[5]));
+        GameEvent battle1 = new GameEvent(battle, 2, 12, false, GameEvent.Type.battle, map.getTile(2, 12), battleInfo[0], enemies, 50, 20);
+        enemies = new ArrayList<>();
+        enemies.add(new Thug(1, 1, enemyImages[1]));
+        enemies.add(new Thug(1, 2, enemyImages[1]));
+        enemies.add(new Angel(0, enemyImages[5]));
+        enemies.add(new Tank(0, enemyImages[3]));
+        GameEvent battle2 = new GameEvent(battle, 13, 11, false, GameEvent.Type.battle, map.getTile(13, 11), battleInfo[1], enemies, 60, 25);
+        enemies = new ArrayList<>();
+        enemies.add(new Thug(1, enemyImages[1]));
+        enemies.add(new Thug(2, enemyImages[2]));
+        enemies.add(new Angel(1, enemyImages[6]));
+        enemies.add(new Tank(0, enemyImages[3]));
+        GameEvent battle3 = new GameEvent(battle, 7, 2, false, GameEvent.Type.battle, map.getTile(7, 2), battleInfo[2], enemies, 70, 30);
+        enemies = new ArrayList<>();
+        enemies.add(new Thug(2, 1, enemyImages[2]));
+        enemies.add(new Thug(2, 2, enemyImages[2]));
+        enemies.add(new Angel(1, enemyImages[6]));
+        enemies.add(new Tank(1, 1, enemyImages[4]));
+        enemies.add(new Tank(1, 2, enemyImages[4]));
+        GameEvent battle4 = new GameEvent(battle, 7, 5, false, GameEvent.Type.battle, map.getTile(7, 5), battleInfo[3], enemies, 80, 35);
+        enemies = new ArrayList<>();
+        enemies.add(new Thug(1, 1, enemyImages[1]));
+        enemies.add(new Thug(1, 2, enemyImages[1]));
+        enemies.add(new Thug(1, 3, enemyImages[1]));
+        enemies.add(new Tank(1, 1, enemyImages[4]));
+        enemies.add(new Tank(1, 2, enemyImages[4]));
+        GameEvent battleOptional = new GameEvent(battle, 9, 14, false, GameEvent.Type.battle, map.getTile(9, 14), battleInfo[4], enemies, 70, 20);
         map.setEvent(battle1, 2, 12);
         map.setEvent(battle2, 13, 11);
         map.setEvent(battle3, 7, 2);
@@ -484,7 +524,9 @@ public class Scenario {
         map.setEvent(battleOptional, 9, 14);
 
         //Final Boss
-        GameEvent finalBattle = new GameEvent(finalBoss, 15, 2, false, GameEvent.Type.battle, map.getTile(15, 2));
+        enemies = new ArrayList<>();
+        enemies.add(new FinalBoss(enemyImages[7]));
+        GameEvent finalBattle = new GameEvent(finalBoss, 15, 2, false, GameEvent.Type.battle, map.getTile(15, 2), battleInfo[5], enemies, 0, 0);
         map.setEvent(finalBattle, 15, 2);
 
     }
@@ -497,6 +539,7 @@ public class Scenario {
 
 
     Player getPlayer() { return player; }
+    Battlefield getBattlefield() { return battlefield; }
 
     Map getMap() {
         return map;

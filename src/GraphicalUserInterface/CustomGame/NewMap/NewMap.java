@@ -184,7 +184,7 @@ public class NewMap extends JComponent {
 
     }
 
-    public void update() {
+    public void updateEnv() {
         repaint();
     }
 

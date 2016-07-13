@@ -38,7 +38,7 @@ abstract public class ActiveAbility extends Ability{
         this.remainingCD = remainingCD;
     }
 
-//    other methods:
+    //other methods:
 
     @Override
     public void upgrade() {

@@ -187,7 +187,7 @@ public class CustomGameMenu extends JComponent {
         g.drawImage(buffer, 0, 0, null);
     }
 
-    public void update() {
+    public void updateEnv() {
         repaint();
     }
 }

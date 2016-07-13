@@ -13,7 +13,7 @@ public class Battlefield {
     //Constructor
 
     public Battlefield() {
-        this.turn = 0;
+        this.turn = 1;
         this.units = new ArrayList<>();
     }
 
@@ -21,13 +21,15 @@ public class Battlefield {
     //Getters and Setters
 
     public int getTurn() { return turn; }
-    public void setTurn(int turn) { this.turn = turn; }
-
 
     //Setting up ArrayList
 
-    public void addUnits(Unit u) { this.units.add(u); }
-    public void addUnits(ArrayList<Unit> U) { this.units.addAll(U);}
+    public void addUnits(ArrayList<Unit> U) {
+        this.units.addAll(U);
+        for (Unit u: units) {
+            u.setField(this);
+        }
+    }
 
 
     //Other methods

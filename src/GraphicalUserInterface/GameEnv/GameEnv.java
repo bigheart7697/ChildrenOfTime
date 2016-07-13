@@ -18,8 +18,7 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 
 public class GameEnv extends JComponent{
@@ -67,6 +66,8 @@ public class GameEnv extends JComponent{
     private HeroInfoEnv heroInfoEnv;
     private boolean heroInfoDisplayFlag;
 
+    //Battle environment stuff
+    private BattleEnv battleEnv;
 
     //Panel stuff
     private Ellipse2D.Double settingsButton, menuButton;
@@ -407,6 +408,15 @@ public class GameEnv extends JComponent{
                                         eventToBeFired = null;
                                         break;
                                     case battle:
+                                        //Battle Environment
+                                        battleEnv = new BattleEnv(emgr, gel, scenario.getPlayer(), scenario.getBattlefield(), scenario.getPlayer().getIMPotionRemaining());
+                                        emgr.frame().add(battleEnv, "battle");
+                                        emgr.setBE(battleEnv);
+                                        battleEnv.setEnemies(eventToBeFired.getEnemies());
+                                        battleEnv.setDisplayInfo(eventToBeFired.getInfo());
+                                        geListener.switchTo("battle");
+                                        scenario.getPlayer().setGold(scenario.getPlayer().getGold() + eventToBeFired.getRewards()[0]);
+                                        scenario.getPlayer().setXP(scenario.getPlayer().getXP() + eventToBeFired.getRewards()[1]);
                                         eventDisappearFlag = true;
                                         break;
                                 }
@@ -595,7 +605,7 @@ public class GameEnv extends JComponent{
                             dialogTypeFlag = false;
                             dialogBoxMessage = "Please select an ability.";
                         } else {
-                            if (scenario.getPlayer().getXP() > abilityUpEnv.getSelected().getXPtoNextLevel()) {
+                            if (scenario.getPlayer().getXP() >= abilityUpEnv.getSelected().getXPtoNextLevel()) {
                                 if (abilityUpEnv.getSelected().getLevel() == 3) {
                                     dialogBoxFlag = true;
                                     dialogTypeFlag = false;
@@ -652,9 +662,9 @@ public class GameEnv extends JComponent{
 
                 if (!clickFlag && menuButton != null && menuButton.contains(e.getX(), e.getY())) {
                     emgr.frame().setSize(new Dimension(1280, 800));
-                        emgr.frame().setLocationRelativeTo(null);
-                        geListener.switchTo("main");
-                        clickFlag = true;
+                    emgr.frame().setLocationRelativeTo(null);
+                    geListener.switchTo("main");
+                    clickFlag = true;
                 }
                 if (!clickFlag && settingsButton != null && settingsButton.contains(e.getX(), e.getY())) {
                     emgr.frame().setSize(new Dimension(1280, 800));
@@ -772,9 +782,9 @@ public class GameEnv extends JComponent{
             g2.setColor(new Color(240, 220, 98));
             g2.drawString(scenario.getPlayer().getName(), 950, 90);
             g2.setFont(mmFont.deriveFont(30f));
-            g2.drawString("Heroes:", 920, 140);
+            g2.drawString("Heroes:", 920, 160);
             ArrayList<Hero> heroes = scenario.getPlayer().getHeroes();
-            int yH = 190;
+            int yH = 210;
             for (Hero h: heroes) {
                 g2.setColor(new Color(200, 200, 200));
                 g2.setFont(geFont.deriveFont(22f));
@@ -795,7 +805,7 @@ public class GameEnv extends JComponent{
                 g2.draw(heroRect[scenario.getPlayer().getHeroes().indexOf(targetHero)]);
             }
 
-            yH += 10;
+            yH += 20;
             g2.setColor(new Color(240, 220, 98));
             g2.setFont(mmFont.deriveFont(30f));
             g2.drawString("Gold:", 920, yH);
@@ -858,7 +868,7 @@ public class GameEnv extends JComponent{
     
 
     private double prevX, prevY;
-    public void update() {
+    public void updateEnv() {
 
             if (!dialogBoxFlag && !messageBoxFlag && !shopFlag && !chooseHeroFlag && !abilityUpEnvFlag && !heroInfoDisplayFlag) {
 
@@ -1039,7 +1049,7 @@ public class GameEnv extends JComponent{
             c1 = new Color(50, 50, 50);
             BGColor = new Color(60, 60, 60);
             borderColor = new Color(150, 150, 150);
-            BG = new RoundRectangle2D.Double(75, 75, 750, 600, 75, 75);
+            BG = new RoundRectangle2D.Double(100, 100, 700, 600, 75, 75);
             buttonGotIt = new RoundRectangle2D.Double(400, 600, 100, 50, 30, 30);
             Tokens = new ArrayList<>();
             image = null;
@@ -1462,6 +1472,7 @@ public class GameEnv extends JComponent{
         void setColor(int n, Color c) { switch (n) { case 1:c1 = c;break;    case 2:c2 = c;break;} }
 
     }
+
 
 }
 
