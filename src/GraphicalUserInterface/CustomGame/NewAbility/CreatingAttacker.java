@@ -14,7 +14,7 @@ import java.io.IOException;
 /**
  * Created by rezab on 13/07/2016.
  */
-public class CreatingRestorer extends JPanel {
+public class CreatingAttacker extends JPanel {
     private BufferedImage BG;
     private Font sFont;
 
@@ -27,8 +27,8 @@ public class CreatingRestorer extends JPanel {
     private int XPToNextLevel, XPPattern, amountPatteern, CDPattern, EP, MP;
     private String attackModifierType, name, description;
 
-    public CreatingRestorer(SimpleMenuListener sListener) {
-        String[] selfBoostTypes = {"energy point", "attack power", "magic point", "health point"};
+    public CreatingAttacker(SimpleMenuListener sListener) {
+        String[] selfBoostTypes = {"sacrifice", "overpowered attack"};
         whichState = new JComboBox(selfBoostTypes);
         neededExperience[0] = new JTextArea(1, 89);
         neededExperience[1] = new JTextArea(1, 89);
@@ -91,15 +91,15 @@ public class CreatingRestorer extends JPanel {
             amount[0].setFont(sFont.deriveFont(20f));
             amount[0].setForeground(Color.white);
             amount[0].setBackground(new Color(60, 60, 60));
-            amount[0].setText("Enter the amount for first upgrade");
             amount[1].setFont(sFont.deriveFont(20f));
             amount[1].setForeground(Color.white);
             amount[1].setBackground(new Color(60, 60, 60));
-            amount[1].setText("Enter the amount for second upgrade");
             amount[2].setFont(sFont.deriveFont(20f));
             amount[2].setForeground(Color.white);
             amount[2].setBackground(new Color(60, 60, 60));
-            amount[2].setText("Enter the amount for third upgrade");
+            amount[0].setText("Enter the H for first upgrade");
+            amount[1].setText("Enter the H for second upgrade");
+            amount[2].setText("Enter the H for third upgrade");
 
             message.setFont(sFont.deriveFont(20f));
             message.setForeground(Color.white);
@@ -141,39 +141,23 @@ public class CreatingRestorer extends JPanel {
         whichState.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (whichState.getSelectedItem().equals("sacrifice")) {
+                    amount[0].setText("Enter the H for first upgrade");
+                    amount[1].setText("Enter the H for second upgrade");
+                    amount[2].setText("Enter the H for third upgrade");
+                }
+                else {
+                    amount[0].setText("Enter the the number after decimal point in N for first upgrade");
+                    amount[1].setText("Enter the number after decimal point in N for second upgrade");
+                    amount[2].setText("Enter the number after decimal point in N for third upgrade");
+                }
             }
         });
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 attackModifierType = (String)whichState.getSelectedItem();
-                if (attackModifierType.equals("energy point") && coolDown[0].getText().matches("[0-9]+") && coolDown[1].getText().matches("[0-9]+")
-                        && coolDown[2].getText().matches("[0-9]+") && neededExperience[0].getText().matches("[0-9]+") && EPGetter.getText().matches("[0-9]+")
-                        && neededExperience[1].getText().matches("[0-9]+") && neededExperience[2].getText().matches("[0-9]+") && MPGetter.getText().matches("[0-9]+")
-                        &&  Integer.parseInt(coolDown[0].getText()) >= 0 && Integer.parseInt(coolDown[0].getText()) < 5
-                        &&  Integer.parseInt(coolDown[1].getText()) >= 0 && Integer.parseInt(coolDown[1].getText()) < 5
-                        &&  Integer.parseInt(coolDown[2].getText()) >= 0 && Integer.parseInt(coolDown[2].getText()) < 5 && amount[0].getText().matches("[0-9]+")
-                        && amount[1].getText().matches("[0-9]+") && amount[2].getText().matches("[0-9]+")
-                        && Integer.parseInt(EPGetter.getText()) > 0 && Integer.parseInt(EPGetter.getText()) < 10
-                        && Integer.parseInt(MPGetter.getText()) > 0 && Integer.parseInt(MPGetter.getText()) < 100
-                        && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
-                        && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
-                        && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10
-                        && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 10
-                        && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 10
-                        && Integer.parseInt(amount[2].getText()) > 0 && Integer.parseInt(amount[2].getText()) < 10) {
-                    description = descriptionGetter.getText();
-                    name = nameGetter.getText();
-                    EP = Integer.parseInt(EPGetter.getText());
-                    MP = Integer.parseInt(MPGetter.getText());
-                    CDPattern = Integer.parseInt(coolDown[0].getText()) * 100 + Integer.parseInt(coolDown[1].getText()) * 10 + Integer.parseInt(coolDown[2].getText());
-                    XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
-                    XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());
-                    amountPatteern = Integer.parseInt(amount[0].getText()) * 100 + Integer.parseInt(amount[1].getText()) * 10 + Integer.parseInt(amount[2].getText());
-                    sListener.switchTo("new ability");
-                }
-
-                else if (!attackModifierType.equals("energy point") && coolDown[0].getText().matches("[0-9]+") && coolDown[1].getText().matches("[0-9]+")
+                if (coolDown[0].getText().matches("[0-9]+") && coolDown[1].getText().matches("[0-9]+")
                         && coolDown[2].getText().matches("[0-9]+") && neededExperience[0].getText().matches("[0-9]+") && EPGetter.getText().matches("[0-9]+")
                         && neededExperience[1].getText().matches("[0-9]+") && neededExperience[2].getText().matches("[0-9]+") && MPGetter.getText().matches("[0-9]+")
                         &&  Integer.parseInt(coolDown[0].getText()) >= 0 && Integer.parseInt(coolDown[0].getText()) < 5
