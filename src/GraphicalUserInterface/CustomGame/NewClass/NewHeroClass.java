@@ -102,7 +102,7 @@ public class NewHeroClass extends JPanel {
         }
 
         try {
-            BG = ImageIO.read(new File("CustomGameMenuGraphics/NI.jpg"));
+            BG = ImageIO.read(new File("CustomGameMenuGraphics/NC.jpg"));
         } catch (IOException e) {
             e.printStackTrace();
         }
