@@ -19,7 +19,7 @@ public class CreatingSelfBoost extends JPanel {
     private Font sFont;
 
     private JComboBox whichState;
-    private JLabel message = new JLabel("Choose the self Boost type:");
+    private JLabel message = new JLabel("Choose the self boost type:");
     private JTextArea neededExperience[] = new JTextArea[3], increaseAmountGetter = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 

@@ -2,6 +2,9 @@ package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewAbility.*;
+import GraphicalUserInterface.CustomGame.NewItem.CreatingConsumable;
+import GraphicalUserInterface.CustomGame.NewItem.CreatingEquipment;
+import GraphicalUserInterface.CustomGame.NewItem.CreatingImmediateEffect;
 import GraphicalUserInterface.CustomGame.NewItem.NewItem;
 import GraphicalUserInterface.CustomGame.NewMap.*;
 import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
@@ -48,6 +51,9 @@ public class EnvironmentMgr implements ActionListener{
     private CreatingAttackModifier CAM;
     private CreatingRestorer CR;
     private CreatingAttacker CA;
+    private CreatingImmediateEffect CIE;
+    private CreatingEquipment CE;
+    private CreatingConsumable CC;
 
 
     public static void main(String[] args) {
@@ -146,6 +152,9 @@ public class EnvironmentMgr implements ActionListener{
         EM.CAM = new CreatingAttackModifier(defaultListener);
         EM.CR = new CreatingRestorer(defaultListener);
         EM.CA = new CreatingAttacker(defaultListener);
+        EM.CIE = new CreatingImmediateEffect(defaultListener);
+        EM.CE = new CreatingEquipment(defaultListener);
+        EM.CC = new CreatingConsumable(defaultListener);
 
 
         EM.NA = new NewAbility(defaultListener);
@@ -176,6 +185,9 @@ public class EnvironmentMgr implements ActionListener{
         EM.frame.add(EM.CAM, "attack modifier");
         EM.frame.add(EM.CR, "restorer");
         EM.frame.add(EM.CA, "attacker");
+        EM.frame.add(EM.CIE, "immediate effect");
+        EM.frame.add(EM.CE, "equipment");
+        EM.frame.add(EM.CC, "consumable");
         EM.cCard = "main";
 
     }

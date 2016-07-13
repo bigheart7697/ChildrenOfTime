@@ -46,7 +46,7 @@ public class NewItem extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (immediateEffect.contains(e.getX(), e.getY())) {
-                    naListener.switchTo("immediate Effect");
+                    naListener.switchTo("immediate effect");
                 }
                 if (consumable.contains(e.getX(), e.getY())) {
                     naListener.switchTo("consumable");

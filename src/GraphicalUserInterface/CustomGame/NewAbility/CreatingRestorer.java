@@ -19,7 +19,7 @@ public class CreatingRestorer extends JPanel {
     private Font sFont;
 
     private JComboBox whichState;
-    private JLabel message = new JLabel("Choose the attack modifier type:");
+    private JLabel message = new JLabel("Choose the restorer type:");
     private JTextArea neededExperience[] = new JTextArea[3], amount[] = new JTextArea[3], coolDown[] = new JTextArea[3];
     private JTextArea nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89), EPGetter = new JTextArea(1, 89), MPGetter = new JTextArea(1, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
@@ -28,8 +28,8 @@ public class CreatingRestorer extends JPanel {
     private String attackModifierType, name, description;
 
     public CreatingRestorer(SimpleMenuListener sListener) {
-        String[] selfBoostTypes = {"energy point", "attack power", "magic point", "health point"};
-        whichState = new JComboBox(selfBoostTypes);
+        String[] restorer = {"energy point", "attack power", "magic point", "health point"};
+        whichState = new JComboBox(restorer);
         neededExperience[0] = new JTextArea(1, 89);
         neededExperience[1] = new JTextArea(1, 89);
         neededExperience[2] = new JTextArea(1, 89);

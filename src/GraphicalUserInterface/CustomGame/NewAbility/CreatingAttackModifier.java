@@ -27,8 +27,8 @@ public class CreatingAttackModifier extends JPanel {
     private String attackModifierType, name, description;
 
     public CreatingAttackModifier(SimpleMenuListener sListener) {
-        String[] selfBoostTypes = {"swirling attack", "critical strike"};
-        whichState = new JComboBox(selfBoostTypes);
+        String[] attackModifierTypes = {"swirling attack", "critical strike"};
+        whichState = new JComboBox(attackModifierTypes);
         neededExperience[0] = new JTextArea(1, 89);
         neededExperience[1] = new JTextArea(1, 89);
         neededExperience[2] = new JTextArea(1, 89);
