@@ -2,6 +2,7 @@ package GraphicalUserInterface;
 
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewAbility.*;
+import GraphicalUserInterface.CustomGame.NewItem.NewItem;
 import GraphicalUserInterface.CustomGame.NewMap.*;
 import GraphicalUserInterface.CustomGame.NewMap.CreatingTiles.*;
 import GraphicalUserInterface.GameEnv.GameEnv;
@@ -97,7 +98,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.NE = new NewEnemy();
         EM.NH = new NewHero();
         EM.NHC = new NewHeroClass();
-        EM.NI = new NewItem();
+        EM.NI = new NewItem(defaultListener);
         EM.NM = new NewMap(new SimpleMenuListener() {
             @Override
             public void switchTo(String target) {
