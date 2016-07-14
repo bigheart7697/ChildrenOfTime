@@ -3,6 +3,7 @@ package GraphicalUserInterface;
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewAbility.*;
 import GraphicalUserInterface.CustomGame.NewClass.NewHeroClass;
+import GraphicalUserInterface.CustomGame.NewEnemy.NewEnemy;
 import GraphicalUserInterface.CustomGame.NewHero.NewHero;
 import GraphicalUserInterface.CustomGame.NewItem.CreatingConsumable;
 import GraphicalUserInterface.CustomGame.NewItem.CreatingEquipment;
@@ -120,7 +121,7 @@ public class EnvironmentMgr implements ActionListener{
 
         EM.CGM = new CustomGameMenu(defaultListener);
 
-        EM.NE = new NewEnemy();
+        EM.NE = new NewEnemy(defaultListener);
         EM.NH = new NewHero(defaultListener);
         EM.NHC = new NewHeroClass(defaultListener);
         EM.NI = new NewItem(defaultListener);
@@ -218,13 +219,13 @@ public class EnvironmentMgr implements ActionListener{
                 MM.update();
                 break;
             case "game":
-                if (GE != null) GE.updateEnv();
+//                if (GE != null) GE.update();
                 break;
             case "custom":
                 if (CGM != null)CGM.updateEnv();
                 break;
             case "single":
-                if (SPM != null)SPM.updateEnv();
+//                if (SPM != null)SPM.update();
                 break;
             case "new map":
                 if (NM != null)NM.updateEnv();
@@ -233,7 +234,7 @@ public class EnvironmentMgr implements ActionListener{
                 if (CM != null) CM.updateEnv();
                 break;
             case "battle":
-                if (BE != null) BE.updateEnv();
+//                if (BE != null) BE.update();
                 break;
         }
     }
