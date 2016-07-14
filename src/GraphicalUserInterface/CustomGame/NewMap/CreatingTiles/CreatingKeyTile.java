@@ -18,12 +18,14 @@ import java.io.IOException;
  * Created by rezab on 12/07/2016.
  */
 public class CreatingKeyTile extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
     private JTextArea keyNumber = new JTextArea(1, 82);
 
     public CreatingKeyTile(SimpleMenuListener sListener, CreatingMap CM) {
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -39,7 +41,9 @@ public class CreatingKeyTile extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         setLayout(new FlowLayout());
+
         keyNumber.setLineWrap(true);
         keyNumber.setFont(sFont.deriveFont(20f));
         keyNumber.setBackground(new Color(60, 60, 60));
@@ -62,21 +66,7 @@ public class CreatingKeyTile extends JPanel {
 
             }
         });
-//        keyNumber.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                keyNumber.setText("");
-//            }
-//        });
-//
-//        story.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                story.setText("");
-//            }
-//        });
+
     }
 
     public void paintComponent(Graphics g) {

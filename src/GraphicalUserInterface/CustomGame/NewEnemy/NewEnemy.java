@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * Created by rezab on 07/07/2016.
  */
 public class NewEnemy extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
 
@@ -27,6 +28,7 @@ public class NewEnemy extends JPanel {
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     public NewEnemy(SimpleMenuListener sListener) {
+
         String[] types = {"attack one hero", "heal one alley", "attack all heroes"};
         type = new JComboBox(types);
 
@@ -52,6 +54,7 @@ public class NewEnemy extends JPanel {
                 amount[cnt].setBackground(new Color(60, 60, 60));
                 amount[cnt].setVisible(false);
                 amount[cnt].setText("Enter the amount for strength" + (cnt + 1));
+
                 maxHP[cnt] = new JTextArea(1, 89);
                 maxHP[cnt].setFont(sFont.deriveFont(20f));
                 maxHP[cnt].setForeground(Color.white);
@@ -96,12 +99,15 @@ public class NewEnemy extends JPanel {
         add(strength.get(0));
         add(strength.get(1));
         add(strength.get(2));
+
         for (int cnt = 0; cnt < 3; cnt++) {
             add(amount[cnt]);
             add(maxHP[cnt]);
         }
+
         add(cancel);
         add(save);
+
         for (int cnt = 0; cnt < 3; cnt++) {
             int finalCnt = cnt;
             strength.get(cnt).addActionListener(new ActionListener() {

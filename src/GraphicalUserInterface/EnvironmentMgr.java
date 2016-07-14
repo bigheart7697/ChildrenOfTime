@@ -219,13 +219,13 @@ public class EnvironmentMgr implements ActionListener{
                 MM.update();
                 break;
             case "game":
-//                if (GE != null) GE.update();
+                if (GE != null) GE.updateEnv();
                 break;
             case "custom":
                 if (CGM != null)CGM.updateEnv();
                 break;
             case "single":
-//                if (SPM != null)SPM.update();
+                if (SPM != null)SPM.updateEnv();
                 break;
             case "new map":
                 if (NM != null)NM.updateEnv();
@@ -234,7 +234,7 @@ public class EnvironmentMgr implements ActionListener{
                 if (CM != null) CM.updateEnv();
                 break;
             case "battle":
-//                if (BE != null) BE.update();
+                if (BE != null) BE.updateEnv();
                 break;
         }
     }

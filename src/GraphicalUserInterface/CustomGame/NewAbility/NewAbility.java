@@ -26,6 +26,7 @@ public class NewAbility extends JComponent {
 
 
     public NewAbility(SimpleMenuListener nml) {
+
         naListener = nml;
         fontColor = Color.white;//new Color(166, 143, 78);
 
@@ -66,32 +67,12 @@ public class NewAbility extends JComponent {
 
             @Override
             public void mousePressed(MouseEvent e) {
-//                if (newMapButton.contains(e.getX(), e.getY())) {
-//                    c1 = new Color(45,45,45);
-//                }
-//                if (newAbilityButton.contains(e.getX(), e.getY())) {
-//                    c2 = new Color(45,45,45);
-//                }
-//                if (newItemButton.contains(e.getX(), e.getY())) {
-//                    c3 = new Color(45,45,45);
-//                }
-//                if (newHeroClassButton.contains(e.getX(), e.getY())) {
-//                    c4 = new Color(45,45,45);
-//                }
-//                if (newHeroButton.contains(e.getX(), e.getY())) {
-//                    c5 = new Color(45,45,45);
-//                }
-//                if (newEnemyButton.contains(e.getX(), e.getY())) {
-//                    c6 = new Color(45,45,45);
-//                }
-//                if (backButton.contains(e.getX(), e.getY())) {
-//                    c7 = new Color(45,45,45);
-//                }
+
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                //c1 = c2 = c3 = c4 = c5 = c6 = c7 = buttonColor;
+
             }
         });
 

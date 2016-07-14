@@ -21,6 +21,7 @@ import java.util.HashMap;
  * Created by rezab on 11/07/2016.
  */
 public class CreatingStoryTile extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
@@ -28,14 +29,17 @@ public class CreatingStoryTile extends JPanel {
     private JTextArea imageDirectory = new JTextArea(1, 82);
 
     public CreatingStoryTile(SimpleMenuListener sListener, CreatingMap CM) {
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             imageDirectory.setFont(sFont.deriveFont(20f));
             story.setFont(sFont.deriveFont(20f));
             story.setText("Enter the story.");
             imageDirectory.setText("Enter the image directory.");
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -45,18 +49,22 @@ public class CreatingStoryTile extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         setLayout(new FlowLayout());
+
         story.setLineWrap(true);
         imageDirectory.setLineWrap(true);
         story.setBackground(new Color(60, 60, 60));
         imageDirectory.setBackground(new Color(60, 60, 60));
         story.setForeground(Color.white);
         imageDirectory.setForeground(Color.white);
+
         add(story);
         add(imageDirectory);
 
 
         add(OK);
+
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -66,21 +74,6 @@ public class CreatingStoryTile extends JPanel {
 
             }
         });
-//        imageDirectory.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                imageDirectory.setText("");
-//            }
-//        });
-//
-//        story.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                story.setText("");
-//            }
-//        });
     }
 
     public void paintComponent(Graphics g) {

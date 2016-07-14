@@ -15,15 +15,17 @@ import java.io.IOException;
  * Created by rezab on 13/07/2016.
  */
 public class CreatingEquipment extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
 
     private JLabel message = new JLabel("Choose the equipment type");
     private JComboBox whichState;
-    private JTextArea amountGetter = new JTextArea(1, 89), price = new JTextArea(1, 89);
+    private JTextArea nameGetter = new JTextArea(1, 89), imageDirectory = new JTextArea(1, 89), amountGetter = new JTextArea(1, 89), price = new JTextArea(1, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     public CreatingEquipment(SimpleMenuListener sListener) {
+
         String[] immediateEffectTypes = {"max HP", "max MP", "attack power", "EP"};
         whichState = new JComboBox(immediateEffectTypes);
 
@@ -31,9 +33,20 @@ public class CreatingEquipment extends JPanel {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             whichState.setFont(sFont.deriveFont(20f));
             whichState.setForeground(Color.white);
             whichState.setBackground(new Color(60, 60, 60));
+
+            imageDirectory.setFont(sFont.deriveFont(20f));
+            imageDirectory.setForeground(Color.white);
+            imageDirectory.setBackground(new Color(60, 60, 60));
+            imageDirectory.setText("Enter the image directory");
+
+            nameGetter.setFont(sFont.deriveFont(20f));
+            nameGetter.setForeground(Color.white);
+            nameGetter.setBackground(new Color(60, 60, 60));
+            nameGetter.setText("Enter the item name");
 
             amountGetter.setFont(sFont.deriveFont(20f));
             amountGetter.setForeground(Color.white);
@@ -60,6 +73,8 @@ public class CreatingEquipment extends JPanel {
 
         add(message);
         add(whichState);
+        add(nameGetter);
+        add(imageDirectory);
         add(amountGetter);
         add(price);
         add(cancel);

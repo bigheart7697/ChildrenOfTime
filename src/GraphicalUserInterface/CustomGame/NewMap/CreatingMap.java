@@ -21,6 +21,7 @@ import java.util.Arrays;
  * Created by rezab on 10/07/2016.
  */
 public class CreatingMap extends JComponent {
+
     private BufferedImage BG, selectedBGTile, selectedFGTile, ability, battle, BGTile, door, lockedDoor, finalBoss, key, mapBG[][], mapFG[][], Obs1, Obs2, Obs3, Obs4, Obs5, Obs6, Obs7, Obs8, Obs9, Obs10, Obs11, Obs12, Obs13, Obs14, shop, story;
     private Font nmFont;
     private Color fontColor, sColor[] = new  Color[24];
@@ -40,6 +41,7 @@ public class CreatingMap extends JComponent {
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
+
         nmListener = nml;
         this.NM = NM;
         mapBG = new BufferedImage[NM.getSizeOfMap()][NM.getSizeOfMap()];
@@ -47,11 +49,13 @@ public class CreatingMap extends JComponent {
         mapBGTile = new Rectangle2D.Double[NM.getSizeOfMap()][NM.getSizeOfMap()];
         isFilled = new Boolean[NM.getSizeOfMap()][NM.getSizeOfMap()];
         Arrays.fill(sColor, new Color(45,45,45));
+
         for (int cnt1 = 0; cnt1 < NM.getSizeOfMap(); cnt1++) {
             for (int cnt2 = 0; cnt2 < NM.getSizeOfMap(); cnt2++) {
                 isFilled[cnt1][cnt2] = false;
             }
         }
+
         sColor[0] = Color.white;
         fontColor = Color.white;//new Color(166, 143, 78);
 
@@ -74,12 +78,14 @@ public class CreatingMap extends JComponent {
             lockedDoor = ImageIO.read(new File("GameEnvGraphics/Door0.png"));
             finalBoss = ImageIO.read(new File("GameEnvGraphics/finalBoss.png"));
             key = ImageIO.read(new File("GameEnvGraphics/key.png"));
+
             for (int cnt1 = 0; cnt1 < NM.getSizeOfMap(); cnt1++) {
                 for (int cnt2 = 0; cnt2 < NM.getSizeOfMap(); cnt2++) {
                     mapBG[cnt1][cnt2] = ImageIO.read(new File("GameEnvGraphics/MapBG.jpg"));
                     mapFG[cnt1][cnt2] = ImageIO.read(new File("GameEnvGraphics/MapBG.jpg"));
                 }
             }
+
             Obs1 = ImageIO.read(new File("GameEnvGraphics/Obs1.png"));
             Obs2 = ImageIO.read(new File("GameEnvGraphics/Obs2.png"));
             Obs3 = ImageIO.read(new File("GameEnvGraphics/Obs3.png"));
@@ -292,32 +298,12 @@ public class CreatingMap extends JComponent {
 
             @Override
             public void mousePressed(MouseEvent e) {
-//                if (newMapButton.contains(e.getX(), e.getY())) {
-//                    c1 = new Color(45,45,45);
-//                }
-//                if (newAbilityButton.contains(e.getX(), e.getY())) {
-//                    c2 = new Color(45,45,45);
-//                }
-//                if (newItemButton.contains(e.getX(), e.getY())) {
-//                    c3 = new Color(45,45,45);
-//                }
-//                if (newHeroClassButton.contains(e.getX(), e.getY())) {
-//                    c4 = new Color(45,45,45);
-//                }
-//                if (newHeroButton.contains(e.getX(), e.getY())) {
-//                    c5 = new Color(45,45,45);
-//                }
-//                if (newEnemyButton.contains(e.getX(), e.getY())) {
-//                    c6 = new Color(45,45,45);
-//                }
-//                if (backButton.contains(e.getX(), e.getY())) {
-//                    c7 = new Color(45,45,45);
-//                }
+
             }
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                //c1 = c2 = c3 = c4 = c5 = c6 = c7 = buttonColor;
+
             }
         });
 

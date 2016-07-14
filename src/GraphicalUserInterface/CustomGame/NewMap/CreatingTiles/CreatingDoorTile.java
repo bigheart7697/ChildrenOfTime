@@ -20,6 +20,7 @@ import java.util.HashMap;
  * Created by rezab on 11/07/2016.
  */
 public class CreatingDoorTile extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
@@ -30,6 +31,7 @@ public class CreatingDoorTile extends JPanel {
     private DoorTile.Direction dir = null;
 
     public CreatingDoorTile(SimpleMenuListener sListener, CreatingMap CM) {
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -45,21 +47,27 @@ public class CreatingDoorTile extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         setLayout(new FlowLayout());
+
         dirLabel.setFont(sFont.deriveFont(20f));
         dirLabel.setForeground(Color.white);
+
         direction.put(DoorTile.Direction.upward, new JRadioButton("upward"));
         direction.put(DoorTile.Direction.downward, new JRadioButton("downward"));
         direction.put(DoorTile.Direction.rightward, new JRadioButton("rightward"));
         direction.put(DoorTile.Direction.leftward, new JRadioButton("leftward"));
+
         dirGroup.add(direction.get(DoorTile.Direction.upward));
         dirGroup.add(direction.get(DoorTile.Direction.downward));
         dirGroup.add(direction.get(DoorTile.Direction.leftward));
         dirGroup.add(direction.get(DoorTile.Direction.rightward));
+
         doorNumber.setLineWrap(true);
         doorNumber.setFont(sFont.deriveFont(20f));
         doorNumber.setBackground(new Color(60, 60, 60));
         doorNumber.setForeground(Color.white);
+
         add(dirLabel);
         add(direction.get(DoorTile.Direction.upward));
         add(direction.get(DoorTile.Direction.downward));
@@ -96,6 +104,7 @@ public class CreatingDoorTile extends JPanel {
         });
 
         add(OK);
+
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -110,21 +119,6 @@ public class CreatingDoorTile extends JPanel {
 
             }
         });
-//        doorNumber.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                doorNumber.setText("");
-//            }
-//        });
-//
-//        story.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                story.setText("");
-//            }
-//        });
     }
 
     public void paintComponent(Graphics g) {

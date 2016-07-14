@@ -29,16 +29,21 @@ public class EarlyAmounts extends JPanel {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             earlyExperience.setFont(sFont.deriveFont(20f));
             earlyExperience.setForeground(Color.white);
+
             earlyMoney.setForeground(Color.white);
             earlyMoney.setFont(sFont.deriveFont(20f));
+
             EEText.setFont(sFont.deriveFont(20f));
             EEText.setBackground(new Color(60, 60, 60));
             EEText.setForeground(Color.white);
+
             EMText.setFont(sFont.deriveFont(20f));
             EMText.setBackground(new Color(60, 60, 60));
             EMText.setForeground(Color.white);
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }

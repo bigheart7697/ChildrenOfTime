@@ -36,12 +36,14 @@ public class MapSize extends JPanel {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             message.setFont(sFont.deriveFont(20f));
             firstSize.setFont(sFont.deriveFont(20f));
             secondSize.setFont(sFont.deriveFont(20f));
             fourthSize.setFont(sFont.deriveFont(20f));
             thirdSize.setFont(sFont.deriveFont(20f));
             fifthSize.setFont(sFont.deriveFont(20f));
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -53,13 +55,14 @@ public class MapSize extends JPanel {
         }
         setLayout(new FlowLayout());
 
-//        defeatMessage.setBackground(new Color(60, 60, 60));
         message.setForeground(Color.white);
+
         group.add(fifthSize);
         group.add(firstSize);
         group.add(secondSize);
         group.add(thirdSize);
         group.add(fourthSize);
+
         add(message);
         add(firstSize);
         add(secondSize);
@@ -67,6 +70,7 @@ public class MapSize extends JPanel {
         add(fourthSize);
         add(fifthSize);
         add(OK);
+
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

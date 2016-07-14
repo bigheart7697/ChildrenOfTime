@@ -8,6 +8,7 @@ import java.util.ArrayList;
  * Created by rezab on 11/07/2016.
  */
 public class FinalBossTile {
+
     private String story, imageDirectory;
     private ArrayList<Enemy> enemies = new ArrayList<>();
 

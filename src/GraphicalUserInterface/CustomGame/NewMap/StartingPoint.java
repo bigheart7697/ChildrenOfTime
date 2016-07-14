@@ -36,14 +36,18 @@ public class StartingPoint extends JPanel {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             message.setFont(sFont.deriveFont(20f));
             message.setForeground(Color.white);
+
             XCoordinate.setFont(sFont.deriveFont(20f));
             XCoordinate.setBackground(new Color(60, 60, 60));
             XCoordinate.setForeground(Color.white);
+
             YCoordinate.setFont(sFont.deriveFont(20f));
             YCoordinate.setBackground(new Color(60, 60, 60));
             YCoordinate.setForeground(Color.white);
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }

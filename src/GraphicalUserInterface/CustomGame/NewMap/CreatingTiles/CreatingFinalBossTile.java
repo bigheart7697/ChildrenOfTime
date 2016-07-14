@@ -23,6 +23,7 @@ import java.util.HashMap;
  * Created by rezab on 12/07/2016.
  */
 public class CreatingFinalBossTile extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
     private JButton OK = new JButton("OK");
@@ -35,59 +36,77 @@ public class CreatingFinalBossTile extends JPanel {
     private ArrayList<Integer> version = new ArrayList<>();
 
     public CreatingFinalBossTile(SimpleMenuListener sListener, CreatingMap CM) {
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             enemies.add(new JTextArea(1, 84));
             enemies.add(new JTextArea(1, 84));
             enemies.add(new JTextArea(1, 84));
             enemies.add(new JTextArea(1, 84));
+
             enemies.get(0).setText("Enter the number of tanks");
             enemies.get(0).setFont(sFont.deriveFont(20f));
             enemies.get(0).setBackground(new Color(60, 60, 60));
             enemies.get(0).setForeground(Color.white);
+
             enemies.get(1).setText("Enter the number of angels");
             enemies.get(1).setFont(sFont.deriveFont(20f));
             enemies.get(1).setBackground(new Color(60, 60, 60));
             enemies.get(1).setForeground(Color.white);
+
             enemies.get(2).setText("Enter the number of thugs");
             enemies.get(2).setFont(sFont.deriveFont(20f));
             enemies.get(2).setBackground(new Color(60, 60, 60));
             enemies.get(2).setForeground(Color.white);
+
             enemies.get(3).setText("Enter the number of final bosses");
             enemies.get(3).setFont(sFont.deriveFont(20f));
             enemies.get(3).setBackground(new Color(60, 60, 60));
             enemies.get(3).setForeground(Color.white);
+
             enemyLabel.add(new JLabel("Tank"));
             enemyLabel.add(new JLabel("Angel"));
             enemyLabel.add(new JLabel("Thug"));
             enemyLabel.add(new JLabel("Final Boss"));
+
             enemyLabel.get(0).setFont(sFont.deriveFont(20f));
             enemyLabel.get(0).setForeground(Color.white);
+
             enemyLabel.get(1).setFont(sFont.deriveFont(20f));
             enemyLabel.get(1).setForeground(Color.white);
+
             enemyLabel.get(2).setFont(sFont.deriveFont(20f));
             enemyLabel.get(2).setForeground(Color.white);
+
             enemyLabel.get(3).setFont(sFont.deriveFont(20f));
             enemyLabel.get(3).setForeground(Color.white);
+
             version.add(-1);
             version.add(-1);
             version.add(-1);
             version.add(0);
+
             versionRadioButton.add(new HashMap<>());
             versionRadioButton.add(new HashMap<>());
             versionRadioButton.add(new HashMap<>());
+
             versionRadioButton.get(0).put("Weak", new JRadioButton("Weak"));
             versionRadioButton.get(0).put("Able", new JRadioButton("Able"));
+
             versionRadioButton.get(1).put("Weak", new JRadioButton("Weak"));
             versionRadioButton.get(1).put("Able", new JRadioButton("Able"));
+
             versionRadioButton.get(2).put("Weak", new JRadioButton("Weak"));
             versionRadioButton.get(2).put("Able", new JRadioButton("Able"));
             versionRadioButton.get(2).put("Mighty", new JRadioButton("Mighty"));
+
             enemyGroups.add(new ButtonGroup());
             enemyGroups.add(new ButtonGroup());
             enemyGroups.add(new ButtonGroup());
+
             enemyGroups.get(0).add(versionRadioButton.get(0).get("Weak"));
             enemyGroups.get(0).add(versionRadioButton.get(0).get("Able"));
             enemyGroups.get(1).add(versionRadioButton.get(1).get("Weak"));
@@ -95,9 +114,12 @@ public class CreatingFinalBossTile extends JPanel {
             enemyGroups.get(2).add(versionRadioButton.get(2).get("Weak"));
             enemyGroups.get(2).add(versionRadioButton.get(2).get("Able"));
             enemyGroups.get(2).add(versionRadioButton.get(2).get("Mighty"));
+
             imageDirectory.setFont(sFont.deriveFont(20f));
+
             finalMessage.setFont(sFont.deriveFont(20f));
             finalMessage.setText("Enter the final message.");
+
             imageDirectory.setText("Enter the image directory.");
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -109,12 +131,14 @@ public class CreatingFinalBossTile extends JPanel {
             e.printStackTrace();
         }
         setLayout(new FlowLayout());
+
         finalMessage.setLineWrap(true);
         imageDirectory.setLineWrap(true);
         finalMessage.setBackground(new Color(60, 60, 60));
         imageDirectory.setBackground(new Color(60, 60, 60));
         finalMessage.setForeground(Color.white);
         imageDirectory.setForeground(Color.white);
+
         add(finalMessage);
         add(imageDirectory);
         add(enemyLabel.get(0));
@@ -132,6 +156,7 @@ public class CreatingFinalBossTile extends JPanel {
         add(enemies.get(2));
         add(enemyLabel.get(3));
         add(enemies.get(3));
+
         versionRadioButton.get(0).get("Weak").addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -205,21 +230,7 @@ public class CreatingFinalBossTile extends JPanel {
 
             }
         });
-//        imageDirectory.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                imageDirectory.setText("");
-//            }
-//        });
-//
-//        finalMessage.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                finalMessage.setText("");
-//            }
-//        });
+
     }
 
     public void paintComponent(Graphics g) {

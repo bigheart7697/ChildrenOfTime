@@ -21,10 +21,11 @@ public class CreatingImmediateEffect extends JPanel {
 
     private JLabel message = new JLabel("Choose the immediate effect type");
     private JComboBox whichState;
-    private JTextArea amountGetter = new JTextArea(1, 89);
+    private JTextArea nameGetter = new JTextArea(1, 89), imageDirectory = new JTextArea(1 ,89), amountGetter = new JTextArea(1, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     public CreatingImmediateEffect(SimpleMenuListener sListener) {
+
         String[] immediateEffectTypes = {"max HP", "max MP", "attack power"};
         whichState = new JComboBox(immediateEffectTypes);
 
@@ -32,9 +33,20 @@ public class CreatingImmediateEffect extends JPanel {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             whichState.setFont(sFont.deriveFont(20f));
             whichState.setForeground(Color.white);
             whichState.setBackground(new Color(60, 60, 60));
+
+            imageDirectory.setFont(sFont.deriveFont(20f));
+            imageDirectory.setForeground(Color.white);
+            imageDirectory.setBackground(new Color(60, 60, 60));
+            imageDirectory.setText("Enter the image directory");
+
+            nameGetter.setFont(sFont.deriveFont(20f));
+            nameGetter.setForeground(Color.white);
+            nameGetter.setBackground(new Color(60, 60, 60));
+            nameGetter.setText("Enter the item name");
 
             amountGetter.setFont(sFont.deriveFont(20f));
             amountGetter.setForeground(Color.white);
@@ -44,6 +56,7 @@ public class CreatingImmediateEffect extends JPanel {
 
             message.setFont(sFont.deriveFont(20f));
             message.setForeground(Color.white);
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -56,6 +69,8 @@ public class CreatingImmediateEffect extends JPanel {
 
         add(message);
         add(whichState);
+        add(nameGetter);
+        add(imageDirectory);
         add(amountGetter);
         add(cancel);
         add(save);

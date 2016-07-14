@@ -57,10 +57,8 @@ public class SelfBoost extends PassiveAbility {
         if (currentXP > XPtoNextLevel) {
             level++;
             currentXP -= XPtoNextLevel;
-            if (level != 1) {
                 XPtoNextLevel = XPGainPattern / 10;
                 XPGainPattern = (XPGainPattern % 10) * 10;
-            }
 
             cast();
         }

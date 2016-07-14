@@ -19,6 +19,7 @@ import java.util.HashMap;
  * Created by rezab on 12/07/2016.
  */
 public class CreatingShopTile extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
     private JLabel messsage = new JLabel("Check the items you want the shop to have:                                                                                                                                                                                                                  ");
@@ -26,6 +27,7 @@ public class CreatingShopTile extends JPanel {
     private HashMap<String, JCheckBox> items = new HashMap<>();
 
     public CreatingShopTile(SimpleMenuListener sListener, CreatingMap CM) {
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -40,7 +42,9 @@ public class CreatingShopTile extends JPanel {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         setLayout(new FlowLayout());
+
         items.put("Toughen", new JCheckBox("Toughen"));
         items.put("Guide", new JCheckBox("Guide"));
         items.put("Defy", new JCheckBox("Defy"));
@@ -59,7 +63,9 @@ public class CreatingShopTile extends JPanel {
         items.get("Magic stick").setFont(sFont.deriveFont(20f));
         items.get("Health potion").setFont(sFont.deriveFont(20f));
         items.get("Magic potion").setFont(sFont.deriveFont(20f));
+
         messsage.setForeground(Color.white);
+
         add(messsage);
         add(items.get("Toughen"));
         add(items.get("Guide"));
@@ -72,6 +78,7 @@ public class CreatingShopTile extends JPanel {
         add(items.get("Magic potion"));
 
         add(OK);
+
         OK.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -81,21 +88,7 @@ public class CreatingShopTile extends JPanel {
 
             }
         });
-//        keyNumber.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                keyNumber.setText("");
-//            }
-//        });
-//
-//        story.addMouseListener(new MouseAdapter() {
-//            @Override
-//            public void mouseClicked(MouseEvent e) {
-//                super.mouseClicked(e);
-//                story.setText("");
-//            }
-//        });
+
     }
 
     public void paintComponent(Graphics g) {

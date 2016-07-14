@@ -20,18 +20,21 @@ public class CreatingAttackModifier extends JPanel {
 
     private JComboBox whichState;
     private JLabel message = new JLabel("Choose the attack modifier type:");
-    private JTextArea neededExperience[] = new JTextArea[3], percentage[] = new JTextArea[3], n = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89);
+    private JTextArea imageDirectory = new JTextArea(1, 89), neededExperience[] = new JTextArea[3], percentage[] = new JTextArea[3], n = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     private int N, XPToNextLevel, XPPattern, pPatteern;
     private String attackModifierType, name, description;
 
     public CreatingAttackModifier(SimpleMenuListener sListener) {
+
         String[] attackModifierTypes = {"swirling attack", "critical strike"};
         whichState = new JComboBox(attackModifierTypes);
+
         neededExperience[0] = new JTextArea(1, 89);
         neededExperience[1] = new JTextArea(1, 89);
         neededExperience[2] = new JTextArea(1, 89);
+
         percentage[0] = new JTextArea(1, 89);
         percentage[1] = new JTextArea(1, 89);
         percentage[2] = new JTextArea(1, 89);
@@ -40,6 +43,7 @@ public class CreatingAttackModifier extends JPanel {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
+
             whichState.setFont(sFont.deriveFont(20f));
             whichState.setForeground(Color.white);
             whichState.setBackground(new Color(60, 60, 60));
@@ -48,34 +52,47 @@ public class CreatingAttackModifier extends JPanel {
             n.setForeground(Color.white);
             n.setBackground(new Color(60, 60, 60));
             n.setText("Enter the N");
+
             nameGetter.setFont(sFont.deriveFont(20f));
             nameGetter.setForeground(Color.white);
             nameGetter.setBackground(new Color(60, 60, 60));
             nameGetter.setText("Enter the ability name");
+
+            imageDirectory.setFont(sFont.deriveFont(20f));
+            imageDirectory.setForeground(Color.white);
+            imageDirectory.setBackground(new Color(60, 60, 60));
+            imageDirectory.setText("Enter the image directory");
+
             descriptionGetter.setFont(sFont.deriveFont(20f));
             descriptionGetter.setForeground(Color.white);
             descriptionGetter.setBackground(new Color(60, 60, 60));
             descriptionGetter.setText("Enter the description of the ability");
+
             neededExperience[0].setFont(sFont.deriveFont(20f));
             neededExperience[0].setForeground(Color.white);
             neededExperience[0].setBackground(new Color(60, 60, 60));
             neededExperience[0].setText("Enter the needed experience for first upgrade");
+
             neededExperience[1].setFont(sFont.deriveFont(20f));
             neededExperience[1].setForeground(Color.white);
             neededExperience[1].setBackground(new Color(60, 60, 60));
             neededExperience[1].setText("Enter the needed experience for second upgrade");
+
             neededExperience[2].setFont(sFont.deriveFont(20f));
             neededExperience[2].setForeground(Color.white);
             neededExperience[2].setBackground(new Color(60, 60, 60));
             neededExperience[2].setText("Enter the needed experience for third upgrade");
+
             percentage[0].setFont(sFont.deriveFont(20f));
             percentage[0].setForeground(Color.white);
             percentage[0].setBackground(new Color(60, 60, 60));
             percentage[0].setText("Enter the percentage for first upgrade");
+
             percentage[1].setFont(sFont.deriveFont(20f));
             percentage[1].setForeground(Color.white);
             percentage[1].setBackground(new Color(60, 60, 60));
             percentage[1].setText("Enter the percentage for second upgrade");
+
             percentage[2].setFont(sFont.deriveFont(20f));
             percentage[2].setForeground(Color.white);
             percentage[2].setBackground(new Color(60, 60, 60));
@@ -99,12 +116,14 @@ public class CreatingAttackModifier extends JPanel {
                 sListener.switchTo("new ability");
             }
         });
+
         n.setVisible(false);
 
         add(message);
         add(whichState);
         add(nameGetter);
         add(descriptionGetter);
+        add(imageDirectory);
         add(n);
         add(neededExperience[0]);
         add(neededExperience[1]);
@@ -125,6 +144,7 @@ public class CreatingAttackModifier extends JPanel {
                     n.setVisible(false);
             }
         });
+
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

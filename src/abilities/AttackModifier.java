@@ -49,7 +49,7 @@ public class AttackModifier extends PassiveAbility {
         if(chancePattern != 0) {
             Random random = new Random();
             int randomNumber = random.nextInt(100);
-            critChance = ((int) Math.pow(10.0,(double)(3 - level)) % 10) * 10;
+            critChance = (critChance / (int) Math.pow(10.0,(double)(3 - level)) % 10) * 10 ;
             if(randomNumber < (chancePattern) * critChance / 100) {
                 target.setHP(target.getHP() - user.getAttDmg() * critRate);
             }

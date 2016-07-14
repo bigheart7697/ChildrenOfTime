@@ -16,6 +16,7 @@ import java.util.ArrayList;
  * Created by rezab on 07/07/2016.
  */
 public class NewHero extends JPanel {
+
     private BufferedImage BG;
     private Font sFont;
 
@@ -55,7 +56,6 @@ public class NewHero extends JPanel {
             message.setForeground(Color.white);
 
             classmessage.setFont(sFont.deriveFont(20f));
-//            classmessage.setForeground(Color.white);
 
             for (int cnt = 0; cnt < 3; cnt++) {
                 firstNeededAbilities[cnt] = new JTextArea(1, 89);
@@ -63,16 +63,19 @@ public class NewHero extends JPanel {
                 firstNeededAbilities[cnt].setForeground(Color.white);
                 firstNeededAbilities[cnt].setBackground(new Color(60, 60, 60));
                 firstNeededAbilities[cnt].setText("Enter the first needed ability for upgrade" + (cnt + 1));
+
                 firstNeededAbilitiesUpgrade[cnt] = new JTextArea(1, 89);
                 firstNeededAbilitiesUpgrade[cnt].setFont(sFont.deriveFont(20f));
                 firstNeededAbilitiesUpgrade[cnt].setForeground(Color.white);
                 firstNeededAbilitiesUpgrade[cnt].setBackground(new Color(60, 60, 60));
                 firstNeededAbilitiesUpgrade[cnt].setText("Enter first needed ability's upgrade for upgrade" + (cnt + 1));
+
                 secondNeededAbilities[cnt] = new JTextArea(1, 89);
                 secondNeededAbilities[cnt].setFont(sFont.deriveFont(20f));
                 secondNeededAbilities[cnt].setForeground(Color.white);
                 secondNeededAbilities[cnt].setBackground(new Color(60, 60, 60));
                 secondNeededAbilities[cnt].setText("Enter the second needed ability for upgrade" + (cnt + 1));
+
                 secondNeededAbilitiesUpgrade[cnt] = new JTextArea(1, 89);
                 secondNeededAbilitiesUpgrade[cnt].setFont(sFont.deriveFont(20f));
                 secondNeededAbilitiesUpgrade[cnt].setForeground(Color.white);
@@ -107,6 +110,7 @@ public class NewHero extends JPanel {
             g.add(tmp);
             add(tmp);
         }
+
         add(name);
         add(imageDirectory);
         add(message);
@@ -122,14 +126,17 @@ public class NewHero extends JPanel {
         add(abilities.get(9));
         add(abilities.get(10));
         add(abilities.get(11));
+
         for (int cnt = 0; cnt < 3; cnt++) {
             add(firstNeededAbilities[cnt]);
             add(firstNeededAbilitiesUpgrade[cnt]);
         }
+
         for (int cnt = 0; cnt < 3; cnt++) {
             add(secondNeededAbilities[cnt]);
             add(secondNeededAbilitiesUpgrade[cnt]);
         }
+
         add(cancel);
         add(save);
 
