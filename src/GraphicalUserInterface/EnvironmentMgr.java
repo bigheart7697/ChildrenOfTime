@@ -3,6 +3,7 @@ package GraphicalUserInterface;
 import GraphicalUserInterface.CustomGame.*;
 import GraphicalUserInterface.CustomGame.NewAbility.*;
 import GraphicalUserInterface.CustomGame.NewClass.NewHeroClass;
+import GraphicalUserInterface.CustomGame.NewHero.NewHero;
 import GraphicalUserInterface.CustomGame.NewItem.CreatingConsumable;
 import GraphicalUserInterface.CustomGame.NewItem.CreatingEquipment;
 import GraphicalUserInterface.CustomGame.NewItem.CreatingImmediateEffect;
@@ -103,7 +104,7 @@ public class EnvironmentMgr implements ActionListener{
         EM.CGM = new CustomGameMenu(defaultListener);
 
         EM.NE = new NewEnemy();
-        EM.NH = new NewHero();
+        EM.NH = new NewHero(defaultListener);
         EM.NHC = new NewHeroClass(defaultListener);
         EM.NI = new NewItem(defaultListener);
         EM.NM = new NewMap(new SimpleMenuListener() {
