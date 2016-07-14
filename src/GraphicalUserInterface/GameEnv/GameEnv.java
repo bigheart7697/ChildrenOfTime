@@ -1,6 +1,7 @@
 package GraphicalUserInterface.GameEnv;
 
 import GraphicalUserInterface.EnvironmentMgr;
+import GraphicalUserInterface.MusicPlayer;
 import GraphicalUserInterface.SimpleMenuListener;
 import abilities.Ability;
 import itemMGMT.Consumable;
@@ -83,6 +84,8 @@ public class GameEnv extends JComponent{
 
 
     public GameEnv(EnvironmentMgr emgr, Scenario scenario, SimpleMenuListener gel) {
+
+        MusicPlayer.playMusic("audios/game");
 
         //Environment Manager
         this.emgr = emgr;
@@ -415,6 +418,8 @@ public class GameEnv extends JComponent{
                                         battleEnv.setEnemies(eventToBeFired.getEnemies());
                                         battleEnv.setDisplayInfo(eventToBeFired.getInfo());
                                         geListener.switchTo("battle");
+                                        MusicPlayer.stopMusic();
+                                        MusicPlayer.playMusic("audios/battle.wav");
                                         scenario.getPlayer().setGold(scenario.getPlayer().getGold() + eventToBeFired.getRewards()[0]);
                                         scenario.getPlayer().setXP(scenario.getPlayer().getXP() + eventToBeFired.getRewards()[1]);
                                         eventDisappearFlag = true;

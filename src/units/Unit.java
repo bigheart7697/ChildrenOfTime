@@ -37,7 +37,10 @@ abstract public class Unit {
         if (this.getHP() > this.getMaxHP()) this.setHP(this.getMaxHP());
     }
     public void died() { this.isDead = true; }
-    public void revived() { this.isDead = false;}
+    public void revived() {
+        this.isDead = false;
+        setHP(maxHP / 2);
+    }
 
     public boolean isDead() {
         return isDead;

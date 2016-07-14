@@ -32,7 +32,7 @@ public class Attacker extends ActiveAbility {
 
 
     @Override
-    public void cast() {
+    public boolean cast() {
         EPCost = EPCostPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;
         user.setEP(user.getEP() - EPCost);
         user.setMP(user.getMP() - magicCost);
@@ -45,5 +45,6 @@ public class Attacker extends ActiveAbility {
             target.setHP(target.getHP() - 3 * HPCost);
             user.setHP(user.getHP() - HPCost);
         }
+        return false;
     }
 }

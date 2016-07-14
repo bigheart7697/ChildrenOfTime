@@ -90,7 +90,7 @@ abstract public class Ability {
         return false;
     }
 
-    public abstract void cast();
+    public abstract boolean cast();
 
     public void upgrade() {
         if (currentXP >= XPtoNextLevel) {
