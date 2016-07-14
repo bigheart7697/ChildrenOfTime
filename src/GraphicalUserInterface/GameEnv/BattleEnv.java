@@ -74,6 +74,8 @@ public class BattleEnv extends JComponent {
     private int startY;
     private int animationMover;
     private boolean attackAnimationFlag;
+    private Image[] glows; //for default scenario only :D
+    private int glowIndex, glowDuration;
 
     private Image BG, arrow;
 
@@ -91,6 +93,10 @@ public class BattleEnv extends JComponent {
 
         //Image Loading
         try {
+            glows = new Image[4];
+            for (int i = 0; i < 4; i++) {
+                glows[i] = ImageIO.read(new File("BattleGraphics/glow" + (i + 1) + ".png"));
+            }
             BG = ImageIO.read(new File("BattleGraphics/BG.jpg"));
             arrow = ImageIO.read(new File("BattleGraphics/arrow.png"));
         } catch (IOException e) {
@@ -123,9 +129,9 @@ public class BattleEnv extends JComponent {
         deployFlag = enemyTurnFlag = false;
 
         //PopUp panel stuff
-        popX = -650.0;
+        popX = 0.0;
         popSpeed = 7.5;
-        popUpPanel = new RoundRectangle2D.Double(popX, 370, 600, 80, 40, 50);
+        popUpPanel = new RoundRectangle2D.Double(40, 370, popX, 80, 40, 50);
         popFlag = disappearFlag = selectionRectFlag = false;
         selectionRect = null;
         selections = new ArrayList<>();
@@ -153,6 +159,8 @@ public class BattleEnv extends JComponent {
         animationMover = 0;
         startY = getHeight() / 2;
         attackAnimationFlag = false;
+        glowIndex = 0;
+        glowDuration = 0;
 
 
 
@@ -259,7 +267,8 @@ public class BattleEnv extends JComponent {
                     }
 
                     if (abilityFlag) {
-
+                        glowIndex = battlefield.getHeroes().indexOf(doer);
+                        glowDuration = 200;
                         ActiveAbility aa = (ActiveAbility) selected;
                         if (aa.getMagicCost() > doer.getMP()) {
                             displaying = ("You don't have enough magic points");
@@ -422,6 +431,15 @@ public class BattleEnv extends JComponent {
                 g2.drawImage(h.getSecondHeroImage(), xH, yH, size, size, null);
                 if (!heroRectFlag) heroRect[battlefield.getHeroes().indexOf(h)] = new Rectangle2D.Double(xH, yH, size, size);
             }
+            if (glowIndex == battlefield.getHeroes().indexOf(h) && glowDuration > 0) {
+                if (h.getName().equalsIgnoreCase("meryl")) {
+                    g2.drawImage(glows[glowIndex], xH - 20, yH - 15, size + 20, size + 20, null);
+                }
+                else {
+                    g2.drawImage(glows[glowIndex], xH - 10, yH - 10, size + 20, size + 20, null);
+                }
+                glowDuration --;
+            }
             xH -= 75;
             size += 10;
         }
@@ -469,16 +487,21 @@ public class BattleEnv extends JComponent {
 
 
         //PopUp panel for items and abilities
+        g2.setColor(fontColor);
+        g2.setFont(mmFont.deriveFont(25f));
+        g2.drawString("Abilities", 60, 392);
+        g2.drawString("   and", 60, 417);
+        g2.drawString("  Items", 60, 442);
         if (popFlag) {
             g2.setColor(buttonColor);
             g2.fill(popUpPanel);
             g2.setColor(fontColor);
             g2.draw(popUpPanel);
-            if (popX < 40) {
+            if (popX < 600) {
                 popX += popSpeed;
-                popUpPanel = new RoundRectangle2D.Double(popX, 370, 600, 80, 40, 50);
+                popUpPanel = new RoundRectangle2D.Double(40, 370, popX, 80, 40, 50);
             }
-            if (popX >= 40) {
+            if (popX >= 600) {
                 g2.setFont(mmFont.deriveFont(25f));
 
                 if (abilityFlag) {
@@ -496,13 +519,19 @@ public class BattleEnv extends JComponent {
                         if (!selectionRectFlag) selectionRect[doer.getActAbs().indexOf(a)] = new Rectangle2D.Double(xD, yD, 40, 40);
                         if (!selectionRectFlag) selections.add(a);
                         g2.setFont(mmFont.deriveFont(15f));
-                        g2.drawString(a.getName(), (int)xD, (int)yD + 55);
-                        g2.drawString(a.getEPCost() + "ep", (int)xD + 50, (int)yD + 15);
-                        g2.drawString(a.getMagicCost() + "mp", (int)xD + 50, (int)yD + 30);
-                        g2.drawString(a.getCD() + "cd", (int)xD + 50, (int)yD + 45);
-                        g2.drawString(a.getRemainingCD() + "rcd", (int)xD + 50, (int)yD + 60);
+                        if (!a.getName().contains(" ")) g2.drawString(a.getName(), (int)xD, (int)yD + 55);
+                        else {
+                            String t[] = a.getName().split(" ");
+                            if (a.getName().contains("Over")) g2.drawString(t[0], (int)xD - 10, (int)yD + 55);
+                            else g2.drawString(t[0], (int)xD - 10, (int)yD + 55);
+                            g2.drawString(t[1], (int)xD, (int)yD + 65);
+                        }
+                        g2.drawString(a.getEPCost() + "ep", (int)xD + 60, (int)yD + 15);
+                        g2.drawString(a.getMagicCost() + "mp", (int)xD + 60, (int)yD + 30);
+                        g2.drawString(a.getCD() + "cd", (int)xD + 60, (int)yD + 45);
+                        g2.drawString(a.getRemainingCD() + "rcd", (int)xD + 60, (int)yD + 60);
                         emptyFlag = false;
-                        xD += 105;
+                        xD += 115;
                     }
                     selectionRectFlag = true;
                     if (selected != null){
@@ -547,11 +576,15 @@ public class BattleEnv extends JComponent {
             g2.fill(popUpPanel);
             g2.setColor(fontColor);
             g2.draw(popUpPanel);
-            if (popX > -650) {
+            if (popX > 0) {
                 popX -= popSpeed;
-                popUpPanel = new RoundRectangle2D.Double(popX, 370, 600, 80, 40, 50);
+                popUpPanel = new RoundRectangle2D.Double(40, 370, popX, 80, 40, 50);
             }
         }
+        g2.setColor(buttonColor);
+        g2.fill(new RoundRectangle2D.Double(30, 370, 20, 80, 20, 20));
+        g2.setColor(fontColor);
+        g2.draw(new RoundRectangle2D.Double(30, 370, 20, 80, 20, 20));
 
 
         //General Buttons
@@ -800,7 +833,7 @@ public class BattleEnv extends JComponent {
 
 
         if (victory && !attackAnimationFlag) {
-            g2.setFont(mmFont.deriveFont(200f));
+            g2.setFont(mmFont.deriveFont(180f));
             g2.setColor(fontColor);
             g2.drawString("You Won!", 340, 400);
         }
@@ -914,7 +947,7 @@ public class BattleEnv extends JComponent {
     private void setUpPanel() {
         disappearFlag = false;
         popFlag = true;
-        popX = -650.0;
+        popX = 0.0;
     }
 
     private void panelDisappear() {
