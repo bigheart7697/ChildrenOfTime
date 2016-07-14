@@ -1,10 +1,12 @@
 package units;
 
+import java.awt.*;
+
 public class Tank extends Enemy {
 
     //Constructors
 
-    public Tank(int version) {
+    public Tank(int version, Image i) {
         super("Tank", 0, 0);
         if (version == 0) {
             setName("Weak tank");
@@ -25,9 +27,10 @@ public class Tank extends Enemy {
                 "Weak version: Attack Power=30, Maximum health=400\n" +
                 "Able version: Attack Power=90, Maximum health=500\n" +
                 "Action message: “Tank just damaged all of your heroes with “ + (attack power) + “ power”\n");
+        setImage(i);
     }
 
-    public Tank(int version, int id) {
+    public Tank(int version, int id, Image i) {
         super("Tank" + id, 0, 0);
         this.id = id;
         if (version == 0) {
@@ -49,17 +52,18 @@ public class Tank extends Enemy {
                 "Weak version: Attack Power=30, Maximum health=400\n" +
                 "Able version: Attack Power=90, Maximum health=500\n" +
                 "Action message: “Tank just damaged all of your heroes with “ + (attack power) + “ power”\n");
+        setImage(i);
     }
 
     @Override
-    public void action() {
+    public String action() {
         for (Hero h: this.field.getHeroes()) {
             if (!h.isDead) {
                 h.setHP(h.getHP() - getAttDmg());
                 h.refreshStatus();
             }
         }
-        System.out.println("Tank just damaged all of your heroes with " + getAttDmg() + " power");
+        return ("Tank just damaged all of your heroes with " + getAttDmg() + " power");
     }
 
     @Override

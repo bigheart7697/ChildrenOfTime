@@ -169,15 +169,15 @@ public class CreatingBattleTile extends JPanel {
                 if (isComplete()) {
                     BattleTile tmp = new BattleTile(Integer.parseInt(moneyPrize.getText()), Integer.parseInt(experiencePrize.getText()));
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-                        tmp.addEnemy(new Tank(version.get(0), cnt + 1));
+//                        tmp.addEnemy(new Tank(version.get(0), cnt + 1));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-                        tmp.addEnemy(new Angel(version.get(1), cnt + 1));
+//                        tmp.addEnemy(new Angel(version.get(1), cnt + 1));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-                        tmp.addEnemy(new Tank(version.get(2), cnt + 1));
+//                        tmp.addEnemy(new Tank(version.get(2), cnt + 1));
                     }
                     CM.addBattleTile(tmp);
                     sListener.switchTo("creating map");

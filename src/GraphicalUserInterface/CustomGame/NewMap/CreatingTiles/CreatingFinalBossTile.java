@@ -182,19 +182,19 @@ public class CreatingFinalBossTile extends JPanel {
                 if (isComplete()) {
                     FinalBossTile tmp = new FinalBossTile(finalMessage.getText(), imageDirectory.getText());
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-                        tmp.addEnemy(new Tank(version.get(0), cnt + 1));
+//                        tmp.addEnemy(new Tank(version.get(0), cnt + 1));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(1).getText()); cnt++) {
-                        tmp.addEnemy(new Angel(version.get(1), cnt + 1));
+//                        tmp.addEnemy(new Angel(version.get(1), cnt + 1));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(2).getText()); cnt++) {
-                        tmp.addEnemy(new Tank(version.get(2), cnt + 1));
+//                        tmp.addEnemy(new Tank(version.get(2), cnt + 1));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(3).getText()); cnt++) {
-                        tmp.addEnemy(new FinalBoss());
+//                        tmp.addEnemy(new FinalBoss());
                     }
                     CM.setFBT(tmp);
                     sListener.switchTo("creating map");

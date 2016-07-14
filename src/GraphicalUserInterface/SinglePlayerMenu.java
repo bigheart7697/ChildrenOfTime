@@ -129,6 +129,6 @@ class SinglePlayerMenu extends JComponent{
         g.drawImage(buffer, 0, 0, null);
     }
 
-    public void update() { repaint(); }
+    void updateEnv() { repaint(); }
 
 }

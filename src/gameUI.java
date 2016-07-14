@@ -675,10 +675,10 @@ public class gameUI {
                 " presence and the growling of thugs tell you that your first battle\nhas BEGUN!\n\n" + "\nYou've encountered 3 weak thug(s), 1 weak angel(s)\n";
 
         ArrayList<Unit> Enemies = new ArrayList<>();
-        Enemies.add(new Thug(0,1));
-        Enemies.add(new Thug(0,2));
-        Enemies.add(new Thug(0,3));
-        Enemies.add(new Angel(0));
+//        Enemies.add(new Thug(0,1));
+//        Enemies.add(new Thug(0,2));
+//        Enemies.add(new Thug(0,3));
+//        Enemies.add(new Angel(0));
         for (Unit enemy : Enemies)
             enemy.setField(battlefield);
         battlefield.addUnits(Enemies);
@@ -699,10 +699,10 @@ public class gameUI {
 
 
             Enemies.clear();
-            Enemies.add(new Thug(1, 1));
-            Enemies.add(new Thug(1, 2));
-            Enemies.add(new Angel(0));
-            Enemies.add(new Tank(0));
+//            Enemies.add(new Thug(1, 1));
+//            Enemies.add(new Thug(1, 2));
+//            Enemies.add(new Angel(0));
+//            Enemies.add(new Tank(0));
             for (Unit enemy : Enemies)
                 enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
@@ -723,10 +723,10 @@ public class gameUI {
 
 
             Enemies.clear();
-            Enemies.add(new Thug(1));
-            Enemies.add(new Thug(2));
-            Enemies.add(new Angel(0));
-            Enemies.add(new Tank(0));
+//            Enemies.add(new Thug(1));
+//            Enemies.add(new Thug(2));
+//            Enemies.add(new Angel(0));
+//            Enemies.add(new Tank(0));
             for (Unit enemy : Enemies)
                 enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
@@ -747,11 +747,11 @@ public class gameUI {
 
 
             Enemies.clear();
-            Enemies.add(new Thug(2, 1));
-            Enemies.add(new Thug(2, 2));
-            Enemies.add(new Angel(1));
-            Enemies.add(new Tank(1, 1));
-            Enemies.add(new Tank(1, 2));
+//            Enemies.add(new Thug(2, 1));
+//            Enemies.add(new Thug(2, 2));
+//            Enemies.add(new Angel(1));
+//            Enemies.add(new Tank(1, 1));
+//            Enemies.add(new Tank(1, 2));
             for (Unit enemy : Enemies)
                 enemy.setField(battlefield);
             battlefield.addUnits(Enemies);
@@ -773,7 +773,7 @@ public class gameUI {
 
 
             Enemies.clear();
-            Enemies.add(new FinalBoss());
+//            Enemies.add(new FinalBoss());
             for (Unit enemy : Enemies)
                 enemy.setField(battlefield);
             battlefield.addUnits(Enemies);

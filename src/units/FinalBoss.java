@@ -2,11 +2,12 @@ package units;
 
 import com.sun.org.apache.xerces.internal.impl.xpath.regex.Match;
 
+import java.awt.*;
 import java.util.Random;
 
 public class FinalBoss extends Enemy{
 
-    public FinalBoss() {
+    public FinalBoss(Image i) {
         super("The Collector", 1000, 150);
         setDescription("Final Boss:\n" +
                 "Burns 2 to 4 energy points of each hero and attacks 2 of them in each turn\n" +
@@ -17,10 +18,12 @@ public class FinalBoss extends Enemy{
                 "“Collector just attacked “ + (target) + “ with ” + (attack power) + “ power”\n" +
                 "“Collector just burned “ + (energy point count) + “ energy points from ” + (target)\n" +
                 "“Collector has mutated”\n");
+        setImage(i);
     }
 
     @Override
-    public void action() {
+    public String action() {
+        String result = "";
         int attCount = 0;
         for (Hero h: this.field.getHeroes()) {
             if (!h.isDead) {
@@ -38,13 +41,14 @@ public class FinalBoss extends Enemy{
                 }
                 if (heroRand[attCount] % 2 == 1) {
                     h.setHP(h.getHP() - getAttDmg());
-                    System.out.println("Collector just attacked " + target.getName() + " with " + getAttDmg() + " power");
+                    result += ("Collector just attacked " + target.getName() + " with " + getAttDmg() + " power");
                 }
                 attCount++;
                 h.refreshStatus();
-                System.out.println("Collector just burned " + rand + " energy points from " + target.getName());
+                result += ("Collector just burned " + rand + " energy points from " + target.getName());
             }
         }
+        return result;
     }
 
     @Override

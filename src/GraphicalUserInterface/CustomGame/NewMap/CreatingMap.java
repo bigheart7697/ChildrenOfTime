@@ -505,7 +505,7 @@ public class CreatingMap extends JComponent {
 
     }
 
-    public void update() {
+    public void updateEnv() {
         repaint();
     }
 

@@ -1,10 +1,12 @@
 package units;
 
+import java.awt.*;
+
 public class Thug extends Enemy {
 
     //Constructors
 
-    public Thug(int version, int id) {
+    public Thug(int version, int id, Image i) {
         super("Thug" + id, 0, 0);
         this.id = id;
         if (version == 0) {
@@ -34,9 +36,10 @@ public class Thug extends Enemy {
                 "Able version: Attack Power=90, Maximum health=300\n" +
                 "Mighty version: Attack Power=150, Maximum health=400\n" +
                 "Action message: “Thug just attacked “ + (target) + “ with “ + (attack power) + “ power”\n");
+        setImage(i);
     }
 
-    public Thug(int version) {
+    public Thug(int version, Image i) {
         super("Thug", 0, 0);
         this.id = 0;
         if (version == 0) {
@@ -66,10 +69,12 @@ public class Thug extends Enemy {
                 "Able version: Attack Power=90, Maximum health=300\n" +
                 "Mighty version: Attack Power=150, Maximum health=400\n" +
                 "Action message: “Thug just attacked “ + (target) + “ with “ + (attack power) + “ power”\n");
+        setImage(i);
     }
 
     @Override
     public void setTarget() {
+        System.out.println(this.field == null);
         int mhp = 0; // To find the hero with max hp and attack it
         for (Hero h: this.field.getHeroes()) {
             if (h.getHP() > mhp) {
@@ -80,10 +85,10 @@ public class Thug extends Enemy {
     }
 
     @Override
-    public void action() {
+    public String action() {
         this.target.setHP(this.target.getHP() - getAttDmg());
         this.target.refreshStatus();
-        System.out.println("Thug just attacked " + target.getName() + " with " + getAttDmg() + " power");
+        return ("Thug just attacked " + target.getName() + " with " + getAttDmg() + " power");
     }
 
 }
