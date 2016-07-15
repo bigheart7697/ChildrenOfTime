@@ -8,9 +8,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 07/07/2016.
@@ -142,6 +150,40 @@ public class NewEnemy extends JPanel {
                         && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 4
                         && amount[1].getText().matches("[0-9]+") && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 4
                         && amount[2].getText().matches("[0-9]+") && Integer.parseInt(amount[2].getText()) > 0 && Integer.parseInt(amount[2].getText()) < 4) {
+
+                    String tmp = "";
+
+                    for (JCheckBox str : strength) {
+                        if (str.isSelected()) {
+                            tmp = str.getText();
+                        }
+                    }
+
+                    String s = tmp + "\n" + type.getSelectedItem() + "\n" + description.getText() + "\n" + imageDirectory.getText() + "\n"
+                            + maxHP[0].getText() + "\n" + amount[0].getText()
+                            + "\n" + maxHP[1].getText() + "\n" + amount[1].getText() +
+                            "\n" + maxHP[2].getText() + "\n" + amount[2].getText();
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Enemy/" + name.getText() + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name.getText()).getBytes();
+                    p = Paths.get("Save/Enemy/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("custom");
                 }
 
@@ -150,12 +192,77 @@ public class NewEnemy extends JPanel {
                         && maxHP[1].getText().matches("[0-9]+") && Integer.parseInt(maxHP[1].getText()) > 0 && Integer.parseInt(maxHP[1].getText()) < 4
                         && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 4
                         && amount[1].getText().matches("[0-9]+") && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 4) {
+
+                    String tmp = "";
+
+                    for (JCheckBox str : strength) {
+                        if (str.isSelected()) {
+                            tmp = str.getText();
+                        }
+                    }
+
+                    String s = tmp + "\n" + type.getSelectedItem() + "\n" + description.getText() + "\n" + imageDirectory.getText() + "\n"
+                            + maxHP[0].getText() + "\n" + amount[0].getText()
+                            + "\n" + maxHP[1].getText() + "\n" + amount[1].getText();
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Enemy/" + name.getText() + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name.getText()).getBytes();
+                    p = Paths.get("Save/Enemy/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("custom");
                 }
 
                     else if (strength.get(0).isSelected()
                         && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 4
                         && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 4) {
+
+                    String tmp = "";
+
+                    for (JCheckBox str : strength) {
+                        if (str.isSelected()) {
+                            tmp = str.getText();
+                        }
+                    }
+
+                    String s = tmp + "\n" + type.getSelectedItem() + "\n" + description.getText() + "\n" + imageDirectory.getText() + "\n"
+                            + maxHP[0].getText() + "\n" + amount[0].getText();
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Enemy/" + name.getText() + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name.getText()).getBytes();
+                    p = Paths.get("Save/Enemy/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("custom");
                 }
 

@@ -8,9 +8,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 07/07/2016.
@@ -21,7 +29,7 @@ public class NewHero extends JPanel {
     private Font sFont;
 
     private JTextArea name = new JTextArea(1, 89), imageDirectory = new JTextArea(1, 89);
-    private JTextArea firstNeededAbilities[] = new JTextArea[3], secondNeededAbilities[] = new JTextArea[3];
+    private JTextArea description = new JTextArea(10, 89), firstNeededAbilities[] = new JTextArea[3], secondNeededAbilities[] = new JTextArea[3];
     private JTextArea firstNeededAbilitiesUpgrade[] = new JTextArea[3], secondNeededAbilitiesUpgrade[] = new JTextArea[3];
     private JLabel message = new JLabel("Choose two abilities"), classmessage = new JLabel("Choose hero class");
     private ButtonGroup g = new ButtonGroup();
@@ -58,6 +66,12 @@ public class NewHero extends JPanel {
             classmessage.setFont(sFont.deriveFont(20f));
 
             for (int cnt = 0; cnt < 3; cnt++) {
+
+                description.setFont(sFont.deriveFont(20f));
+                description.setForeground(Color.white);
+                description.setBackground(new Color(60, 60, 60));
+                description.setText("Enter the description");
+
                 firstNeededAbilities[cnt] = new JTextArea(1, 89);
                 firstNeededAbilities[cnt].setFont(sFont.deriveFont(20f));
                 firstNeededAbilities[cnt].setForeground(Color.white);
@@ -112,6 +126,7 @@ public class NewHero extends JPanel {
         }
 
         add(name);
+        add(description);
         add(imageDirectory);
         add(message);
         add(abilities.get(0));
@@ -160,6 +175,39 @@ public class NewHero extends JPanel {
                         && secondNeededAbilitiesUpgrade[0].getText().matches("[0-9]+") && Integer.parseInt(secondNeededAbilitiesUpgrade[0].getText()) > 0 && Integer.parseInt(secondNeededAbilitiesUpgrade[0].getText()) < 4
                         && secondNeededAbilitiesUpgrade[1].getText().matches("[0-9]+") && Integer.parseInt(secondNeededAbilitiesUpgrade[1].getText()) > 0 && Integer.parseInt(secondNeededAbilitiesUpgrade[1].getText()) < 4 && checkedNum == 2
                         && secondNeededAbilitiesUpgrade[2].getText().matches("[0-9]+") && Integer.parseInt(secondNeededAbilitiesUpgrade[2].getText()) > 0 && Integer.parseInt(secondNeededAbilitiesUpgrade[2].getText()) < 4) {
+
+                    String s = description.getText() + "\n" + imageDirectory.getText() + "\n" + firstNeededAbilities[0].getText() + "\n" + firstNeededAbilitiesUpgrade[0].getText()
+                            + "\n" + firstNeededAbilities[1].getText() + "\n" + firstNeededAbilitiesUpgrade[1].getText() +
+                            "\n" + firstNeededAbilities[2].getText() + "\n" + firstNeededAbilitiesUpgrade[2].getText() + "\n" +
+                            secondNeededAbilities[0].getText() + "\n" + secondNeededAbilitiesUpgrade[0].getText() + "\n" +
+                            secondNeededAbilities[1].getText() + "\n" + secondNeededAbilitiesUpgrade[1].getText() + "\n" +
+                            secondNeededAbilities[2].getText() + "\n" + secondNeededAbilitiesUpgrade[2].getText();
+                    for (JCheckBox ability : abilities) {
+                        if (ability.isSelected()) {
+                            s += "\n" + ability.getText();
+                        }
+                    }
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Hero/" + name.getText() + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name.getText()).getBytes();
+                    p = Paths.get("Save/Hero/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("custom");
                 }
                 else {

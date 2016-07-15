@@ -1,6 +1,7 @@
 package GraphicalUserInterface.CustomGame.NewClass;
 
 import GraphicalUserInterface.SimpleMenuListener;
+import abilities.Ability;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -8,9 +9,17 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 07/07/2016.
@@ -153,6 +162,35 @@ public class NewHeroClass extends JPanel {
                         && EP.getText().matches("[0-9]+") && Integer.parseInt(EP.getText()) > 0 && Integer.parseInt(EP.getText()) < 10 && checkedNum == 2
                         && attDamage.getText().matches("[0-9]+") && Integer.parseInt(attDamage.getText()) > 0 && Integer.parseInt(attDamage.getText()) < 500
                         && invSize.getText().matches("[0-9]+") && Integer.parseInt(invSize.getText()) > 0 && Integer.parseInt(invSize.getText()) < 10) {
+
+                    String s = description.getText() + "\n" + maxHP.getText() + "\n" + HPRefill.getText() + "\n" + maxMP.getText()
+                            + "\n" + MPRefill.getText() + "\n" + attDamage.getText() + "\n" + EP.getText() + "\n" + invSize.getText();
+                    for (JCheckBox ability : abilities) {
+                        if (ability.isSelected()) {
+                            s += "\n" + ability.getText();
+                        }
+                    }
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Class/" + name.getText() + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name.getText()).getBytes();
+                    p = Paths.get("Save/Class/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("custom");
                 }
                 else {

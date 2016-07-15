@@ -8,8 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 13/07/2016.
@@ -21,7 +29,7 @@ public class CreatingConsumable extends JPanel {
 
     private JLabel message = new JLabel("Choose the consumable type");
     private JComboBox whichState;
-    private JTextArea nameGetter = new JTextArea(1, 89), imageDirectory = new JTextArea(1, 89), amountGetter = new JTextArea(1, 89), price = new JTextArea(1, 89);
+    private JTextArea description = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), imageDirectory = new JTextArea(1, 89), amountGetter = new JTextArea(1, 89), price = new JTextArea(1, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     public CreatingConsumable(SimpleMenuListener sListener) {
@@ -42,6 +50,11 @@ public class CreatingConsumable extends JPanel {
             amountGetter.setForeground(Color.white);
             amountGetter.setBackground(new Color(60, 60, 60));
             amountGetter.setText("Enter the amount");
+
+            description.setFont(sFont.deriveFont(20f));
+            description.setForeground(Color.white);
+            description.setBackground(new Color(60, 60, 60));
+            description.setText("Enter the description");
 
             nameGetter.setFont(sFont.deriveFont(20f));
             nameGetter.setForeground(Color.white);
@@ -75,6 +88,7 @@ public class CreatingConsumable extends JPanel {
         add(message);
         add(whichState);
         add(nameGetter);
+        add(description);
         add(imageDirectory);
         add(amountGetter);
         add(price);
@@ -93,6 +107,29 @@ public class CreatingConsumable extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (amountGetter.getText().matches("[0-9]+") && Integer.parseInt(amountGetter.getText()) > 0 && Integer.parseInt(amountGetter.getText()) < 200
                         && price.getText().matches("[0-9]+") && Integer.parseInt(price.getText()) > 0 && Integer.parseInt(price.getText()) < 10) {
+
+                    String s = "consumable" + "\n" + whichState.getSelectedItem() + "\n" + description.getText() + "\n" + imageDirectory.getText() + "\n" + amountGetter.getText() + "\n" + price.getText();
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Item/" + nameGetter.getText() + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + nameGetter.getText()).getBytes();
+                    p = Paths.get("Save/Item/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("custom");
                 }
                 else {
