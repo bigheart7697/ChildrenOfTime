@@ -32,6 +32,7 @@ public class CreatingDoorTile extends JPanel {
 
     public CreatingDoorTile(SimpleMenuListener sListener, CreatingMap CM) {
 
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -89,7 +90,7 @@ public class CreatingDoorTile extends JPanel {
             }
         });
 
-        direction.get(DoorTile.Direction.leftward).addActionListener(new ActionListener() {
+        direction.get(DoorTile.Direction.rightward).addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 dir = DoorTile.Direction.leftward;
@@ -110,7 +111,8 @@ public class CreatingDoorTile extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (doorNumber.getText().matches("[0-9]+") && dir != null) {
                     DoorTile tmp = new DoorTile(dir, Integer.parseInt(doorNumber.getText()));
-                    CM.addDoorTile(tmp);
+//                    CM.addDoorTile(tmp);
+                    CM.setSelectedTile(tmp);
                     sListener.switchTo("creating map");
                 }
                 else {
@@ -125,4 +127,5 @@ public class CreatingDoorTile extends JPanel {
         super.paintComponent(g);
         g.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
     }
+
 }

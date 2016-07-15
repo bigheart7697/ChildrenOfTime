@@ -3,7 +3,7 @@ package GraphicalUserInterface.CustomGame.Tiles;
 /**
  * Created by rezab on 11/07/2016.
  */
-public class KeyTile {
+public class KeyTile extends Tiles {
 
     private int keyNumber;
 

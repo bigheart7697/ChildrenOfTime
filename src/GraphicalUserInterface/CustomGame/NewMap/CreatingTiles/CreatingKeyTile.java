@@ -26,6 +26,7 @@ public class CreatingKeyTile extends JPanel {
 
     public CreatingKeyTile(SimpleMenuListener sListener, CreatingMap CM) {
 
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -57,7 +58,8 @@ public class CreatingKeyTile extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 if (keyNumber.getText().matches("[0-9]+")) {
                     KeyTile tmp = new KeyTile(Integer.parseInt(keyNumber.getText()));
-                    CM.addKeyTile(tmp);
+//                    CM.addKeyTile(tmp);
+                    CM.setSelectedTile(tmp);
                     sListener.switchTo("creating map");
                 }
                 else {
@@ -73,4 +75,6 @@ public class CreatingKeyTile extends JPanel {
         super.paintComponent(g);
         g.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
     }
+
+
 }

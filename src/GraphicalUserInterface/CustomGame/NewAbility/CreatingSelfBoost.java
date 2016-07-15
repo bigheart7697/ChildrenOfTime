@@ -8,8 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 12/07/2016.
@@ -126,6 +134,30 @@ public class CreatingSelfBoost extends JPanel {
                     increaseAmount = Integer.parseInt(increaseAmountGetter.getText());
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());
+
+                    String s = "restorer" + "\n" + selfBoostType + "\n" + description + "\n" + imageDirectory.getText() + "\n" + increaseAmount + "\n" + XPToNextLevel + "\n"
+                            + XPPattern;
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Ability/" + name + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name).getBytes();
+                    p = Paths.get("Save/Ability/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("new ability");
                 }
 
@@ -139,6 +171,30 @@ public class CreatingSelfBoost extends JPanel {
                     increaseAmount = Integer.parseInt(increaseAmountGetter.getText());
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());
+
+                    String s = "restorer" + "\n" + selfBoostType + "\n" + description + "\n" + imageDirectory.getText() + "\n" + increaseAmount + "\n" + XPToNextLevel + "\n"
+                            + XPPattern;
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Ability/" + name + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name).getBytes();
+                    p = Paths.get("Save/Ability/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("new ability");
                 }
 

@@ -21,6 +21,13 @@ public class Attacker extends ActiveAbility {
         this.user = user;
     }
 
+    public Attacker(String name, int level, int XPtoNextLevel, int XPGainPattern, int magicCost, int EPCost, int CDPattern, int multiplierPattern, int HPCostPattern, boolean global) {
+        super(name, level, XPtoNextLevel, XPGainPattern, magicCost, EPCost, CDPattern);
+        this.multiplierPattern = multiplierPattern;
+        this.HPCostPattern = HPCostPattern;
+        this.global = global;
+    }
+
 //    getters and setters:
 
     @Override
@@ -45,5 +52,9 @@ public class Attacker extends ActiveAbility {
             target.setHP(target.getHP() - 3 * HPCost);
             user.setHP(user.getHP() - HPCost);
         }
+    }
+
+    public void setUser(Hero user) {
+        this.user = user;
     }
 }

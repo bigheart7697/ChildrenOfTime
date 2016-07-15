@@ -22,11 +22,12 @@ public class CreatingShopTile extends JPanel {
 
     private BufferedImage BG;
     private Font sFont;
-    private JLabel messsage = new JLabel("Check the items you want the shop to have:                                                                                                                                                                                                                  ");
+    private JLabel messsage = new JLabel("Check the items you want the shop to have:                                                                                                                                                          ");
     private JButton OK = new JButton("OK");
     private HashMap<String, JCheckBox> items = new HashMap<>();
 
     public CreatingShopTile(SimpleMenuListener sListener, CreatingMap CM) {
+
 
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
@@ -83,7 +84,17 @@ public class CreatingShopTile extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 ShopTile tmp = new ShopTile();
-                CM.addShopTile(tmp);
+                if (items.get("Toughen").isSelected()) tmp.addItem("Toughen");
+                if (items.get("Guide").isSelected()) tmp.addItem("Guide");
+                if (items.get("Defy").isSelected()) tmp.addItem("Defy");
+                if (items.get("Sword").isSelected()) tmp.addItem("Sword");
+                if (items.get("Energy boots").isSelected()) tmp.addItem("Energy boots");
+                if (items.get("Armor").isSelected()) tmp.addItem("Armor");
+                if (items.get("Magic stick").isSelected()) tmp.addItem("Magic stick");
+                if (items.get("Health potion").isSelected()) tmp.addItem("Health potion");
+                if (items.get("Magic potion").isSelected()) tmp.addItem("Magic potion");
+//                CM.addShopTile(tmp);
+                CM.setSelectedTile(tmp);
                 sListener.switchTo("creating map");
 
             }
@@ -95,4 +106,5 @@ public class CreatingShopTile extends JPanel {
         super.paintComponent(g);
         g.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
     }
+
 }

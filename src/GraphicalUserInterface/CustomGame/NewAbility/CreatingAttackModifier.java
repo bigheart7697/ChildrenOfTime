@@ -8,8 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 12/07/2016.
@@ -23,7 +31,7 @@ public class CreatingAttackModifier extends JPanel {
     private JTextArea imageDirectory = new JTextArea(1, 89), neededExperience[] = new JTextArea[3], percentage[] = new JTextArea[3], n = new JTextArea(1, 89), nameGetter = new JTextArea(1, 89), descriptionGetter = new JTextArea(10, 89);
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
-    private int N, XPToNextLevel, XPPattern, pPatteern;
+    private int N = 0, XPToNextLevel, XPPattern, pPatteern;
     private String attackModifierType, name, description;
 
     public CreatingAttackModifier(SimpleMenuListener sListener) {
@@ -167,6 +175,30 @@ public class CreatingAttackModifier extends JPanel {
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());
                     pPatteern = Integer.parseInt(percentage[0].getText()) * 100 + Integer.parseInt(percentage[1].getText()) * 10 + Integer.parseInt(percentage[2].getText());
+
+                    String s = "attack modifier" + "\n" + attackModifierType + "\n" + description + "\n" + imageDirectory.getText() + "\n" + N + "\n" + XPToNextLevel + "\n"
+                            + XPPattern + "\n" + pPatteern;
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Ability/" + name + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name).getBytes();
+                    p = Paths.get("Save/Ability/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("new ability");
                 }
 

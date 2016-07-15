@@ -37,6 +37,7 @@ public class CreatingFinalBossTile extends JPanel {
 
     public CreatingFinalBossTile(SimpleMenuListener sListener, CreatingMap CM) {
 
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -207,21 +208,22 @@ public class CreatingFinalBossTile extends JPanel {
                 if (isComplete()) {
                     FinalBossTile tmp = new FinalBossTile(finalMessage.getText(), imageDirectory.getText());
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-//                        tmp.addEnemy(new Tank(version.get(0), cnt + 1));
+                        tmp.addEnemy("Tank" + version.get(0));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(1).getText()); cnt++) {
-//                        tmp.addEnemy(new Angel(version.get(1), cnt + 1));
+                        tmp.addEnemy("Angel" + version.get(1));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(2).getText()); cnt++) {
-//                        tmp.addEnemy(new Tank(version.get(2), cnt + 1));
+                        tmp.addEnemy("Thug" + version.get(2));
                     }
 
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(3).getText()); cnt++) {
-//                        tmp.addEnemy(new FinalBoss());
+                        tmp.addEnemy("Final Boss");
                     }
                     CM.setFBT(tmp);
+                    CM.setSelectedTile(tmp);
                     sListener.switchTo("creating map");
                 }
                 else {
@@ -245,4 +247,5 @@ public class CreatingFinalBossTile extends JPanel {
         }
         return true;
     }
+
 }

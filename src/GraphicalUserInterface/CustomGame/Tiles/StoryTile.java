@@ -3,10 +3,9 @@ package GraphicalUserInterface.CustomGame.Tiles;
 /**
  * Created by rezab on 11/07/2016.
  */
-public class StoryTile {
+public class StoryTile extends Tiles {
 
     private String story, imageDirectory;
-     private int XOfTile, YOfTile;
 
     public StoryTile(String text, String imageDirectory) {
         this.story = text;
@@ -29,11 +28,4 @@ public class StoryTile {
         this.imageDirectory = imageDirectory;
     }
 
-    public int getXOfTile() {
-        return XOfTile;
-    }
-
-    public int getYOfTile() {
-        return YOfTile;
-    }
 }

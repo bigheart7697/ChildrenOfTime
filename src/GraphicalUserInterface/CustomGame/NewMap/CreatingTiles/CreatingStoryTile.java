@@ -30,6 +30,7 @@ public class CreatingStoryTile extends JPanel {
 
     public CreatingStoryTile(SimpleMenuListener sListener, CreatingMap CM) {
 
+
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -69,7 +70,8 @@ public class CreatingStoryTile extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                     StoryTile tmp = new StoryTile(story.getText(), imageDirectory.getText());
-                    CM.addStoryTile(tmp);
+//                    CM.addStoryTile(tmp);
+                CM.setSelectedTile(tmp);
                     sListener.switchTo("creating map");
 
             }
@@ -80,6 +82,7 @@ public class CreatingStoryTile extends JPanel {
         super.paintComponent(g);
         g.drawImage(BG, 0, 0, getWidth(), getHeight(), null);
     }
+
 
 
 }

@@ -5,6 +5,7 @@ import GraphicalUserInterface.CustomGame.Tiles.BattleTile;
 import GraphicalUserInterface.SimpleMenuListener;
 import units.Angel;
 import units.Tank;
+import units.Thug;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,8 +33,25 @@ public class CreatingBattleTile extends JPanel {
     private JTextArea experiencePrize = new JTextArea(1, 84);
     private ArrayList<JTextArea> enemies =new ArrayList<>();
     private ArrayList<Integer> version = new ArrayList<>();
+    private Image enemyImages[];
 
     public CreatingBattleTile(SimpleMenuListener sListener, CreatingMap CM) {
+
+
+        enemyImages = new Image[8];
+        try {
+            enemyImages[0] = ImageIO.read(new File("BattleGraphics/thug0.png"));
+            enemyImages[1] = ImageIO.read(new File("BattleGraphics/thug1.png"));
+            enemyImages[2] = ImageIO.read(new File("BattleGraphics/thug2.png"));
+            enemyImages[3] = ImageIO.read(new File("BattleGraphics/tank0.png"));
+            enemyImages[4] = ImageIO.read(new File("BattleGraphics/tank1.png"));
+            enemyImages[5] = ImageIO.read(new File("BattleGraphics/angel0.png"));
+            enemyImages[6] = ImageIO.read(new File("BattleGraphics/angel1.png"));
+            enemyImages[7] = ImageIO.read(new File("BattleGraphics/collector.png"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
 
         try {
             sFont = Font.createFont(Font.TRUETYPE_FONT, new File("CustomGameMenuGraphics/game.ttf"));
@@ -191,17 +209,18 @@ public class CreatingBattleTile extends JPanel {
                 if (isComplete()) {
                     BattleTile tmp = new BattleTile(Integer.parseInt(moneyPrize.getText()), Integer.parseInt(experiencePrize.getText()));
                     for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-//                        tmp.addEnemy(new Tank(version.get(0), cnt + 1));
+                        tmp.addEnemy("Tank" + version.get(0));
                     }
 
-                    for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-//                        tmp.addEnemy(new Angel(version.get(1), cnt + 1));
+                    for (int cnt = 0; cnt < Integer.parseInt(enemies.get(1).getText()); cnt++) {
+                        tmp.addEnemy("Angel" + version.get(1));
                     }
 
-                    for (int cnt = 0; cnt < Integer.parseInt(enemies.get(0).getText()); cnt++) {
-//                        tmp.addEnemy(new Tank(version.get(2), cnt + 1));
+                    for (int cnt = 0; cnt < Integer.parseInt(enemies.get(2).getText()); cnt++) {
+                        tmp.addEnemy("Thug" + version.get(2));
                     }
-                    CM.addBattleTile(tmp);
+//                    CM.addBattleTile(tmp);
+                    CM.setSelectedTile(tmp);
                     sListener.switchTo("creating map");
                 }
                 else {
@@ -230,5 +249,6 @@ public class CreatingBattleTile extends JPanel {
             return false;
         return true;
     }
+
 }
 

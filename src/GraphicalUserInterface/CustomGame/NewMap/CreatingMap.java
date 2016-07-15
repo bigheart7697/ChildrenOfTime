@@ -12,10 +12,18 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 10/07/2016.
@@ -27,25 +35,31 @@ public class CreatingMap extends JComponent {
     private Color fontColor, sColor[] = new  Color[24];
     private SimpleMenuListener nmListener;
     private Boolean isFilled[][], isMapComplete = false;
+    private Tiles tile[][], selectedTile;
+    private String tileType, tileName[][];
 
     private Rectangle2D.Double  abilityTile, battleTile, backgroundTile, doorTile, lockedDoorTile, finalBossTile, keyTile, mapBGTile[][], Obs1Tile, Obs2Tile, Obs3Tile, Obs4Tile, Obs5Tile, Obs6Tile, Obs7Tile, Obs8Tile, Obs9Tile, Obs10Tile, Obs11Tile, Obs12Tile, Obs13Tile, Obs14Tile, shopTile, storyTile;
     private RoundRectangle2D.Double ok;
     private Ellipse2D.Double back, save;
     private NewMap NM;
-    private ArrayList<BattleTile> BT = new ArrayList<>();
-    private ArrayList<StoryTile> ST = new ArrayList<>();
-    private ArrayList<DoorTile> DT = new ArrayList<>();
-    private ArrayList<KeyTile> KT = new ArrayList<>();
-    private ArrayList<ShopTile> SHT = new ArrayList<>();
-    private FinalBossTile FBT = null;
+    private int cnt3 = 0, cnt4 = 0;
+//    private ArrayList<BattleTile> BT = new ArrayList<>();
+//    private ArrayList<StoryTile> ST = new ArrayList<>();
+//    private ArrayList<DoorTile> DT = new ArrayList<>();
+//    private ArrayList<KeyTile> KT = new ArrayList<>();
+//    private ArrayList<ShopTile> SHT = new ArrayList<>();
+    private FinalBossTile FBT = new FinalBossTile("no story", "");
+    private ArrayList<OtherTiles> OT = new ArrayList<>();
 
 
     public CreatingMap(SimpleMenuListener nml, NewMap NM) {
 
         nmListener = nml;
         this.NM = NM;
+        tile = new Tiles[NM.getSizeOfMap()][NM.getSizeOfMap()];
         mapBG = new BufferedImage[NM.getSizeOfMap()][NM.getSizeOfMap()];
         mapFG = new BufferedImage[NM.getSizeOfMap()][NM.getSizeOfMap()];
+        tileName = new String[NM.getSizeOfMap()][NM.getSizeOfMap()];
         mapBGTile = new Rectangle2D.Double[NM.getSizeOfMap()][NM.getSizeOfMap()];
         isFilled = new Boolean[NM.getSizeOfMap()][NM.getSizeOfMap()];
         Arrays.fill(sColor, new Color(45,45,45));
@@ -115,24 +129,28 @@ public class CreatingMap extends JComponent {
                     sColor[2] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = ability;
+                    tileType = "ability";
                 }
                 if (backgroundTile.contains(e.getX(), e.getY())) {
                     Arrays.fill(sColor, new Color(45,45,45));
                     sColor[0] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = BGTile;
+                    tileType = "background";
                 }
                 if (battleTile.contains(e.getX(), e.getY())) {
                     Arrays.fill(sColor, new Color(45,45,45));
                     sColor[1] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = battle;
+                    tileType = "battle";
                 }
                 if (doorTile.contains(e.getX(), e.getY())) {
                     Arrays.fill(sColor, new Color(45,45,45));
                     sColor[3] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = door;
+                    tileType = "door";
                 }
 
                 if (lockedDoorTile.contains(e.getX(), e.getY())) {
@@ -140,6 +158,7 @@ public class CreatingMap extends JComponent {
                     sColor[4] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = lockedDoor;
+                    tileType = "locked door";
                 }
 
                 if (keyTile.contains(e.getX(), e.getY())) {
@@ -147,6 +166,7 @@ public class CreatingMap extends JComponent {
                     sColor[5] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = key;
+                    tileType = "key";
                 }
 
                 if (storyTile.contains(e.getX(), e.getY())) {
@@ -154,6 +174,7 @@ public class CreatingMap extends JComponent {
                     sColor[6] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = story;
+                    tileType = "story";
                 }
 
                 if (shopTile.contains(e.getX(), e.getY())) {
@@ -161,6 +182,7 @@ public class CreatingMap extends JComponent {
                     sColor[7] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = shop;
+                    tileType = "shop";
                 }
 
                 if (Obs1Tile.contains(e.getX(), e.getY())) {
@@ -168,6 +190,7 @@ public class CreatingMap extends JComponent {
                     sColor[8] = Color.white;
                     selectedBGTile = Obs1;
                     selectedFGTile = Obs1;
+                    tileType = "Obs1";
                 }
 
                 if (Obs2Tile.contains(e.getX(), e.getY())) {
@@ -175,6 +198,7 @@ public class CreatingMap extends JComponent {
                     sColor[9] = Color.white;
                     selectedBGTile = Obs2;
                     selectedFGTile = Obs2;
+                    tileType = "Obs2";
                 }
 
                 if (Obs3Tile.contains(e.getX(), e.getY())) {
@@ -182,6 +206,7 @@ public class CreatingMap extends JComponent {
                     sColor[10] = Color.white;
                     selectedBGTile = Obs3;
                     selectedFGTile = Obs3;
+                    tileType = "Obs3";
                 }
 
                 if (Obs4Tile.contains(e.getX(), e.getY())) {
@@ -189,6 +214,7 @@ public class CreatingMap extends JComponent {
                     sColor[11] = Color.white;
                     selectedBGTile = Obs4;
                     selectedFGTile = Obs4;
+                    tileType = "Obs4";
                 }
 
                 if (Obs5Tile.contains(e.getX(), e.getY())) {
@@ -196,6 +222,7 @@ public class CreatingMap extends JComponent {
                     sColor[12] = Color.white;
                     selectedBGTile = Obs5;
                     selectedFGTile = Obs5;
+                    tileType = "Obs5";
                 }
 
                 if (Obs6Tile.contains(e.getX(), e.getY())) {
@@ -203,6 +230,7 @@ public class CreatingMap extends JComponent {
                     sColor[13] = Color.white;
                     selectedBGTile = Obs6;
                     selectedFGTile = Obs6;
+                    tileType = "Obs6";
                 }
 
                 if (Obs7Tile.contains(e.getX(), e.getY())) {
@@ -210,6 +238,7 @@ public class CreatingMap extends JComponent {
                     sColor[14] = Color.white;
                     selectedBGTile = Obs7;
                     selectedFGTile = Obs7;
+                    tileType = "Obs7";
                 }
 
                 if (Obs8Tile.contains(e.getX(), e.getY())) {
@@ -217,6 +246,7 @@ public class CreatingMap extends JComponent {
                     sColor[15] = Color.white;
                     selectedBGTile = Obs8;
                     selectedFGTile = Obs8;
+                    tileType = "Obs8";
                 }
 
                 if (Obs9Tile.contains(e.getX(), e.getY())) {
@@ -224,6 +254,7 @@ public class CreatingMap extends JComponent {
                     sColor[16] = Color.white;
                     selectedBGTile = Obs9;
                     selectedFGTile = Obs9;
+                    tileType = "Obs9";
                 }
 
                 if (Obs10Tile.contains(e.getX(), e.getY())) {
@@ -231,6 +262,7 @@ public class CreatingMap extends JComponent {
                     sColor[17] = Color.white;
                     selectedBGTile = Obs10;
                     selectedFGTile = Obs10;
+                    tileType = "Obs10";
                 }
 
                 if (Obs11Tile.contains(e.getX(), e.getY())) {
@@ -238,6 +270,7 @@ public class CreatingMap extends JComponent {
                     sColor[18] = Color.white;
                     selectedBGTile = Obs11;
                     selectedFGTile = Obs11;
+                    tileType = "Obs11";
                 }
 
                 if (Obs12Tile.contains(e.getX(), e.getY())) {
@@ -245,6 +278,7 @@ public class CreatingMap extends JComponent {
                     sColor[19] = Color.white;
                     selectedBGTile = Obs12;
                     selectedFGTile = Obs12;
+                    tileType = "Obs12";
                 }
 
                 if (Obs13Tile.contains(e.getX(), e.getY())) {
@@ -252,6 +286,7 @@ public class CreatingMap extends JComponent {
                     sColor[20] = Color.white;
                     selectedBGTile = Obs13;
                     selectedFGTile = Obs13;
+                    tileType = "Obs13";
                 }
 
                 if (Obs14Tile.contains(e.getX(), e.getY())) {
@@ -259,6 +294,7 @@ public class CreatingMap extends JComponent {
                     sColor[21] = Color.white;
                     selectedBGTile = Obs14;
                     selectedFGTile = Obs14;
+                    tileType = "Obs14";
                 }
 
                 if (finalBossTile.contains(e.getX(), e.getY())) {
@@ -266,15 +302,25 @@ public class CreatingMap extends JComponent {
                     sColor[22] = Color.white;
                     selectedBGTile = BGTile;
                     selectedFGTile = finalBoss;
+                    tileType = "final boss";
                 }
+
+
 
                 for (int cnt1 = 0; cnt1 < NM.getSizeOfMap(); cnt1++) {
                     for (int cnt2 = 0; cnt2 < NM.getSizeOfMap(); cnt2++) {
                         if (mapBGTile[cnt1][cnt2].contains(e.getX(), e.getY())) {
+                            if (mapFG[cnt1][cnt2].equals(finalBoss)) {
+                                FBT.setStory("no story");
+                            }
                             mapBG[cnt1][cnt2] = selectedBGTile;
                             mapFG[cnt1][cnt2] = selectedFGTile;
+                            tile[cnt3][cnt4] = selectedTile;
                             isFilled[cnt1][cnt2] = true;
                             enteringInputs(selectedBGTile, selectedFGTile);
+                            tileName[cnt1][cnt2] = tileType;
+                            cnt3 = cnt1;
+                            cnt4 = cnt2;
                         }
                     }
                 }
@@ -284,8 +330,72 @@ public class CreatingMap extends JComponent {
                         isMapComplete = true;
                         repaint();
                     }
-                    else
+                    else {
+                        tile[cnt3][cnt4] = selectedTile;
+                        String s = NM.getStory() + "\n" + NM.getBreakMessage() + "\n" + NM.getSizeOfMap() + "\n" + NM.getExperience()
+                               + "\n" + NM.getMoney() + "\n" + NM.getXOfStartingPoint() + "\n" + NM.getYOfStartingPoint() + "\n\n";
+                        for (int cnt1 = 0; cnt1 < NM.getSizeOfMap(); cnt1++) {
+                            for (int cnt2 = 0; cnt2 < NM.getSizeOfMap(); cnt2++) {
+                                s += tileName[cnt1][cnt2] + "\n";
+                                if (tile[cnt1][cnt2] instanceof BattleTile) {
+                                    BattleTile tmp = (BattleTile)tile[cnt1][cnt2];
+                                    for (int cnt = 0; cnt < tmp.getEnemies().size(); cnt++) {
+                                        s += tmp.getEnemies().get(cnt) + "\n";
+                                    }
+                                    s += tmp.getExperiencePrize() + "\n" + tmp.getMoneyPrize() + "\n\n";
+                                }
+                                else if (tile[cnt1][cnt2] instanceof DoorTile) {
+                                    DoorTile tmp = (DoorTile)tile[cnt1][cnt2];
+                                    s += tmp.getDirection() +"\n" + tmp.getNumber() + "\n\n";
+                                }
+                                else if (tile[cnt1][cnt2] instanceof KeyTile) {
+                                    KeyTile tmp = (KeyTile)tile[cnt1][cnt2];
+                                    s += tmp.getKeyNumber() + "\n\n";
+                                }
+                                else if (tile[cnt1][cnt2] instanceof ShopTile) {
+                                    ShopTile tmp = (ShopTile)tile[cnt1][cnt2];
+                                    for (int cnt = 0; cnt < tmp.getItems().size(); cnt++) {
+                                        s += tmp.getItems().get(cnt) + "\n";
+                                    }
+                                    s += "\n";
+                                }
+                                else if (tile[cnt1][cnt2] instanceof StoryTile) {
+                                    StoryTile tmp = (StoryTile)tile[cnt1][cnt2];
+                                    s += tmp.getStory() + "\n" + tmp.getImageDirectory() + "\n\n";
+                                }
+                                else if (tile[cnt1][cnt2] instanceof FinalBossTile) {
+                                    FinalBossTile tmp = (FinalBossTile)tile[cnt1][cnt2];
+                                    for (int cnt = 0; cnt < tmp.getEnemies().size(); cnt++) {
+                                        s += tmp.getEnemies().get(cnt) + "\n";
+                                    }
+                                    s += tmp.getStory() + "\n" + tmp.getImageDirectory() + "\n\n";
+                                }
+                                else
+                                    s += "\n";
+                            }
+                        }
+                        byte data[] = s.getBytes();
+                        Path p = Paths.get("Save/Map/" + NM.getScenarioName()+ ".txt");
+
+                        try (OutputStream out = new BufferedOutputStream(
+                                Files.newOutputStream(p, CREATE))) {
+                            out.write(data, 0, data.length);
+                        } catch (IOException x) {
+                            System.err.println(x);
+                        }
+
+                        data = ("\n" + NM.getScenarioName()).getBytes();
+                        p = Paths.get("Save/Map/List.txt");
+
+                        try (OutputStream out = new BufferedOutputStream(
+                                Files.newOutputStream(p, CREATE, APPEND))) {
+                            out.write(data, 0, data.length);
+                        } catch (IOException x) {
+                            System.err.println(x);
+                        }
+
                         nmListener.switchTo("custom");
+                    }
                 }
                 if (back.contains(e.getX(), e.getY())) {
                     nmListener.switchTo("new map");
@@ -534,28 +644,42 @@ public class CreatingMap extends JComponent {
         }
 
         else if (selectedBGTile.equals(BGTile) && (selectedFGTile.equals(finalBoss))) {
-            nmListener.switchTo("finalBoss tile");
+            if (FBT.getStory().equals("no story")) {
+                nmListener.switchTo("finalBoss tile");
+            }
+        }
+        else {
+            OT.add(new OtherTiles());
+            selectedTile = OT.get(OT.size() - 1);
         }
 
     }
 
-    public void addBattleTile(BattleTile BT) {
-        this.BT.add(BT);
-    }
-
-    public void addStoryTile(StoryTile ST) {
-        this.ST.add(ST);
-    }
-
-    public void addDoorTile(DoorTile DT) {
-        this.DT.add(DT);
-    }
-
-    public void addKeyTile(KeyTile KT) { this.KT.add(KT); }
-
-    public void addShopTile(ShopTile SHT) { this.SHT.add(SHT); }
-
+//    public void addBattleTile(BattleTile BT) {
+//        this.BT.add(BT);
+//    }
+//
+//    public void addStoryTile(StoryTile ST) {
+//        this.ST.add(ST);
+//    }
+//
+//    public void addDoorTile(DoorTile DT) {
+//        this.DT.add(DT);
+//    }
+//
+//    public void addKeyTile(KeyTile KT) { this.KT.add(KT); }
+//
+//    public void addShopTile(ShopTile SHT) { this.SHT.add(SHT); }
+//
     public void setFBT(FinalBossTile FBT) {
         this.FBT = FBT;
+    }
+
+    public void setSelectedTile(Tiles tile) {
+        selectedTile = tile;
+    }
+
+    public void setTile(int x, int y) {
+        tile[x][y] = selectedTile;
     }
 }

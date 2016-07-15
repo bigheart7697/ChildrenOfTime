@@ -7,9 +7,9 @@ import java.util.ArrayList;
 /**
  * Created by rezab on 11/07/2016.
  */
-public class BattleTile {
+public class BattleTile extends Tiles {
 
-    private ArrayList<Enemy> enemies = new ArrayList<>();
+    private ArrayList<String> enemies = new ArrayList<>();
     private int moneyPrize, experiencePrize;
 
     public BattleTile(int moneyPrize, int experiencePrize) {
@@ -34,11 +34,11 @@ public class BattleTile {
         this.moneyPrize = moneyPrize;
     }
 
-    public void addEnemy(Enemy enemy) {
+    public void addEnemy(String enemy) {
         enemies.add(enemy);
     }
 
-    public ArrayList<Enemy> getEnemies() {
+    public ArrayList<String> getEnemies() {
         return enemies;
     }
 }

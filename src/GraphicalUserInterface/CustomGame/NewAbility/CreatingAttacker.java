@@ -8,8 +8,16 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static java.nio.file.StandardOpenOption.APPEND;
+import static java.nio.file.StandardOpenOption.CREATE;
 
 /**
  * Created by rezab on 13/07/2016.
@@ -25,7 +33,7 @@ public class CreatingAttacker extends JPanel {
     private JButton save = new JButton("save"), cancel = new JButton("cancel");
 
     private int XPToNextLevel, XPPattern, amountPatteern, CDPattern, EP, MP;
-    private String attackModifierType, name, description;
+    private String attackerType, name, description;
 
     public CreatingAttacker(SimpleMenuListener sListener) {
 
@@ -182,7 +190,7 @@ public class CreatingAttacker extends JPanel {
         save.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                attackModifierType = (String)whichState.getSelectedItem();
+                attackerType = (String)whichState.getSelectedItem();
                 if (coolDown[0].getText().matches("[0-9]+") && coolDown[1].getText().matches("[0-9]+")
                         && coolDown[2].getText().matches("[0-9]+") && neededExperience[0].getText().matches("[0-9]+") && EPGetter.getText().matches("[0-9]+")
                         && neededExperience[1].getText().matches("[0-9]+") && neededExperience[2].getText().matches("[0-9]+") && MPGetter.getText().matches("[0-9]+")
@@ -206,6 +214,29 @@ public class CreatingAttacker extends JPanel {
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());
                     XPPattern = Integer.parseInt(neededExperience[1].getText()) * 10 + Integer.parseInt(neededExperience[2].getText());
                     amountPatteern = Integer.parseInt(amount[0].getText()) * 10 + Integer.parseInt(amount[1].getText()) + Integer.parseInt(amount[2].getText()) / 10;
+                    String s = "attacker" + "\n" + attackerType + "\n" + description + "\n" + imageDirectory.getText() + "\n" + EP + "\n" + MP + "\n" + CDPattern + "\n" + XPToNextLevel + "\n"
+                            + XPPattern + "\n" + amountPatteern;
+
+                    byte data[] = s.getBytes();
+                    Path p = Paths.get("Save/Ability/" + name + ".txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+                    data = ("\n" + name).getBytes();
+                    p = Paths.get("Save/Ability/List.txt");
+
+                    try (OutputStream out = new BufferedOutputStream(
+                            Files.newOutputStream(p, CREATE, APPEND))) {
+                        out.write(data, 0, data.length);
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
                     sListener.switchTo("new ability");
                 }
 
