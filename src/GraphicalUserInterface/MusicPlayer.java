@@ -33,4 +33,8 @@ public class MusicPlayer {
         }
     }
 
+    public static void sameArea() {
+        cnt --;
+    }
+
 }

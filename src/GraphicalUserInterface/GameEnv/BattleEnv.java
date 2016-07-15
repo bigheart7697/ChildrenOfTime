@@ -6,6 +6,7 @@ import GraphicalUserInterface.SimpleMenuListener;
 import abilities.*;
 import battleMechanics.Battlefield;
 import itemMGMT.Consumable;
+import itemMGMT.Item;
 import player.op.Player;
 import units.*;
 
@@ -69,6 +70,15 @@ public class BattleEnv extends JComponent {
     private float size;
     private boolean dialogFlag, victory;
 
+    //Info Dialog stuff
+    private String info;
+    private RoundRectangle2D.Double textHolder;
+    private Rectangle2D.Double[] infoRects1, infoRects2;
+    private Rectangle2D.Double selected1, selected2;
+    private ArrayList<String> infoStrings;
+    private boolean infoRectsFlag, isDisplaying;
+    private boolean infoDialogFlag;
+
     //Animations
     private int[] swordX, swordY;
     private int startY;
@@ -130,7 +140,7 @@ public class BattleEnv extends JComponent {
 
         //PopUp panel stuff
         popX = 0.0;
-        popSpeed = 7.5;
+        popSpeed = 1.25;
         popUpPanel = new RoundRectangle2D.Double(40, 370, popX, 80, 40, 50);
         popFlag = disappearFlag = selectionRectFlag = false;
         selectionRect = null;
@@ -143,6 +153,22 @@ public class BattleEnv extends JComponent {
         size = 25f;
         dialogBox = new RoundRectangle2D.Double(230, 200, 730, 330, 50, 50);
         dialogFlag = victory = false;
+
+        //Info Dialog Stuff
+        infoDialogFlag = false;
+        infoRectsFlag = false;
+        isDisplaying = false;
+        textHolder = new RoundRectangle2D.Double(150, 200, 900, 400, 50, 50);
+        infoRects1 = new Rectangle2D.Double[5];
+        infoRects1[0] = new Rectangle2D.Double(160, 280, 80, 35); // Classes
+        infoRects1[1] = new Rectangle2D.Double(160, 320, 80, 35); // Heroes
+        infoRects1[2] = new Rectangle2D.Double(160, 360, 80, 35); // Abilities
+        infoRects1[3] = new Rectangle2D.Double(160, 400, 80, 35); // Items
+        infoRects1[4] = new Rectangle2D.Double(160, 440, 80, 35); // Enemies
+        selected1 = null;
+        selected2 = null;
+        infoStrings = new ArrayList<>();
+        info = null;
 
 
         //Animation Stuff
@@ -168,7 +194,7 @@ public class BattleEnv extends JComponent {
             @Override
             public void mouseClicked(MouseEvent e) {
 
-                if (attackButton != null && attackButton.contains(e.getX(), e.getY())) {
+                if (!infoDialogFlag && attackButton != null && attackButton.contains(e.getX(), e.getY())) {
                     panelDisappear();
                     if (doer != null) {
                         if (doer.getEP() < 2) {
@@ -183,7 +209,7 @@ public class BattleEnv extends JComponent {
                     abilityFlag = itemFlag = infoFlag = deployFlag = false;
                     size = 25f;
                 }
-                if (abilityButton != null && !itemFlag && abilityButton.contains(e.getX(), e.getY())) {
+                if (!infoDialogFlag && abilityButton != null && !itemFlag && abilityButton.contains(e.getX(), e.getY())) {
                     if (doer != null) {
                         abilityFlag = true;
                         setUpPanel();
@@ -193,7 +219,7 @@ public class BattleEnv extends JComponent {
                     attackFlag = itemFlag = infoFlag = deployFlag = false;
                     size = 25f;
                 }
-                if (itemButton != null && !abilityFlag && itemButton.contains(e.getX(), e.getY())) {
+                if (!infoDialogFlag && itemButton != null && !abilityFlag && itemButton.contains(e.getX(), e.getY())) {
                     if (doer != null) {
                         itemFlag = true;
                         setUpPanel();
@@ -203,23 +229,21 @@ public class BattleEnv extends JComponent {
                     abilityFlag = attackFlag = infoFlag = deployFlag = false;
                     size = 25f;
                 }
-                if (infoButton != null && infoButton.contains(e.getX(), e.getY())) {
-                    if (doer != null) {
-                        displaying = doer.getDescription();
-                        size = 15f;
-                    }
-                    else {
-                        displaying = "Choose a hero first";
-                        size = 25f;
-                    }
-                    abilityFlag = itemFlag = attackFlag = deployFlag = false;
-                }
-                if (nextTurnButton != null && nextTurnButton.contains(e.getX(), e.getY())) {
+                if (!infoDialogFlag && nextTurnButton != null && nextTurnButton.contains(e.getX(), e.getY())) {
                     enemyTurnFlag = true;
                     size = 25f;
                 }
+                if (infoButton != null && infoButton.contains(e.getX(), e.getY())) {
+                    infoDialogFlag = !infoDialogFlag;
+                    if (infoDialogFlag) size = 20f;
+                    else size = 25f;
+                    selected1 = null;
+                    selected2 = null;
+                    infoRectsFlag = false;
+                }
 
-                if (deployFlag && deployButton.contains(e.getX(), e.getY())) {
+                //Deploying
+                if (!infoDialogFlag && deployFlag && deployButton.contains(e.getX(), e.getY())) {
 
                     if (attackFlag) {
                         attackAnimationFlag = true;
@@ -259,7 +283,6 @@ public class BattleEnv extends JComponent {
                             }
                             displaying = doer.getName() + " has successfully attacked " + target.getName() + " with " + doer.getAttDmg() + " power. ";
                         }
-                        if (target.getHP() <= 0) displaying += target.getName() + " has died. ";
                         attackFlag = false;
                         doer = null;
                         target = null;
@@ -280,6 +303,7 @@ public class BattleEnv extends JComponent {
                             displaying = ("Your desired ability is still in cooldown");
                         }
                         else {
+                            panelDisappear();
                             if (target == null) {
                                 aa.setTarget(friendlyTarget);
                                 displaying = (doer.getName() + " has casted " + aa.getName() + " on " + friendlyTarget.getName() + " successfully!");
@@ -313,12 +337,16 @@ public class BattleEnv extends JComponent {
                         selected = null;
                     }
 
+                    for (Enemy en: battlefield.getEnemies()) {
+                        if (en.getHP() <= 0) displaying += en.getName() + " has died. ";
+                    }
+
                     deployFlag = false;
                     size = 25f;
                 }
 
                 //Choosing a hero
-                if (heroRectFlag && !attackFlag && !abilityFlag && !itemFlag && !infoFlag) {
+                if (!infoDialogFlag && heroRectFlag && !attackFlag && !abilityFlag && !itemFlag && !infoFlag) {
                     for (int i = 0; i < heroRect.length; i++) {
                         if (heroRect[i].contains(e.getX(), e.getY())) {
                             doer = battlefield.getHeroes().get(i);
@@ -329,7 +357,7 @@ public class BattleEnv extends JComponent {
                 }
 
                 //Choosing a Friend target
-                if (enemyRectFlag && selected != null && (selected instanceof Restorer || selected instanceof  Consumable)) {
+                if (!infoDialogFlag && enemyRectFlag && selected != null && (selected instanceof Restorer || selected instanceof  Consumable)) {
                     for (int i = 0; i < heroRect.length; i++) {
                         if (heroRect[i].contains(e.getX(), e.getY())) {
                             friendlyTarget = battlefield.getHeroes().get(i);
@@ -344,7 +372,7 @@ public class BattleEnv extends JComponent {
                 }
 
                 //Choosing a target
-                if (enemyRectFlag && (attackFlag || (selected != null && selected instanceof Attacker))) {
+                if (!infoDialogFlag && enemyRectFlag && (attackFlag || (selected != null && selected instanceof Attacker))) {
                     for (int i = 0; i < enemyRect.length; i++) {
                         if (enemyRect[i].contains(e.getX(), e.getY())) {
                             target = battlefield.getEnemies().get(i);
@@ -359,6 +387,170 @@ public class BattleEnv extends JComponent {
                     }
                 }
 
+                //Choosing ability/item
+                if (!infoDialogFlag && selectionRectFlag) {
+                    for (int i = 0; i < selectionRect.length; i++) {
+                        if (selectionRect[i].contains(e.getX(), e.getY())) {
+                            selected = selections.get(i);
+                            break;
+                        }
+                    }
+                }
+
+                //Almanac
+                if (infoDialogFlag) {
+                    if (infoRectsFlag) {
+                        for (int i = 0; i < infoRects2.length; i++) {
+                            if (infoRects2[i].contains(e.getX(), e.getY())) {
+                                isDisplaying = true;
+                                selected2 = infoRects2[i];
+                                for (int j = 0; j < infoRects1.length; j++) {
+                                    if (selected1.equals(infoRects1[j])) {
+                                        switch (j) {
+                                            case 0:
+                                                if (i == 0) info = ("Fighter class:\n" +
+                                                        "Maximum health: 200\n" +
+                                                        "Health refill rate: 10 percent of maximum health\n" +
+                                                        "Maximum magic: 120\n" +
+                                                        "Magic refill rate: 5 percent of maximum magic\n" +
+                                                        "Attack power: 120\n" +
+                                                        "Energy points: 6\n" +
+                                                        "Inventory size: 2\n" +
+                                                        "Ability 1: Fight training\n" +
+                                                        "Permanently increases attack power\n" +
+                                                        "Upgrade1: +30 attack power for 2 xp points\n" +
+                                                        "Upgrade2: +30 attack power for 3 xp points\n" +
+                                                        "Upgrade3: +30 attack power for 4 xp points\n" +
+                                                        "Ability 2: Work out\n" +
+                                                        "Permanently increases maximum health\n" +
+                                                        "Upgrade 1: +50 maximum health for 2 xp points\n" +
+                                                        "Upgrade 2: +50 maximum health for 3 xp points\n" +
+                                                        "Upgrade 3: +50 maximum health for 4 xp points\n");
+                                                if (i == 1) info = ("Supporter class:\n" +
+                                                        "Maximum health: 220\n" +
+                                                        "Health refill rate: 5 percent of maximum health\n" +
+                                                        "Maximum magic: 200\n" +
+                                                        "Magic refill rate: 10 percent of maximum magic\n" +
+                                                        "Attack power: 80\n" +
+                                                        "Energy points: 5\n" +
+                                                        "Inventory size: 3\n" +
+                                                        "Ability 1: Quick as a bunny\n" +
+                                                        "Permanently increases energy points\n" +
+                                                        "Upgrade1: +1 energy point for 2 xp points\n" +
+                                                        "Upgrade2: +1 energy point for 3 xp points\n" +
+                                                        "Upgrade3: +1 energy point for 4 xp points\n" +
+                                                        "Ability 2: Magic lessons\n" +
+                                                        "Permanently increases maximum magic\n" +
+                                                        "Upgrade 1: +50 maximum magic for 2 xp points\n" +
+                                                        "Upgrade 2: +50 maximum magic for 3 xp points\n" +
+                                                        "Upgrade 3: +50 maximum magic for 4 xp points\n");
+                                                break;
+                                            case 1:
+                                                info = battlefield.getHeroes().get(i).getDescription();
+                                                break;
+                                            case 2:
+                                                ArrayList<ActiveAbility> aas = new ArrayList<>();
+                                                for (Hero h : battlefield.getHeroes()) {
+                                                    aas.addAll(h.getActAbs());
+                                                }
+                                                info = aas.get(i).getDescription();
+                                                break;
+                                            case 3:
+                                                ArrayList<Item> its = new ArrayList<>();
+                                                for (Hero h : battlefield.getHeroes()) {
+                                                    its.addAll(h.getItems());
+                                                }
+                                                info = its.get(i).getDescription();
+                                                break;
+                                            case 4:
+                                                info = battlefield.getEnemies().get(i).getDescription();
+                                                break;
+                                        }
+                                    }
+                                }
+                                break;
+                            } else {
+                                isDisplaying = false;
+                                selected2 = null;
+                            }
+                        }
+                    }
+                    if (infoDialogFlag && !isDisplaying) {
+                        if (!isDisplaying) for (int i = 0; i < infoRects1.length; i++) {
+                            if (infoRects1[i].contains(e.getX(), e.getY())) {
+                                infoRectsFlag = true;
+                                selected1 = infoRects1[i];
+                                switch (i) {
+                                    case 0:
+                                        infoStrings.clear();
+                                        infoStrings.add("Fighter");
+                                        infoStrings.add("Supporter");
+                                        infoRects2 = new Rectangle2D.Double[2];
+                                        infoRects2[0] = new Rectangle2D.Double(250, 270, 145, 30);
+                                        infoRects2[1] = new Rectangle2D.Double(250, 310, 145, 30);
+                                        break;
+                                    case 1:
+                                        infoStrings.clear();
+                                        infoStrings.addAll(battlefield.getHeroes().stream().map(Unit::getName).collect(Collectors.toList()));
+                                        int yi = 270;
+                                        infoRects2 = new Rectangle2D.Double[infoStrings.size()];
+                                        for (int j = 0; j < infoRects2.length; j++) {
+                                            infoRects2[j] = new Rectangle2D.Double(250, yi, 145, 30);
+                                            yi += 40;
+                                        }
+                                        break;
+                                    case 2:
+                                        infoStrings.clear();
+                                        for (Hero h : battlefield.getHeroes()) {
+                                            infoStrings.addAll(h.getActAbs().stream().map(Ability::getName).collect(Collectors.toList()));
+                                        }
+                                        yi = 270;
+                                        infoRects2 = new Rectangle2D.Double[infoStrings.size()];
+                                        for (int j = 0; j < infoRects2.length; j++) {
+                                            infoRects2[j] = new Rectangle2D.Double(250, yi, 145, 30);
+                                            yi += 40;
+                                        }
+                                        break;
+                                    case 3:
+                                        infoStrings.clear();
+                                        for (Hero h : battlefield.getHeroes()) {
+                                            infoStrings.addAll(h.getItems().stream().map(Item::getName).collect(Collectors.toList()));
+                                        }
+                                        yi = 270;
+                                        infoRects2 = new Rectangle2D.Double[infoStrings.size()];
+                                        for (int j = 0; j < infoRects2.length; j++) {
+                                            infoRects2[j] = new Rectangle2D.Double(250, yi, 145, 30);
+                                            yi += 40;
+                                        }
+                                        break;
+                                    case 4:
+                                        infoStrings.clear();
+                                        infoStrings.addAll(battlefield.getEnemies().stream().map(Unit::getName).collect(Collectors.toList()));
+                                        yi = 270;
+                                        infoRects2 = new Rectangle2D.Double[infoStrings.size()];
+                                        String repeatCheck = "";
+                                        for (int j = 0; j < infoRects2.length; j++) {
+                                            if ((repeatCheck.contains("thug") && infoStrings.get(j).contains("thug"))
+                                                    || (repeatCheck.contains("angel") && infoStrings.get(j).contains("angel"))
+                                                    || (repeatCheck.contains("tank") && infoStrings.get(j).contains("tank")))
+                                            {
+                                                yi -= 40;
+                                            }
+                                            infoRects2[j] = new Rectangle2D.Double(250, yi, 145, 30);
+                                            repeatCheck = infoStrings.get(j);
+                                            yi += 40;
+                                        }
+                                        break;
+                                }
+                                break;
+                            } else {
+                                infoRectsFlag = false;
+                                selected1 = null;
+                            }
+                        }
+                    }
+                }
+
                 if (menuButton.contains(e.getX(), e.getY())) {
                     emgr.frame().setSize(new Dimension(1280, 800));
                     emgr.frame().setLocationRelativeTo(null);
@@ -369,20 +561,14 @@ public class BattleEnv extends JComponent {
                     selected = null;
                     friendlyTarget = null;
                     target = null;
-                    attackFlag = abilityFlag = itemFlag = infoFlag = false;
+                    attackFlag = abilityFlag = itemFlag = infoFlag = infoDialogFlag = false;
+                    selected1 = null;
+                    selected2 = null;
+                    infoRectsFlag = false;
+                    size = 25f;
                     deployFlag = false;
                     panelDisappear();
                     displaying = "Canceled";
-                }
-
-                //Choosing ability/item
-                if (selectionRectFlag) {
-                    for (int i = 0; i < selectionRect.length; i++) {
-                        if (selectionRect[i].contains(e.getX(), e.getY())) {
-                            selected = selections.get(i);
-                            break;
-                        }
-                    }
                 }
             }
 
@@ -489,7 +675,7 @@ public class BattleEnv extends JComponent {
         //PopUp panel for items and abilities
         g2.setColor(fontColor);
         g2.setFont(mmFont.deriveFont(25f));
-        g2.drawString("Abilities", 60, 392);
+        g2.drawString(" Abilities", 60, 392);
         g2.drawString("   and", 60, 417);
         g2.drawString("  Items", 60, 442);
         if (popFlag) {
@@ -498,7 +684,7 @@ public class BattleEnv extends JComponent {
             g2.setColor(fontColor);
             g2.draw(popUpPanel);
             if (popX < 600) {
-                popX += popSpeed;
+                popX += popSpeed + (600 - popX) / 40;
                 popUpPanel = new RoundRectangle2D.Double(40, 370, popX, 80, 40, 50);
             }
             if (popX >= 600) {
@@ -577,7 +763,7 @@ public class BattleEnv extends JComponent {
             g2.setColor(fontColor);
             g2.draw(popUpPanel);
             if (popX > 0) {
-                popX -= popSpeed;
+                popX -= popSpeed + (600 - popX) / 40;
                 popUpPanel = new RoundRectangle2D.Double(40, 370, popX, 80, 40, 50);
             }
         }
@@ -648,7 +834,7 @@ public class BattleEnv extends JComponent {
         g2.setColor(fontColor);
         g2.draw(infoButton);
         g2.setFont(beFont.deriveFont(30f));
-        g2.drawString("Info", 260, getHeight() - 50);
+        g2.drawString("Almanac", 225, getHeight() - 50);
 
         if (nextTurnButton == null) nextTurnButton = new RoundRectangle2D.Double(195, getHeight() - 145, 200, 50, 25, 25);
         g2.setColor(c9);
@@ -680,7 +866,7 @@ public class BattleEnv extends JComponent {
         g2.setColor(fontColor);
         g2.draw(new RoundRectangle2D.Double(420, getHeight() - 230, getWidth() - 430, 220, 50, 50));
         if (displaying != null) {
-            drawDisplayingInfo();
+            drawDisplayingInfo(true);
         }
 
 
@@ -722,7 +908,6 @@ public class BattleEnv extends JComponent {
                 if (e instanceof FinalBoss) {
                     g2.drawImage(e.getImage(), xH, yH, 495, 254, null);
                     if (!enemyRectFlag) {
-                        System.out.println(1);
                         enemyRect[battlefield.getEnemies().indexOf(e)] = new Rectangle2D.Double(xH, yH, 495, 254);
                     }
                 }
@@ -755,10 +940,11 @@ public class BattleEnv extends JComponent {
             xD = enemyRect[battlefield.getEnemies().indexOf(target)].getX();
             yD = enemyRect[battlefield.getEnemies().indexOf(target)].getY();
             sizeD = enemyRect[battlefield.getEnemies().indexOf(target)].getWidth();
+            double sizeD2 = enemyRect[battlefield.getEnemies().indexOf(target)].getHeight();
             g2.setColor(new Color(160, 255, 224));
-            g2.drawOval((int)xD, (int)yD, (int)sizeD, (int)sizeD);
-            g2.drawLine((int)(xD + sizeD / 2), (int)yD, (int)(xD + sizeD / 2), (int)(yD + sizeD));
-            g2.drawLine((int)xD, (int)(yD + sizeD / 2), (int)(xD + sizeD), (int)(yD + sizeD / 2));
+            g2.drawOval((int)xD, (int)yD, (int)sizeD, (int)sizeD2);
+            g2.drawLine((int)(xD + sizeD / 2), (int)yD, (int)(xD + sizeD / 2), (int)(yD + sizeD2));
+            g2.drawLine((int)xD, (int)(yD + sizeD2 / 2), (int)(xD + sizeD), (int)(yD + sizeD2 / 2));
         }
 
         //Chosen Friendly Target
@@ -835,7 +1021,44 @@ public class BattleEnv extends JComponent {
         if (victory && !attackAnimationFlag) {
             g2.setFont(mmFont.deriveFont(180f));
             g2.setColor(fontColor);
-            g2.drawString("You Won!", 340, 400);
+            g2.drawString("You Won!", 315, 400);
+        }
+
+
+        //Info Dialog Panel
+        if (infoDialogFlag) {
+            g2.setColor(bgColor);
+            g2.fill(textHolder);
+            g2.setColor(fontColor);
+            g2.draw(textHolder);
+            g2.setFont(mmFont.deriveFont(25f));
+            g2.drawString("Knowledge is Power", 170, 240);
+            g2.setFont(mmFont.deriveFont(20f));
+            g2.drawString("Classes", 170, 300);
+            g2.drawString("Heroes", 170, 340);
+            g2.drawString("Abilities", 170, 380);
+            g2.drawString("Items", 170, 420);
+            g2.drawString("Enemies", 170, 460);
+            if (selected1 != null) g2.draw(selected1);
+            if (selected2 != null) g2.draw(selected2);
+            if (infoRectsFlag) {
+                String repeatCheck = "";
+                for (int i = 0; i < infoRects2.length; i++) {
+                    if (selected1 == infoRects1[4]) {
+                        String[] p = infoStrings.get(i).split(" ");
+                        if (repeatCheck.equals(p[1])) continue;
+                        String t = p[1].charAt(0) + "";
+                        t = t.toUpperCase();
+                        t += p[1].substring(1, p[1].length());
+                        repeatCheck = p[1];
+                        g2.drawString(t, (int)infoRects2[i].getX() + 10, (int)infoRects2[i].getY() + 20);
+                    }
+                    else g2.drawString(infoStrings.get(i), (int)infoRects2[i].getX() + 10, (int)infoRects2[i].getY() + 20);
+                }
+            }
+            if (isDisplaying) {
+                drawDisplayingInfo(false);
+            }
         }
 
 
@@ -897,7 +1120,7 @@ public class BattleEnv extends JComponent {
             enemyRect = new Rectangle.Double[battlefield.getEnemies().size()];
         }
         if (battlefield.getEnemies().size() == 0) victory = true;
-        if (victory && !attackAnimationFlag) {
+        if (victory && !attackAnimationFlag && glowDuration == 0) {
             MusicPlayer.stopMusic();
             MusicPlayer.playMusic("audios/victory.wav");
             battlefield.getHeroes().forEach(Hero::renew);
@@ -923,25 +1146,39 @@ public class BattleEnv extends JComponent {
     }
 
     void setDisplayInfo(String s) { displaying = s; }
-    private void drawDisplayingInfo() {
-        int charMax = 0;
+    private void drawDisplayingInfo(boolean cond) {
+        String st;
+        if (cond) st = displaying;
+        else st = info;
+        int charMax = 0, limit;
+        if (cond) limit = 75;
+        else limit = 75;
         String temp = "";
         ArrayList<String> tokens = new ArrayList<>();
-        for (int i = 0; i < displaying.length(); i++) {
-            temp += displaying.charAt(i);
-            charMax ++;
-            if ((charMax > 140 && displaying.charAt(i) == ' ') || i == displaying.length() - 1) {
+        for (int i = 0; i < st.length(); i++) {
+            temp += st.charAt(i);
+            charMax++;
+            if ((charMax > limit && st.charAt(i) == ' ') || i == st.length() - 1) {
                 tokens.add(temp);
                 temp = "";
                 charMax = 0;
             }
         }
-        int xT = 440, yT = getHeight() - 200;
+        int xT, yT;
+        if (cond) {
+            xT = 440;
+            yT = getHeight() - 200;
+        }
+        else {
+            xT = 420;
+            yT = 240;
+        }
         for (String s : tokens) {
             g2.setFont(mmFont.deriveFont(size));
             g2.drawString(s, xT, yT);
             yT += 30;
         }
+
     }
 
     private void setUpPanel() {
