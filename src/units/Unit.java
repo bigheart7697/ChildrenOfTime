@@ -37,7 +37,10 @@ abstract public class Unit {
         if (this.getHP() > this.getMaxHP()) this.setHP(this.getMaxHP());
     }
     public void died() { this.isDead = true; }
-    public void revived() { this.isDead = false;}
+    public void revived() {
+        this.isDead = false;
+        setHP(maxHP / 2);
+    }
 
     public boolean isDead() {
         return isDead;
@@ -56,6 +59,7 @@ abstract public class Unit {
     public void setField(Battlefield f) { this.field = f; }
 
     public abstract void setTarget();
+    public Unit getTarget() { return target; }
     public abstract void update();
 
     public String getDescription() {

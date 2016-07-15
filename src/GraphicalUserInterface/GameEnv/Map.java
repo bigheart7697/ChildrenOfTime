@@ -171,9 +171,6 @@ class GameEvent {
         return passable;
     }
 
-    public GameEvent getRelatedEvent() {
-        return relatedEvent;
-    }
     private void setRelatedEvent(GameEvent relatedEvent) {
         this.relatedEvent = relatedEvent;
     }

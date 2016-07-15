@@ -31,7 +31,7 @@ public class Restorer extends ActiveAbility {
 //    other methods:
 
     @Override
-    public void cast() {
+    public boolean cast() {
         EPCost = EPCostPattern / (int)Math.pow(10.0, (double)(3 - level)) % 10;
         if(user.getEP() < EPCost)
             System.out.println("You don't have enough energy point!");
@@ -82,5 +82,6 @@ public class Restorer extends ActiveAbility {
                     target.setMP(target.getMaxMP());
             }
         }
+        return false;
     }
 }

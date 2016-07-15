@@ -1,6 +1,7 @@
 package GraphicalUserInterface.GameEnv;
 
 import GraphicalUserInterface.EnvironmentMgr;
+import GraphicalUserInterface.MusicPlayer;
 import GraphicalUserInterface.SimpleMenuListener;
 import abilities.Ability;
 import itemMGMT.Consumable;
@@ -78,11 +79,13 @@ public class GameEnv extends JComponent{
 
     //Graphics2D
     private Graphics2D g2;
-    private boolean gameStarted;
+    private boolean gameStarted, gameFinished;
 
 
 
     public GameEnv(EnvironmentMgr emgr, Scenario scenario, SimpleMenuListener gel) {
+
+        MusicPlayer.playMusic("audios/game");
 
         //Environment Manager
         this.emgr = emgr;
@@ -91,6 +94,7 @@ public class GameEnv extends JComponent{
 
         //Start Flag
         gameStarted = false;
+        gameFinished = false;
 
 
         //Moving Icon stuff
@@ -415,9 +419,18 @@ public class GameEnv extends JComponent{
                                         battleEnv.setEnemies(eventToBeFired.getEnemies());
                                         battleEnv.setDisplayInfo(eventToBeFired.getInfo());
                                         geListener.switchTo("battle");
+                                        MusicPlayer.stopMusic();
+                                        MusicPlayer.playMusic("audios/battle.wav");
+                                        if (eventToBeFired.getTile().getX() == 9 && eventToBeFired.getTile().getY() == 14) MusicPlayer.sameArea();
                                         scenario.getPlayer().setGold(scenario.getPlayer().getGold() + eventToBeFired.getRewards()[0]);
                                         scenario.getPlayer().setXP(scenario.getPlayer().getXP() + eventToBeFired.getRewards()[1]);
                                         eventDisappearFlag = true;
+                                        if (eventToBeFired.getInfo().contains("collector")) {
+                                            gameFinished = true;
+                                            messageBox.setMessage(scenario.geEndStory());
+                                            messageBox.setImage(scenario.getEndImage());
+                                            messageBoxFlag = true;
+                                        }
                                         break;
                                 }
                                 if (dialogTypeFlag) dialogBoxFlag = false;
@@ -437,6 +450,11 @@ public class GameEnv extends JComponent{
                         messageBox.setMessage(null);
                         messageBox.setImage(null);
                         if (!abilityUpEnvFlag && !heroInfoDisplayFlag) targetHero = null;
+                        if (gameFinished) {
+                            emgr.frame().setSize(1280, 800);
+                            emgr.frame().setLocationRelativeTo(null);
+                            geListener.switchTo("main");
+                        }
                         clickFlag = true;
                     }
 
@@ -733,6 +751,13 @@ public class GameEnv extends JComponent{
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
         if (!gameStarted) {
+
+            //Story Box
+            if (messageBoxFlag) {
+                messageBox.draw();
+            }
+
+        } else if (gameFinished) {
 
             //Story Box
             if (messageBoxFlag) {

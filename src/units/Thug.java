@@ -74,7 +74,6 @@ public class Thug extends Enemy {
 
     @Override
     public void setTarget() {
-        System.out.println(this.field == null);
         int mhp = 0; // To find the hero with max hp and attack it
         for (Hero h: this.field.getHeroes()) {
             if (h.getHP() > mhp) {

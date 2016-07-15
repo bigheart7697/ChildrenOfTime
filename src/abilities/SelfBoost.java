@@ -30,8 +30,8 @@ public class SelfBoost extends PassiveAbility {
 //    other methods:
 
     @Override
-    public void cast() {
-        if((whichStat == "magic point") && level <= 3){
+    public boolean cast() {
+        if((whichStat == "magic point") && (level <= 3)){
             getUser().setMaxMP( getUser().getMaxMP() + amount);
             getUser().setMP(getUser().getMaxMP());
         }
@@ -49,18 +49,16 @@ public class SelfBoost extends PassiveAbility {
             getUser().setMaxEP(getUser().getMaxEP() + amount);
             getUser().setEP( getUser().getMaxEP());
         }
-
+        return false;
     }
 
     @Override
     public void upgrade() {
         if (currentXP > XPtoNextLevel) {
-            System.out.println(1);
-                level++;
-                currentXP -= XPtoNextLevel;
-                XPtoNextLevel = XPGainPattern / 10;
-                XPGainPattern = (XPGainPattern % 10) * 10;
-
+            level++;
+            currentXP -= XPtoNextLevel;
+            XPtoNextLevel = XPGainPattern / 10;
+            XPGainPattern = (XPGainPattern % 10) * 10;
             cast();
         }
     }

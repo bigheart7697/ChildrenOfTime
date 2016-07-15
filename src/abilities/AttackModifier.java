@@ -36,7 +36,7 @@ public class AttackModifier extends PassiveAbility {
 //  other methods:
 
     @Override
-    public void cast() {
+    public boolean cast() {
         if (splashPattern != 0) {
             target.setHP(target.getHP() - user.getAttDmg());
             for(Enemy tmp : battlefield.getEnemies()) {
@@ -52,11 +52,13 @@ public class AttackModifier extends PassiveAbility {
             critChance = (critChance / (int) Math.pow(10.0,(double)(3 - level)) % 10) * 10 ;
             if(randomNumber < (chancePattern) * critChance / 100) {
                 target.setHP(target.getHP() - user.getAttDmg() * critRate);
+                return true;
             }
             else {
-                target.setHP(target.getHP() - user.getAttDmg());
+                return false;
             }
         }
+        return false;
     }
 
 }
