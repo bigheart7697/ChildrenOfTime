@@ -59,6 +59,7 @@ abstract public class Unit {
     public void setField(Battlefield f) { this.field = f; }
 
     public abstract void setTarget();
+    public Unit getTarget() { return target; }
     public abstract void update();
 
     public String getDescription() {

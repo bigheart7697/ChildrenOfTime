@@ -80,11 +80,12 @@ public class BattleEnv extends JComponent {
     private boolean infoDialogFlag;
 
     //Animations
-    private int[] swordX, swordY;
-    private int startY;
+    private int[] swordX, swordY, axeX, axeY;
+    private int swordStartY, swordRedColor, swordBlueColor, axeStartX, axeColor;
     private int animationMover;
-    private boolean attackAnimationFlag;
+    private boolean attackAnimationFlag, enemyAnimationFlag, healAnimationFlag, collectorAnimationFlag;
     private Image[] glows; //for default scenario only :D
+    private Image greenShade;
     private int glowIndex, glowDuration;
 
     private Image BG, arrow;
@@ -107,6 +108,7 @@ public class BattleEnv extends JComponent {
             for (int i = 0; i < 4; i++) {
                 glows[i] = ImageIO.read(new File("BattleGraphics/glow" + (i + 1) + ".png"));
             }
+            greenShade = ImageIO.read(new File("BattleGraphics/greenShade.png"));
             BG = ImageIO.read(new File("BattleGraphics/BG.jpg"));
             arrow = ImageIO.read(new File("BattleGraphics/arrow.png"));
         } catch (IOException e) {
@@ -173,18 +175,33 @@ public class BattleEnv extends JComponent {
 
         //Animation Stuff
         swordX = new int[5];
-        swordX[0] = 50;
-        swordX[1] = 200;
-        swordX[2] = 225;
-        swordX[3] = 600;
-        swordX[4] = 650;
+        swordX[0] = 25;
+        swordX[1] = 100;
+        swordX[2] = 112;
+        swordX[3] = 300;
+        swordX[4] = 325;
         swordY = new int[3];
-        swordY[0] = 15;
-        swordY[1] = 50;
-        swordY[2] = 35;
+        swordY[0] = 7;
+        swordY[1] = 25;
+        swordY[2] = 17;
+        swordStartY = getHeight() / 2;
+        swordRedColor = 0;
+        swordBlueColor = 0;
+        axeX = new int[6];
+        axeX[0] = 200;
+        axeX[1] = 245;
+        axeX[2] = 256;
+        axeX[3] = 267;
+        axeX[4] = 312;
+        axeX[5] = 387;
+        axeY = new int[3];
+        axeY[0] = 7;
+        axeY[1] = 50;
+        axeY[2] = 80;
+        axeStartX = -25;
+        axeColor = 0;
         animationMover = 0;
-        startY = getHeight() / 2;
-        attackAnimationFlag = false;
+        attackAnimationFlag = enemyAnimationFlag = healAnimationFlag = collectorAnimationFlag = false;
         glowIndex = 0;
         glowDuration = 0;
 
@@ -245,6 +262,11 @@ public class BattleEnv extends JComponent {
                 //Deploying
                 if (!infoDialogFlag && deployFlag && deployButton.contains(e.getX(), e.getY())) {
 
+                    //Decreasing enemy HPs gradually
+                    int[] enemyHPsBefore = new int[battlefield.getEnemies().size()];
+                    for (int i = 0; i < battlefield.getEnemies().size(); i++)
+                        enemyHPsBefore[i] = battlefield.getEnemies().get(i).getHP();
+
                     if (attackFlag) {
                         attackAnimationFlag = true;
                         animationMover = -700;
@@ -254,19 +276,25 @@ public class BattleEnv extends JComponent {
                                 ability.setTarget(target);
                                 if (ability.getName().equalsIgnoreCase("Swirling attack") && ability.getLevel() > 0) {
                                     ability.cast();
+                                    glowIndex = battlefield.getHeroes().indexOf(doer);
+                                    glowDuration = 200;
+                                    swordBlueColor = 55;
                                     doer.setEP(doer.getEP() - 2);
                                     hasAttackModifier = true;
                                     displaying = doer.getName() + " has successfully attacked " + target.getName() +
                                             " and used the ability: Swirling Attack ";
-                                    size = 15f;
+                                    size = 25f;
                                 }
                                 else if (ability.getName().equalsIgnoreCase("Critical strike") && ability.getLevel() > 0) {
                                     hasAttackModifier = ability.cast();
                                     if (hasAttackModifier) {
+                                        glowIndex = battlefield.getHeroes().indexOf(doer);
+                                        glowDuration = 200;
+                                        swordBlueColor = 55;
                                         doer.setEP(doer.getEP() - 2);
                                         displaying = doer.getName() + " has successfully attacked " + target.getName() +
                                                 " and used the ability: Critical Strike ";
-                                        size = 15f;
+                                        size = 25f;
                                     }
                                 }
                                 break;
@@ -274,13 +302,7 @@ public class BattleEnv extends JComponent {
                         }
                         if (!hasAttackModifier) {
                             doer.setEP(doer.getEP() - 2);
-                            int tarHP = target.getHP() - doer.getAttDmg();
-                            if (tarHP < 0) tarHP = 0;
-                            //Decreasing HP gradually
-                            while (target.getHP() > tarHP) {
-                                target.setHP(target.getHP() - 1);
-                                paintComponent(getGraphics());
-                            }
+                            target.setHP(target.getHP() - doer.getAttDmg());
                             displaying = doer.getName() + " has successfully attacked " + target.getName() + " with " + doer.getAttDmg() + " power. ";
                         }
                         attackFlag = false;
@@ -304,7 +326,13 @@ public class BattleEnv extends JComponent {
                         }
                         else {
                             panelDisappear();
+                            if (aa instanceof Attacker) {
+                                attackAnimationFlag = true;
+                                animationMover = -700;
+                                swordRedColor = 55;
+                            }
                             if (target == null) {
+                                healAnimationFlag = true;
                                 aa.setTarget(friendlyTarget);
                                 displaying = (doer.getName() + " has casted " + aa.getName() + " on " + friendlyTarget.getName() + " successfully!");
                                 aa.cast();
@@ -314,13 +342,11 @@ public class BattleEnv extends JComponent {
                                 displaying = (doer.getName() + " has casted " + aa.getName() + " on " + target.getName() + " successfully!");
                                 aa.cast();
                             }
-
                         }
                         panelDisappear();
                         abilityFlag = false;
                         doer = null;
                         target = null;
-                        friendlyTarget = null;
                         selected = null;
                     }
 
@@ -337,9 +363,28 @@ public class BattleEnv extends JComponent {
                         selected = null;
                     }
 
-                    for (Enemy en: battlefield.getEnemies()) {
-                        if (en.getHP() <= 0) displaying += en.getName() + " has died. ";
+                    //Decreasing Enemy HPs gradually
+                    int[] enemyHPsAfter = new int[battlefield.getEnemies().size()];
+                    for (int i = 0; i < battlefield.getEnemies().size(); i++) {
+                        enemyHPsAfter[i] = battlefield.getEnemies().get(i).getHP();
+                        if (enemyHPsAfter[i] < 0) enemyHPsAfter[i] = 0;
                     }
+                    for (int i = 0; i < battlefield.getEnemies().size(); i++)
+                        battlefield.getEnemies().get(i).setHP(enemyHPsBefore[i]);
+                    boolean hpFlag = true;
+                    while (hpFlag) {
+                        hpFlag = false;
+                        for (int i = 0; i < battlefield.getEnemies().size(); i++) {
+                            if (battlefield.getEnemies().get(i).getHP() > enemyHPsAfter[i]) {
+                                hpFlag = true;
+                                battlefield.getEnemies().get(i).setHP(battlefield.getEnemies().get(i).getHP() - 1);
+                            }
+                        }
+                        paintComponent(getGraphics());
+                    }
+
+                    //Dead enemies
+                    battlefield.getEnemies().stream().filter(en -> en.getHP() <= 0).forEach(en -> displaying += en.getName() + " has died. ");
 
                     deployFlag = false;
                     size = 25f;
@@ -376,7 +421,7 @@ public class BattleEnv extends JComponent {
                     for (int i = 0; i < enemyRect.length; i++) {
                         if (enemyRect[i].contains(e.getX(), e.getY())) {
                             target = battlefield.getEnemies().get(i);
-                            startY = (int) (enemyRect[i].getY() + enemyRect[i].getHeight() / 2);
+                            swordStartY = (int) (enemyRect[i].getY() + enemyRect[i].getHeight() / 2);
                             deployFlag = true;
                             break;
                         }
@@ -936,7 +981,7 @@ public class BattleEnv extends JComponent {
         }
 
         //Chosen Enemy
-        if (target != null) {
+        if (target != null && !healAnimationFlag) {
             xD = enemyRect[battlefield.getEnemies().indexOf(target)].getX();
             yD = enemyRect[battlefield.getEnemies().indexOf(target)].getY();
             sizeD = enemyRect[battlefield.getEnemies().indexOf(target)].getWidth();
@@ -948,7 +993,7 @@ public class BattleEnv extends JComponent {
         }
 
         //Chosen Friendly Target
-        if (friendlyTarget != null) {
+        if (friendlyTarget != null && !healAnimationFlag) {
             xD = heroRect[battlefield.getHeroes().indexOf(friendlyTarget)].getX();
             yD = heroRect[battlefield.getHeroes().indexOf(friendlyTarget)].getY();
             if (friendlyTarget.getName().equalsIgnoreCase("meryl")) {
@@ -992,38 +1037,82 @@ public class BattleEnv extends JComponent {
             if (animationMover > 0) {
                 int[] xs = {swordX[0] + animationMover, swordX[0] + animationMover, swordX[1] + animationMover, swordX[1] + animationMover,
                         swordX[2] + animationMover, swordX[2] + animationMover, swordX[3] + animationMover, swordX[4] + animationMover};
-                g2.setColor(new Color(200, 200, 200));
-                int[] ys1 = {startY, startY - swordY[0], startY - swordY[0], startY - swordY[1],
-                        startY - swordY[1], startY - swordY[2], startY - swordY[2], startY};
-                int[] ys2 = {startY, startY + swordY[0], startY + swordY[0], startY + swordY[1],
-                        startY + swordY[1], startY + swordY[2], startY + swordY[2], startY};
+                g2.setColor(new Color(200 + swordRedColor, 200 + swordRedColor, 200 + swordBlueColor));
+                int[] ys1 = {swordStartY, swordStartY - swordY[0], swordStartY - swordY[0], swordStartY - swordY[1],
+                        swordStartY - swordY[1], swordStartY - swordY[2], swordStartY - swordY[2], swordStartY};
+                int[] ys2 = {swordStartY, swordStartY + swordY[0], swordStartY + swordY[0], swordStartY + swordY[1],
+                        swordStartY + swordY[1], swordStartY + swordY[2], swordStartY + swordY[2], swordStartY};
                 g2.fill(new Polygon(xs, ys1, 8));
-                g2.setColor(new Color(140, 140, 140));
+                g2.setColor(new Color(140 + swordRedColor, 140 + swordRedColor, 140 + swordBlueColor));
                 g2.fill(new Polygon(xs, ys2, 8));
             }
             else {
                 int[] xs = {swordX[0] , swordX[0] , swordX[1] , swordX[1] ,
                         swordX[2] , swordX[2] , swordX[3] , swordX[4] };
                 g2.setColor(new Color(Math.abs(animationMover) % 255, Math.abs(animationMover) % 255, Math.abs(animationMover) % 255));
-                int[] ys1 = {startY, startY - swordY[0], startY - swordY[0], startY - swordY[1],
-                        startY - swordY[1], startY - swordY[2], startY - swordY[2], startY};
-                int[] ys2 = {startY, startY + swordY[0], startY + swordY[0], startY + swordY[1],
-                        startY + swordY[1], startY + swordY[2], startY + swordY[2], startY};
+                int[] ys1 = {swordStartY, swordStartY - swordY[0], swordStartY - swordY[0], swordStartY - swordY[1],
+                        swordStartY - swordY[1], swordStartY - swordY[2], swordStartY - swordY[2], swordStartY};
+                int[] ys2 = {swordStartY, swordStartY + swordY[0], swordStartY + swordY[0], swordStartY + swordY[1],
+                        swordStartY + swordY[1], swordStartY + swordY[2], swordStartY + swordY[2], swordStartY};
                 g2.fill(new Polygon(xs, ys1, 8));
                 g2.setColor(new Color(255 - Math.abs(animationMover) % 255, 255 - Math.abs(animationMover) % 255, 255 - Math.abs(animationMover) % 255));
                 g2.fill(new Polygon(xs, ys2, 8));
             }
-            animationMover += 10;
-            if (animationMover > getWidth() + 700) attackAnimationFlag = false;
+            animationMover += 7;
+            if (animationMover > getWidth() + 700) {
+                attackAnimationFlag = false;
+                swordRedColor = 0;
+                swordBlueColor = 0;
+            }
         }
-
-
-        if (victory && !attackAnimationFlag) {
-            g2.setFont(mmFont.deriveFont(180f));
-            g2.setColor(fontColor);
-            g2.drawString("You Won!", 315, 400);
+        if (enemyAnimationFlag) {
+            if (animationMover > 0 && animationMover < getHeight() - 590) {
+                int[] xs = {axeX[0] + axeStartX, axeX[0] + axeStartX, axeX[1] + axeStartX, axeX[0] + axeStartX,
+                        axeX[2] + axeStartX, axeX[4] + axeStartX, axeX[3] + axeStartX, axeX[5] + axeStartX, axeX[5] + axeStartX};
+                int[] ys1 = {200 + animationMover, 200 - axeY[0] + animationMover,
+                        200 - axeY[0] + animationMover, 200 - axeY[1] + animationMover,
+                        200 - axeY[2] + animationMover, 200 - axeY[1] + animationMover,
+                        200 - axeY[0] + animationMover, 200 - axeY[0] + animationMover,
+                        200 + animationMover};
+                int[] ys2 = {200 + animationMover, 200 + axeY[0] + animationMover,
+                        200 + axeY[0] + animationMover, 200 + axeY[1] + animationMover,
+                        200 + axeY[2] + animationMover, 200 + axeY[1] + animationMover,
+                        200 + axeY[0] + animationMover, 200 + axeY[0] + animationMover,
+                        200 + animationMover};
+                g2.setColor(new Color(111 + axeColor, 111, 111));
+                g2.fill(new Polygon(xs, ys1, 9));
+                g2.setColor(new Color(76 + axeColor, 76, 76));
+                g2.draw(new Polygon(xs, ys1, 9));
+                g2.fill(new Polygon(xs, ys2, 9));
+            }
+            else if (animationMover < 0  || animationMover > getHeight() - 590){
+                int[] xs = {axeX[0] + axeStartX, axeX[0] + axeStartX, axeX[1] + axeStartX, axeX[0] + axeStartX,
+                        axeX[2] + axeStartX, axeX[4] + axeStartX, axeX[3] + axeStartX, axeX[5] + axeStartX, axeX[5] + axeStartX};
+                int place;
+                if (animationMover < 0) place = 0;
+                else place = getHeight() - 590;
+                int[] ys1 = {200 + place, 200 - axeY[0] + place,
+                        200 - axeY[0] + place, 200 - axeY[1] + place,
+                        200 - axeY[2] + place, 200 - axeY[1] + place,
+                        200 - axeY[0] + place, 200 - axeY[0] + place,
+                        200 + place};
+                int[] ys2 = {200 + place, 200 + axeY[0] + place,
+                        200 + axeY[0] + place, 200 + axeY[1] + place,
+                        200 + axeY[2] + place, 200 + axeY[1] + place,
+                        200 + axeY[0] + place, 200 + axeY[0] + place,
+                        200 + place};
+                g2.setColor(new Color(111 + axeColor, 111, 111));
+                g2.fill(new Polygon(xs, ys1, 9));
+                g2.setColor(new Color(76 + axeColor, 76, 76));
+                g2.draw(new Polygon(xs, ys1, 9));
+                g2.fill(new Polygon(xs, ys2, 9));
+            }
+            animationMover += 7;
+            if (animationMover > getHeight() + 400) {
+                enemyAnimationFlag = false;
+                axeColor = 0;
+            }
         }
-
 
         //Info Dialog Panel
         if (infoDialogFlag) {
@@ -1061,15 +1150,89 @@ public class BattleEnv extends JComponent {
             }
         }
 
+        //Victory
+        if (victory && !attackAnimationFlag && glowDuration == 0) {
+            g2.setFont(mmFont.deriveFont(180f));
+            g2.setColor(fontColor);
+            g2.drawString("You Won!", 315, 400);
+        }
 
-        g.drawImage(buffer, 0, 0, null);
+        if (healAnimationFlag) {
+            if (target != null) {
+                g2.drawImage(greenShade,
+                        (int)enemyRect[battlefield.getEnemies().indexOf(target)].getX(),
+                        (int)enemyRect[battlefield.getEnemies().indexOf(target)].getY(),
+                        (int)enemyRect[battlefield.getEnemies().indexOf(target)].getWidth(),
+                        (int)enemyRect[battlefield.getEnemies().indexOf(target)].getHeight(),
+                        null);
+            }
+            if (friendlyTarget != null) {
+                g2.drawImage(greenShade,
+                        (int)heroRect[battlefield.getHeroes().indexOf(friendlyTarget)].getX(),
+                        (int)heroRect[battlefield.getHeroes().indexOf(friendlyTarget)].getY(),
+                        (int)heroRect[battlefield.getHeroes().indexOf(friendlyTarget)].getWidth(),
+                        (int)heroRect[battlefield.getHeroes().indexOf(friendlyTarget)].getHeight(),
+                        null);
+            }
+            g.drawImage(buffer, 0, 0, null);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            target = null;
+            friendlyTarget = null;
+            healAnimationFlag = false;
+        }
+        else if (collectorAnimationFlag) {
+            for (int x = 0; x < buffer.getWidth(); x++) {
+                for (int y = 0; y < buffer.getHeight(); y++) {
+                    int rgba = buffer.getRGB(x, y);
+                    Color col = new Color(rgba, true);
+                    col = new Color(255 - col.getRed(),
+                            255 - col.getGreen(),
+                            255 - col.getBlue());
+                    buffer.setRGB(x, y, col.getRGB());
+                }
+            }
+            g.drawImage(buffer, 0, 0, null);
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            collectorAnimationFlag = false;
+        }
+        else g.drawImage(buffer, 0, 0, null);
     }
 
     public void updateEnv() {
-        if (enemyTurnFlag) {
-            for (Enemy enemy : battlefield.getEnemies()) {
+        while (enemyTurnFlag || enemyAnimationFlag) {
+            if (enemyTurnFlag) for (Enemy enemy : battlefield.getEnemies()) {
                 enemy.setTarget();
                 displaying = enemy.action();
+
+                if (enemy.getTarget() != null && enemy.getTarget() instanceof Hero) {
+                    enemyAnimationFlag = true;
+                    animationMover = -700;
+                    axeStartX = (int) heroRect[battlefield.getHeroes().indexOf(enemy.getTarget())].getX() - 210;
+                    while (enemyAnimationFlag)
+                        paintComponent(getGraphics());
+                }
+                if (enemy instanceof Angel) {
+                    target = (Enemy) enemy.getTarget();
+                    healAnimationFlag = true;
+                }
+                if (enemy instanceof Tank) {
+                    enemyAnimationFlag = true;
+                    animationMover = -700;
+                    axeColor = 55;
+                    axeStartX = 140;
+                }
+                if (enemy instanceof FinalBoss) {
+                    collectorAnimationFlag = true;
+                }
+
                 for (Hero h : battlefield.getHeroes()) {
                     if (h.getHP() <= 0) {
                         player.useIMPotion(h);
@@ -1105,14 +1268,9 @@ public class BattleEnv extends JComponent {
                     }
                 }
                 paintComponent(getGraphics());
-                try {
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
             }
             battlefield.updateBattlefield();
-            dialogMessage = "Your turn.";
+            if (!enemyAnimationFlag) displaying = "Your turn";
             enemyTurnFlag = false;
         }
         if (battlefield.removeDeadUnit()) {
