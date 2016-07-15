@@ -14,8 +14,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -118,6 +120,66 @@ public class CreatingFinalBossTile extends JPanel {
 
             imageDirectory.setFont(sFont.deriveFont(20f));
 
+            Path file = Paths.get("Save/Enemy/List.txt");
+            try (InputStream in = Files.newInputStream(file);
+                 BufferedReader reader =
+                         new BufferedReader(new InputStreamReader(in))) {
+                String line = reader.readLine();
+                while ((line = reader.readLine()) != null) {
+
+                    enemyLabel.add(new JLabel(line));
+                    enemyLabel.get(enemyLabel.size() - 1).setFont(sFont.deriveFont(20f));
+                    enemyLabel.get(enemyLabel.size() - 1).setForeground(Color.white);
+                    enemies.add(new JTextArea(1, 84));
+                    enemies.get(enemies.size() - 1).setText("Enter the number of " + line + "s");
+                    enemies.get(enemies.size() - 1).setFont(sFont.deriveFont(20f));
+                    enemies.get(enemies.size() - 1).setBackground(new Color(60, 60, 60));
+                    enemies.get(enemies.size() - 1).setForeground(Color.white);
+                    version.add(-1);
+                    versionRadioButton.add(new HashMap<>());
+                    enemyGroups.add(new ButtonGroup());
+
+                    Path file1 = Paths.get("Save/Enemy/"+ line + ".txt");
+                    try (InputStream in1 = Files.newInputStream(file1);
+                         BufferedReader reader1 =
+                                 new BufferedReader(new InputStreamReader(in1))) {
+                        String line1 = null;
+                        line1 = reader1.readLine();
+                        if (line1.equals("weak")) {
+                            versionRadioButton.get(versionRadioButton.size() - 1).put("Weak", new JRadioButton("Weak"));
+                            enemyGroups.get(enemyGroups.size() - 1).add(versionRadioButton.get(versionRadioButton.size() - 1).get("Weak"));
+                        }
+
+                        else if (line1.equals("able")) {
+                            versionRadioButton.get(versionRadioButton.size() - 1).put("Weak", new JRadioButton("Weak"));
+                            versionRadioButton.get(versionRadioButton.size() - 1).put("Able", new JRadioButton("Able"));
+                            enemyGroups.get(enemyGroups.size() - 1).add(versionRadioButton.get(versionRadioButton.size() - 1).get("Weak"));
+                            enemyGroups.get(enemyGroups.size() - 1).add(versionRadioButton.get(versionRadioButton.size() - 1).get("Able"));
+                        }
+
+                        else if (line1.equals("mighty")) {
+                            versionRadioButton.get(versionRadioButton.size() - 1).put("Weak", new JRadioButton("Weak"));
+                            versionRadioButton.get(versionRadioButton.size() - 1).put("Able", new JRadioButton("Able"));
+                            versionRadioButton.get(versionRadioButton.size() - 1).put("Mighty", new JRadioButton("Mighty"));
+                            enemyGroups.get(enemyGroups.size() - 1).add(versionRadioButton.get(versionRadioButton.size() - 1).get("Weak"));
+                            enemyGroups.get(enemyGroups.size() - 1).add(versionRadioButton.get(versionRadioButton.size() - 1).get("Able"));
+                            enemyGroups.get(enemyGroups.size() - 1).add(versionRadioButton.get(versionRadioButton.size() - 1).get("Mighty"));
+                        }
+
+
+
+
+                    } catch (IOException x) {
+                        System.err.println(x);
+                    }
+
+
+
+                }
+            } catch (IOException x) {
+                System.err.println(x);
+            }
+
             finalMessage.setFont(sFont.deriveFont(20f));
             finalMessage.setText("Enter the final message.");
 
@@ -157,6 +219,38 @@ public class CreatingFinalBossTile extends JPanel {
         add(enemies.get(2));
         add(enemyLabel.get(3));
         add(enemies.get(3));
+
+        for (int cnt = 4; cnt < versionRadioButton.size(); cnt++) {
+            add(enemyLabel.get(cnt));
+            add(versionRadioButton.get(cnt).get("Weak"));
+            int finalCnt = cnt;
+            versionRadioButton.get(cnt).get("Weak").addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    version.set(finalCnt, 0);
+                }
+            });
+            if (versionRadioButton.get(cnt).containsKey("Able")) {
+                add(versionRadioButton.get(cnt).get("Able"));
+                versionRadioButton.get(cnt).get("Able").addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        version.set(finalCnt, 1);
+                    }
+                });
+            }
+            if (versionRadioButton.get(cnt).size() == 3) {
+                add(versionRadioButton.get(cnt).get("Mighty"));
+                versionRadioButton.get(cnt).get("Mighty").addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        version.set(finalCnt, 1);
+                    }
+                });
+            }
+            add(enemies.get(cnt));
+
+        }
 
         versionRadioButton.get(0).get("Weak").addActionListener(new ActionListener() {
             @Override

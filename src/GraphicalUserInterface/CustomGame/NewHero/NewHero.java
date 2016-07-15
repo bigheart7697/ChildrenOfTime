@@ -8,10 +8,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -107,6 +104,37 @@ public class NewHero extends JPanel {
             imageDirectory.setBackground(new Color(60, 60, 60));
             imageDirectory.setText("Enter the class imageDirectory");
 
+            add(name);
+            add(description);
+            add(imageDirectory);
+            add(message);
+            add(abilities.get(0));
+            add(abilities.get(1));
+            add(abilities.get(2));
+            add(abilities.get(3));
+            add(abilities.get(4));
+            add(abilities.get(5));
+            add(abilities.get(6));
+            add(abilities.get(7));
+            add(abilities.get(8));
+            add(abilities.get(9));
+            add(abilities.get(10));
+            add(abilities.get(11));
+
+            Path file = Paths.get("Save/Item/List.txt");
+            try (InputStream in = Files.newInputStream(file);
+                 BufferedReader reader =
+                         new BufferedReader(new InputStreamReader(in))) {
+                String line = reader.readLine();
+                while ((line = reader.readLine()) != null) {
+                    abilities.add(new JCheckBox(line));
+                    abilities.get(abilities.size() - 1).setFont(sFont.deriveFont(20f));
+                    add(abilities.get(abilities.size() - 1));
+                }
+            } catch (IOException x) {
+                System.err.println(x);
+            }
+
 
 
         } catch (FontFormatException | IOException e) {
@@ -125,22 +153,7 @@ public class NewHero extends JPanel {
             add(tmp);
         }
 
-        add(name);
-        add(description);
-        add(imageDirectory);
-        add(message);
-        add(abilities.get(0));
-        add(abilities.get(1));
-        add(abilities.get(2));
-        add(abilities.get(3));
-        add(abilities.get(4));
-        add(abilities.get(5));
-        add(abilities.get(6));
-        add(abilities.get(7));
-        add(abilities.get(8));
-        add(abilities.get(9));
-        add(abilities.get(10));
-        add(abilities.get(11));
+
 
         for (int cnt = 0; cnt < 3; cnt++) {
             add(firstNeededAbilities[cnt]);

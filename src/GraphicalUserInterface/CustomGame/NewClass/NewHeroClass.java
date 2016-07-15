@@ -9,10 +9,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -105,6 +102,43 @@ public class NewHeroClass extends JPanel {
             invSize.setBackground(new Color(60, 60, 60));
             invSize.setText("Enter the inventory size");
 
+            add(name);
+            add(description);
+            add(maxHP);
+            add(HPRefill);
+            add(maxMP);
+            add(MPRefill);
+            add(attDamage);
+            add(EP);
+            add(invSize);
+            add(message);
+            add(abilities.get(0));
+            add(abilities.get(1));
+            add(abilities.get(2));
+            add(abilities.get(3));
+            add(abilities.get(4));
+            add(abilities.get(5));
+            add(abilities.get(6));
+            add(abilities.get(7));
+            add(abilities.get(8));
+            add(abilities.get(9));
+            add(abilities.get(10));
+            add(abilities.get(11));
+
+            Path file = Paths.get("Save/Item/List.txt");
+            try (InputStream in = Files.newInputStream(file);
+                 BufferedReader reader =
+                         new BufferedReader(new InputStreamReader(in))) {
+                String line = reader.readLine();
+                while ((line = reader.readLine()) != null) {
+                    abilities.add(new JCheckBox(line));
+                    abilities.get(abilities.size() - 1).setFont(sFont.deriveFont(20f));
+                    add(abilities.get(abilities.size() - 1));
+                }
+            } catch (IOException x) {
+                System.err.println(x);
+            }
+
 
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
@@ -116,28 +150,7 @@ public class NewHeroClass extends JPanel {
             e.printStackTrace();
         }
 
-        add(name);
-        add(description);
-        add(maxHP);
-        add(HPRefill);
-        add(maxMP);
-        add(MPRefill);
-        add(attDamage);
-        add(EP);
-        add(invSize);
-        add(message);
-        add(abilities.get(0));
-        add(abilities.get(1));
-        add(abilities.get(2));
-        add(abilities.get(3));
-        add(abilities.get(4));
-        add(abilities.get(5));
-        add(abilities.get(6));
-        add(abilities.get(7));
-        add(abilities.get(8));
-        add(abilities.get(9));
-        add(abilities.get(10));
-        add(abilities.get(11));
+
         add(cancel);
         add(save);
 

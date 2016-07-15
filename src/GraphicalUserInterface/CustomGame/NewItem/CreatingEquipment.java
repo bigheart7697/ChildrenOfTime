@@ -105,7 +105,7 @@ public class CreatingEquipment extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (amountGetter.getText().matches("[0-9]+") && Integer.parseInt(amountGetter.getText()) > 0
-                        && Integer.parseInt(amountGetter.getText()) < 500 && whichState.getSelectedItem().equals("EP")
+                        && Integer.parseInt(amountGetter.getText()) < 10 && whichState.getSelectedItem().equals("EP")
                         && price.getText().matches("[0-9]+") && Integer.parseInt(price.getText()) > 0 && Integer.parseInt(price.getText()) < 10) {
 
                     String s = "restorer" + "\n" + whichState.getSelectedItem() + "\n" + description.getText() + "\n" + imageDirectory.getText() + "\n" + amountGetter.getText() + "\n" + price.getText();

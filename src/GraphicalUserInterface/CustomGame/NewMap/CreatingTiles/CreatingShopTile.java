@@ -11,8 +11,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -25,6 +28,7 @@ public class CreatingShopTile extends JPanel {
     private JLabel messsage = new JLabel("Check the items you want the shop to have:                                                                                                                                                          ");
     private JButton OK = new JButton("OK");
     private HashMap<String, JCheckBox> items = new HashMap<>();
+    private ArrayList<String> newItems = new ArrayList<>();
 
     public CreatingShopTile(SimpleMenuListener sListener, CreatingMap CM) {
 
@@ -34,6 +38,54 @@ public class CreatingShopTile extends JPanel {
             GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
             ge.registerFont(sFont);
             messsage.setFont(sFont.deriveFont(20f));
+
+            items.put("Toughen", new JCheckBox("Toughen"));
+            items.put("Guide", new JCheckBox("Guide"));
+            items.put("Defy", new JCheckBox("Defy"));
+            items.put("Sword", new JCheckBox("Sword"));
+            items.put("Energy boots", new JCheckBox("Energy Boots"));
+            items.put("Armor", new JCheckBox("Armor"));
+            items.put("Magic stick", new  JCheckBox("Magic stick"));
+            items.put("Health potion", new JCheckBox("Health potion"));
+            items.put("Magic potion", new JCheckBox("Magic potion"));
+            items.get("Toughen").setFont(sFont.deriveFont(20f));
+            items.get("Guide").setFont(sFont.deriveFont(20f));
+            items.get("Defy").setFont(sFont.deriveFont(20f));
+            items.get("Sword").setFont(sFont.deriveFont(20f));
+            items.get("Energy boots").setFont(sFont.deriveFont(20f));
+            items.get("Armor").setFont(sFont.deriveFont(20f));
+            items.get("Magic stick").setFont(sFont.deriveFont(20f));
+            items.get("Health potion").setFont(sFont.deriveFont(20f));
+            items.get("Magic potion").setFont(sFont.deriveFont(20f));
+
+            messsage.setForeground(Color.white);
+
+            add(messsage);
+            add(items.get("Toughen"));
+            add(items.get("Guide"));
+            add(items.get("Defy"));
+            add(items.get("Sword"));
+            add(items.get("Energy boots"));
+            add(items.get("Armor"));
+            add(items.get("Magic stick"));
+            add(items.get("Health potion"));
+            add(items.get("Magic potion"));
+
+            Path file = Paths.get("Save/Item/List.txt");
+            try (InputStream in = Files.newInputStream(file);
+                 BufferedReader reader =
+                         new BufferedReader(new InputStreamReader(in))) {
+                String line = reader.readLine();
+                while ((line = reader.readLine()) != null) {
+                    items.put(line, new JCheckBox(line));
+                    items.get(line).setFont(sFont.deriveFont(20f));
+                    add(items.get(line));
+                    newItems.add(line);
+                }
+            } catch (IOException x) {
+                System.err.println(x);
+            }
+
         } catch (FontFormatException | IOException e) {
             e.printStackTrace();
         }
@@ -46,37 +98,9 @@ public class CreatingShopTile extends JPanel {
 
         setLayout(new FlowLayout());
 
-        items.put("Toughen", new JCheckBox("Toughen"));
-        items.put("Guide", new JCheckBox("Guide"));
-        items.put("Defy", new JCheckBox("Defy"));
-        items.put("Sword", new JCheckBox("Sword"));
-        items.put("Energy boots", new JCheckBox("Energy Boots"));
-        items.put("Armor", new JCheckBox("Armor"));
-        items.put("Magic stick", new  JCheckBox("Magic stick"));
-        items.put("Health potion", new JCheckBox("Health potion"));
-        items.put("Magic potion", new JCheckBox("Magic potion"));
-        items.get("Toughen").setFont(sFont.deriveFont(20f));
-        items.get("Guide").setFont(sFont.deriveFont(20f));
-        items.get("Defy").setFont(sFont.deriveFont(20f));
-        items.get("Sword").setFont(sFont.deriveFont(20f));
-        items.get("Energy boots").setFont(sFont.deriveFont(20f));
-        items.get("Armor").setFont(sFont.deriveFont(20f));
-        items.get("Magic stick").setFont(sFont.deriveFont(20f));
-        items.get("Health potion").setFont(sFont.deriveFont(20f));
-        items.get("Magic potion").setFont(sFont.deriveFont(20f));
 
-        messsage.setForeground(Color.white);
 
-        add(messsage);
-        add(items.get("Toughen"));
-        add(items.get("Guide"));
-        add(items.get("Defy"));
-        add(items.get("Sword"));
-        add(items.get("Energy boots"));
-        add(items.get("Armor"));
-        add(items.get("Magic stick"));
-        add(items.get("Health potion"));
-        add(items.get("Magic potion"));
+
 
         add(OK);
 
@@ -93,6 +117,9 @@ public class CreatingShopTile extends JPanel {
                 if (items.get("Magic stick").isSelected()) tmp.addItem("Magic stick");
                 if (items.get("Health potion").isSelected()) tmp.addItem("Health potion");
                 if (items.get("Magic potion").isSelected()) tmp.addItem("Magic potion");
+                for (String item : newItems) {
+                    if (items.get(item).isSelected()) tmp.addItem(item);
+                }
 //                CM.addShopTile(tmp);
                 CM.setSelectedTile(tmp);
                 sListener.switchTo("creating map");

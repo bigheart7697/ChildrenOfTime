@@ -130,6 +130,7 @@ public class CreatingSelfBoost extends JPanel {
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
                         && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
                         && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10) {
+                    name = nameGetter.getText();
                     description = descriptionGetter.getText();
                     increaseAmount = Integer.parseInt(increaseAmountGetter.getText());
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());

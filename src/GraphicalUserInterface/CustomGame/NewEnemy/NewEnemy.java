@@ -29,7 +29,7 @@ public class NewEnemy extends JPanel {
     private Font sFont;
 
     private JComboBox type;
-    private JTextArea name = new JTextArea(1, 89), imageDirectory = new JTextArea(1, 89), description = new JTextArea(1, 89);
+    private JTextArea name = new JTextArea(1, 89), imageDirectory = new JTextArea(1, 89), description = new JTextArea(5, 89);
     private JTextArea amount[] = new JTextArea[3], maxHP[] = new JTextArea[3];
     private JLabel strengthMessage = new JLabel("Check the enemy power"), typeMessage = new JLabel("Choose the enemy type");
     private ArrayList<JCheckBox> strength = new ArrayList<>();
@@ -74,7 +74,7 @@ public class NewEnemy extends JPanel {
             name.setFont(sFont.deriveFont(20f));
             name.setForeground(Color.white);
             name.setBackground(new Color(60, 60, 60));
-            name.setText("Enter the class name");
+            name.setText("Enter the enemy name");
 
             description.setFont(sFont.deriveFont(20f));
             description.setForeground(Color.white);
@@ -144,12 +144,12 @@ public class NewEnemy extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (strength.get(0).isSelected() && strength.get(1).isSelected() && strength.get(2).isSelected()
-                && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 4
-                        && maxHP[1].getText().matches("[0-9]+") && Integer.parseInt(maxHP[1].getText()) > 0 && Integer.parseInt(maxHP[1].getText()) < 4
-                        && maxHP[2].getText().matches("[0-9]+") && Integer.parseInt(maxHP[2].getText()) > 0 && Integer.parseInt(maxHP[2].getText()) < 4
-                        && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 4
-                        && amount[1].getText().matches("[0-9]+") && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 4
-                        && amount[2].getText().matches("[0-9]+") && Integer.parseInt(amount[2].getText()) > 0 && Integer.parseInt(amount[2].getText()) < 4) {
+                && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 500
+                        && maxHP[1].getText().matches("[0-9]+") && Integer.parseInt(maxHP[1].getText()) > 0 && Integer.parseInt(maxHP[1].getText()) < 500
+                        && maxHP[2].getText().matches("[0-9]+") && Integer.parseInt(maxHP[2].getText()) > 0 && Integer.parseInt(maxHP[2].getText()) < 500
+                        && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 500
+                        && amount[1].getText().matches("[0-9]+") && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 500
+                        && amount[2].getText().matches("[0-9]+") && Integer.parseInt(amount[2].getText()) > 0 && Integer.parseInt(amount[2].getText()) < 500) {
 
                     String tmp = "";
 
@@ -188,10 +188,10 @@ public class NewEnemy extends JPanel {
                 }
 
                 else if (strength.get(0).isSelected() && strength.get(1).isSelected()
-                        && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 4
-                        && maxHP[1].getText().matches("[0-9]+") && Integer.parseInt(maxHP[1].getText()) > 0 && Integer.parseInt(maxHP[1].getText()) < 4
-                        && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 4
-                        && amount[1].getText().matches("[0-9]+") && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 4) {
+                        && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 500
+                        && maxHP[1].getText().matches("[0-9]+") && Integer.parseInt(maxHP[1].getText()) > 0 && Integer.parseInt(maxHP[1].getText()) < 500
+                        && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 500
+                        && amount[1].getText().matches("[0-9]+") && Integer.parseInt(amount[1].getText()) > 0 && Integer.parseInt(amount[1].getText()) < 500) {
 
                     String tmp = "";
 
@@ -229,8 +229,8 @@ public class NewEnemy extends JPanel {
                 }
 
                     else if (strength.get(0).isSelected()
-                        && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 4
-                        && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 4) {
+                        && maxHP[0].getText().matches("[0-9]+") && Integer.parseInt(maxHP[0].getText()) > 0 && Integer.parseInt(maxHP[0].getText()) < 500
+                        && amount[0].getText().matches("[0-9]+") && Integer.parseInt(amount[0].getText()) > 0 && Integer.parseInt(amount[0].getText()) < 500) {
 
                     String tmp = "";
 

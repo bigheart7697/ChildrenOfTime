@@ -162,13 +162,11 @@ public class CreatingAttackModifier extends JPanel {
                         &&  Integer.parseInt(n.getText()) > 0 && Integer.parseInt(n.getText()) < 10 && percentage[0].getText().matches("[0-9]+")
                         && percentage[1].getText().matches("[0-9]+") && percentage[2].getText().matches("[0-9]+")
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
-                        && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
-                        && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
                         && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
                         && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10
-                        && Integer.parseInt(percentage[0].getText()) > 0 && Integer.parseInt(percentage[0].getText()) < 10
-                        && Integer.parseInt(percentage[1].getText()) > 0 && Integer.parseInt(percentage[1].getText()) < 10
-                        && Integer.parseInt(percentage[2].getText()) > 0 && Integer.parseInt(percentage[2].getText()) < 10) {
+                        && Integer.parseInt(percentage[0].getText()) > 0 && Integer.parseInt(percentage[0].getText()) < 100
+                        && Integer.parseInt(percentage[1].getText()) > 0 && Integer.parseInt(percentage[1].getText()) < 100
+                        && Integer.parseInt(percentage[2].getText()) > 0 && Integer.parseInt(percentage[2].getText()) < 100) {
                     description = descriptionGetter.getText();
                     name = nameGetter.getText();
                     N = Integer.parseInt(n.getText());
@@ -208,9 +206,9 @@ public class CreatingAttackModifier extends JPanel {
                         && Integer.parseInt(neededExperience[0].getText()) > 0 && Integer.parseInt(neededExperience[0].getText()) < 10
                         && Integer.parseInt(neededExperience[1].getText()) > 0 && Integer.parseInt(neededExperience[1].getText()) < 10
                         && Integer.parseInt(neededExperience[2].getText()) > 0 && Integer.parseInt(neededExperience[2].getText()) < 10
-                        && Integer.parseInt(percentage[0].getText()) > 0 && Integer.parseInt(percentage[0].getText()) < 10
-                        && Integer.parseInt(percentage[1].getText()) > 0 && Integer.parseInt(percentage[1].getText()) < 10
-                        && Integer.parseInt(percentage[2].getText()) > 0 && Integer.parseInt(percentage[2].getText()) < 10) {
+                        && Integer.parseInt(percentage[0].getText()) > 0 && Integer.parseInt(percentage[0].getText()) < 100
+                        && Integer.parseInt(percentage[1].getText()) > 0 && Integer.parseInt(percentage[1].getText()) < 100
+                        && Integer.parseInt(percentage[2].getText()) > 0 && Integer.parseInt(percentage[2].getText()) < 100) {
                     description = descriptionGetter.getText();
                     name = nameGetter.getText();
                     XPToNextLevel = Integer.parseInt(neededExperience[0].getText());

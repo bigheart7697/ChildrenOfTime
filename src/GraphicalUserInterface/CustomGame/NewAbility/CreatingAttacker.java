@@ -191,6 +191,7 @@ public class CreatingAttacker extends JPanel {
             @Override
             public void actionPerformed(ActionEvent e) {
                 attackerType = (String)whichState.getSelectedItem();
+                name = nameGetter.getText();
                 if (coolDown[0].getText().matches("[0-9]+") && coolDown[1].getText().matches("[0-9]+")
                         && coolDown[2].getText().matches("[0-9]+") && neededExperience[0].getText().matches("[0-9]+") && EPGetter.getText().matches("[0-9]+")
                         && neededExperience[1].getText().matches("[0-9]+") && neededExperience[2].getText().matches("[0-9]+") && MPGetter.getText().matches("[0-9]+")
