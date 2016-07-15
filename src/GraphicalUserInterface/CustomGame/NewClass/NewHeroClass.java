@@ -125,7 +125,7 @@ public class NewHeroClass extends JPanel {
             add(abilities.get(10));
             add(abilities.get(11));
 
-            Path file = Paths.get("Save/Item/List.txt");
+            Path file = Paths.get("Save/Ability/List.txt");
             try (InputStream in = Files.newInputStream(file);
                  BufferedReader reader =
                          new BufferedReader(new InputStreamReader(in))) {
