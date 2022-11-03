@@ -1,0 +1,5 @@
+immediate effect
+max HP
+a
+a
+25

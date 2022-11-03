@@ -1,0 +1,6 @@
+consumable
+MP
+c
+c
+150
+4
